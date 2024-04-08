@@ -1,0 +1,51 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:jsx-a11y/recommended", // eslint-plugin-jsx-a11y 설치한 경우
+    "plugin:import/errors", // eslint-plugin-import 설치한 경우
+    "plugin:import/warnings", // eslint-plugin-import 설치한 경우
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": ["./tsconfig.json"]
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks", // eslint-plugin-react-hooks 설치한 경우
+    "import"
+  ],
+  "rules": {
+    "indent": ["error", 2], // 들여쓰기 스타일을 설정합니다.
+    "semi": ["error", "always"], // 문장의 끝에 세미콜론을 강제합니다.
+    "quotes": ["error", "single"], // 문자열에는 작은 따옴표를 사용하도록 강제합니다.
+    "no-var": "error", // var 키워드를 사용하지 않도록 강제합니다.
+    "no-unused-vars": "error", // 사용되지 않는 변수를 선언하지 못하도록 강제합니다.
+    "no-console": "error", // console.log() 등 디버깅용 메서드 사용을 금지합니다.
+    "eqeqeq": "error", // 일치 연산자(=== 및 !==)를 사용하여 타입 및 값까지 비교하도록 강제합니다.
+    "no-undef": "error", // 정의되지 않은 변수를 사용하지 못하도록 강제합니다.
+    "no-alert": "error", // alert() 사용을 금지합니다.
+    "no-debugger": "error", // debugger 문을 사용하지 못하도록 강제합니다.
+    "no-trailing-spaces": "error", // 코드 끝에 불필요한 공백을 허용하지 않습니다.
+    "eol-last": ["error", "always"], // 파일 끝에 개행문자가 있는지 확인합니다.
+    "no-mixed-spaces-and-tabs": "error", // 탭과 공백 문자가 혼용되지 않도록 강제합니다.
+    "no-multi-spaces": "error", // 여러 개의 공백 문자를 사용하지 못하도록 강제합니다.
+    "prettier/prettier": "off" // eslint와 prettier 간의 규칙 충돌 방지합니다.
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}
