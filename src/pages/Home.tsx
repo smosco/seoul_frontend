@@ -6,6 +6,7 @@ import safetCenter from '../assets/images/safetycenter.png';
 import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
+import usePlaceSearch from '../hooks/usePlaceSearch';
 
 declare global {
   interface Window {
@@ -44,6 +45,11 @@ function Home() {
   const [currentPosition, setCurrentPosition] =
     useState<GeolocationPosition | null>(null);
   const [startAddress, setStartAddress] = useState<string>('');
+  const [endAddress, setEndAddress] = useState<string>('');
+  const startPlaces = usePlaceSearch(startAddress);
+  const endPlaces = usePlaceSearch(endAddress);
+  const [startIsSearching, setStartIsSearching] = useState<boolean>(false);
+  const [endIsSearching, setEndIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
     // 위치 정보 요청
@@ -147,10 +153,58 @@ function Home() {
       <input
         type="text"
         value={startAddress}
-        onChange={(e) => setStartAddress(e.target.value)}
+        onChange={(e) => {
+          setStartIsSearching(true);
+          setStartAddress(e.target.value);
+        }}
         placeholder="출발지를 입력하세요"
       />
+      <input
+        type="text"
+        value={endAddress}
+        onChange={(e) => {
+          setEndIsSearching(true);
+          setEndAddress(e.target.value);
+        }}
+        placeholder="도착지를 입력하세요"
+      />
       <div id="map" style={{ width: '500px', height: '500px' }} />
+      <ul>
+        {startIsSearching &&
+          startPlaces.map((place, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <li key={index}>
+              <button
+                type="button"
+                onClick={() => {
+                  setStartAddress(place.address);
+                  setStartIsSearching(false);
+                }}
+              >
+                <div>{place.name}</div>
+                <div>{place.address}</div>
+              </button>
+            </li>
+          ))}
+      </ul>
+      <ul>
+        {endIsSearching &&
+          endPlaces.map((place, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <li key={index}>
+              <button
+                type="button"
+                onClick={() => {
+                  setEndAddress(place.address);
+                  setEndIsSearching(false);
+                }}
+              >
+                <div>{place.name}</div>
+                <div>{place.address}</div>
+              </button>
+            </li>
+          ))}
+      </ul>
     </>
   );
 }
