@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import cctv from '../assets/images/cctv.png';
 import emergencyBell from '../assets/images/emergencybell.png';
 import safetFacility from '../assets/images/safetyfacility.png';
@@ -7,6 +7,8 @@ import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
 import usePlaceSearch from '../hooks/usePlaceSearch';
+import useMap from '../hooks/useMap';
+import POSITIONS from '../constant/mockingPositions';
 
 declare global {
   interface Window {
@@ -42,8 +44,8 @@ const getImageSrc = (title: string) => {
 };
 
 function Home() {
-  const [currentPosition, setCurrentPosition] =
-    useState<GeolocationPosition | null>(null);
+  const mapRef = useRef(null);
+  const { map, currentPosition } = useMap(mapRef);
   const [startAddress, setStartAddress] = useState<string>('');
   const [endAddress, setEndAddress] = useState<string>('');
   const startPlaces = usePlaceSearch(startAddress);
@@ -52,58 +54,7 @@ function Home() {
   const [endIsSearching, setEndIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
-    // 위치 정보 요청
-    navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => {
-        setCurrentPosition(position);
-      },
-      (error: GeolocationPositionError) => {
-        console.error('Error getting current position:', error);
-      },
-    );
-  }, []);
-
-  useEffect(() => {
     if (!currentPosition) return;
-
-    const container = document.getElementById('map');
-    const option = {
-      center: new kakao.maps.LatLng(
-        currentPosition.coords.latitude,
-        currentPosition.coords.longitude,
-      ),
-      level: 3,
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    const map = new kakao.maps.Map(container, option);
-
-    const positions = [
-      {
-        title: 'cctv',
-        latlng: new kakao.maps.LatLng(37.486592, 126.9409552),
-      },
-      {
-        title: 'safetyFacility',
-        latlng: new kakao.maps.LatLng(37.486592, 126.938552),
-      },
-      {
-        title: 'fireStation',
-        latlng: new kakao.maps.LatLng(37.485592, 126.9409552),
-      },
-      {
-        title: 'heatShelter',
-        latlng: new kakao.maps.LatLng(37.487592, 126.9399552),
-      },
-      {
-        title: 'saftyCenter',
-        latlng: new kakao.maps.LatLng(37.486592, 126.9389552),
-      },
-      {
-        title: 'emergencyBell',
-        latlng: new kakao.maps.LatLng(37.486592, 126.9389552),
-      },
-    ];
 
     // 현재 위치 마커 생성 및 추가
     const currentPositionMarker = new kakao.maps.Marker({
@@ -115,22 +66,23 @@ function Home() {
     });
     currentPositionMarker.setMap(map);
 
-    for (let i = 0; i < positions.length; i++) {
-      const imageSrc = getImageSrc(positions[i].title);
+    for (let i = 0; i < POSITIONS.length; i++) {
+      const imageSrc = getImageSrc(POSITIONS[i].title);
       const imageSize = new kakao.maps.Size(16, 16);
 
       const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
       const marker = new kakao.maps.Marker({
         map,
-        position: positions[i].latlng,
-        title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        position: POSITIONS[i].latlng,
+        title: POSITIONS[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
         image: markerImage,
       });
       marker.setMap(map);
     }
-  }, [currentPosition]);
+  }, [currentPosition, map]);
 
+  // currentPosition를 Geocoder를 사용해서 startAddress에 저장한다.
   useEffect(() => {
     if (!currentPosition) return;
 
@@ -168,7 +120,7 @@ function Home() {
         }}
         placeholder="도착지를 입력하세요"
       />
-      <div id="map" style={{ width: '500px', height: '500px' }} />
+      <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
       <ul>
         {startIsSearching &&
           startPlaces.map((place, index) => (
