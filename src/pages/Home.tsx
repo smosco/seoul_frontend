@@ -43,6 +43,7 @@ const getImageSrc = (title: string) => {
 function Home() {
   const [currentPosition, setCurrentPosition] =
     useState<GeolocationPosition | null>(null);
+  const [startAddress, setStartAddress] = useState<string>('');
 
   useEffect(() => {
     // 위치 정보 요청
@@ -104,13 +105,13 @@ function Home() {
         currentPosition.coords.latitude,
         currentPosition.coords.longitude,
       ),
-      image: new kakao.maps.MarkerImage(location, new kakao.maps.Size(24, 32)),
+      image: new kakao.maps.MarkerImage(location, new kakao.maps.Size(16, 22)),
     });
     currentPositionMarker.setMap(map);
 
     for (let i = 0; i < positions.length; i++) {
       const imageSrc = getImageSrc(positions[i].title);
-      const imageSize = new kakao.maps.Size(32, 32);
+      const imageSize = new kakao.maps.Size(16, 16);
 
       const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -128,21 +129,30 @@ function Home() {
     if (!currentPosition) return;
 
     const geocoder = new kakao.maps.services.Geocoder();
-
     const coord = new kakao.maps.LatLng(
       currentPosition?.coords.latitude,
       currentPosition?.coords.longitude,
     );
     const callback = (result: AddressResult[], status: string) => {
       if (status === kakao.maps.services.Status.OK) {
-        console.log(result, result[0].address.address_name);
+        setStartAddress(result[0].address.address_name);
       }
     };
 
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
   }, [currentPosition]);
 
-  return <div id="map" style={{ width: '500px', height: '500px' }} />;
+  return (
+    <>
+      <input
+        type="text"
+        value={startAddress}
+        onChange={(e) => setStartAddress(e.target.value)}
+        placeholder="출발지를 입력하세요"
+      />
+      <div id="map" style={{ width: '500px', height: '500px' }} />
+    </>
+  );
 }
 
 export default Home;
