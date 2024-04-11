@@ -10,8 +10,8 @@ declare global {
 const { kakao } = window;
 
 interface Coordinate {
-    lat: number | null;
-    lng: number | null;
+    lat: number | undefined
+    lng: number | undefined
 }
 
 function useMap(containerRef: React.RefObject<HTMLDivElement>, coordinate:Coordinate | null) {
@@ -27,7 +27,7 @@ function useMap(containerRef: React.RefObject<HTMLDivElement>, coordinate:Coordi
       const Map = new kakao.maps.Map(containerRef.current, options);
       setMap(Map);
     }
-  }, [containerRef, coordinate?.lat, coordinate?.lng]);
+  }, [coordinate?.lat, coordinate?.lng]);
   return { map };
 }
 
