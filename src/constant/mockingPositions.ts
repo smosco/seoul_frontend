@@ -1,9 +1,10 @@
 import { FacilitiesType } from '../types/mapTypes';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface MockedPositionType {
   title: FacilitiesType
   // latlng: kakao.maps.LatLng;
-  latlng: unknown;
+  latlng: any;
   lat: number;
   lng: number;
 }

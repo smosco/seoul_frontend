@@ -1,3 +1,4 @@
+import React from 'react';
 import cctv from '../assets/images/cctv.png';
 import emergencyBell from '../assets/images/emergencybell.png';
 import safetFacility from '../assets/images/safetyfacility.png';
@@ -6,6 +7,16 @@ import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
 import { FacilitiesType } from '../types/mapTypes';
+
+interface SearchState {
+  address: string;
+  isSearching: boolean;
+}
+
+interface AddressResult {
+  address: { address_name: string };
+  code: string;
+}
 
 declare global {
     interface Window {
@@ -38,7 +49,6 @@ const getImageSrc = (facilities?: FacilitiesType) => {
 
 export function generateMarker(lat:number, lng:number, facilities?:FacilitiesType) {
   const imgSrc = getImageSrc(facilities);
-  // TODO : size 매직넘버 지우기
   const imgSize = facilities ? new kakao.maps.Size(16,16) : new kakao.maps.Size(16,22);
   const markerImg = new kakao.maps.MarkerImage(imgSrc, imgSize);
   const markerPosition = new kakao.maps.LatLng(lat, lng);
@@ -70,4 +80,21 @@ export function generateCircle(lat:number, lng:number) {
     fillOpacity: 0.15,
   });
   return circle;
+}
+
+export function updateAddressFromCurrentCoordinates(currentPosition: GeolocationPosition | null, setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>, startSearchState: SearchState) {
+  if (!currentPosition) return;
+
+  const geocoder = new kakao.maps.services.Geocoder();
+  const coord = new kakao.maps.LatLng(
+    currentPosition?.coords.latitude,
+    currentPosition?.coords.longitude,
+  );
+  const callback = (result: AddressResult[], status: string) => {
+    if (status === kakao.maps.services.Status.OK) {
+      setStartSearchState({ ...startSearchState, address: result[0].address.address_name });
+    }
+  };
+
+  geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
 }
