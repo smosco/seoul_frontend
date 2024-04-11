@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import useMap from '../hooks/useMapTest';
+import useMap from '../hooks/useMap';
 import { generateCircle, generateInfoWindow, generateMarker } from '../utils/mapUtils';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 

@@ -1,3 +1,12 @@
+import cctv from '../assets/images/cctv.png';
+import emergencyBell from '../assets/images/emergencybell.png';
+import safetFacility from '../assets/images/safetyfacility.png';
+import safetCenter from '../assets/images/safetycenter.png';
+import fireStation from '../assets/images/firestation.png';
+import heatShelter from '../assets/images/heatshelter.png';
+import location from '../assets/images/location.png';
+import { FacilitiesType } from '../types/mapTypes';
+
 declare global {
     interface Window {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -7,10 +16,35 @@ declare global {
 
 const { kakao } = window;
 
-export function generateMarker(lat:number, lng:number) {
+
+const getImageSrc = (facilities?: FacilitiesType) => {
+  switch (facilities) {
+    case 'cctv':
+      return cctv;
+    case 'fireStation':
+      return fireStation;
+    case 'safetyFacility':
+      return safetFacility;
+    case 'saftyCenter':
+      return safetCenter;
+    case 'emergencyBell':
+      return emergencyBell;
+    case 'heatShelter':
+      return heatShelter;
+    default:
+      return location;
+  }
+};
+
+export function generateMarker(lat:number, lng:number, facilities?:FacilitiesType) {
+  const imgSrc = getImageSrc(facilities);
+  // TODO : size 매직넘버 지우기
+  const imgSize = facilities ? new kakao.maps.Size(16,16) : new kakao.maps.Size(16,22);
+  const markerImg = new kakao.maps.MarkerImage(imgSrc, imgSize);
   const markerPosition = new kakao.maps.LatLng(lat, lng);
   const marker = new kakao.maps.Marker({
     position: markerPosition,
+    image: markerImg,
   });
   return marker;
 }

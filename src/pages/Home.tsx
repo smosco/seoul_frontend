@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import cctv from '../assets/images/cctv.png';
-import emergencyBell from '../assets/images/emergencybell.png';
-import safetFacility from '../assets/images/safetyfacility.png';
-import safetCenter from '../assets/images/safetycenter.png';
-import fireStation from '../assets/images/firestation.png';
-import heatShelter from '../assets/images/heatshelter.png';
-import location from '../assets/images/location.png';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
+import { generateMarker } from '../utils/mapUtils';
 
 declare global {
   interface Window {
@@ -24,25 +18,6 @@ interface AddressResult {
 }
 
 const { kakao } = window;
-
-const getImageSrc = (title: string) => {
-  switch (title) {
-    case 'cctv':
-      return cctv;
-    case 'fireStation':
-      return fireStation;
-    case 'safetyFacility':
-      return safetFacility;
-    case 'saftyCenter':
-      return safetCenter;
-    case 'emergencyBell':
-      return emergencyBell;
-    case 'heatShelter':
-      return heatShelter;
-    default:
-      return location;
-  }
-};
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
@@ -63,27 +38,19 @@ function Home() {
     if (!currentPosition) return;
 
     // 현재 위치 마커 생성 및 추가
-    const currentPositionMarker = new kakao.maps.Marker({
-      position: new kakao.maps.LatLng(
-        currentPosition.coords.latitude,
-        currentPosition.coords.longitude,
-      ),
-      image: new kakao.maps.MarkerImage(location, new kakao.maps.Size(16, 22)),
-    });
+    const currentPositionMarker = generateMarker(
+      currentPosition.coords.latitude,
+      currentPosition.coords.longitude
+    );
     currentPositionMarker.setMap(map);
 
     // 위험 시설 마커 생성 및 추가
     for (let i = 0; i < POSITIONS.length; i++) {
-      const imageSrc = getImageSrc(POSITIONS[i].title);
-      const imageSize = new kakao.maps.Size(16, 16);
-
-      const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-      const marker = new kakao.maps.Marker({
-        map,
-        position: POSITIONS[i].latlng,
-        image: markerImage,
-      });
+      const marker = generateMarker(
+        POSITIONS[i].lat,
+        POSITIONS[i].lng,
+        POSITIONS[i].title
+      );
       marker.setMap(map);
     }
   }, [currentPosition, map]);
