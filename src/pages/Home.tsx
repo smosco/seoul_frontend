@@ -9,6 +9,7 @@ import location from '../assets/images/location.png';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
+import useCurrentPosition from '../hooks/useCurruntPosition';
 
 declare global {
   interface Window {
@@ -44,8 +45,13 @@ const getImageSrc = (title: string) => {
 };
 
 function Home() {
+  const { currentPosition } = useCurrentPosition();
+  const coordinate = currentPosition ? {
+    lat: currentPosition.coords.latitude,
+    lng: currentPosition.coords.longitude
+  } : null;
   const mapRef = useRef(null);
-  const { map, currentPosition } = useMap(mapRef);
+  const { map } = useMap(mapRef, coordinate);
   const [startAddress, setStartAddress] = useState<string>('');
   const [endAddress, setEndAddress] = useState<string>('');
   const startPlaces = usePlaceSearch(startAddress);
@@ -66,6 +72,7 @@ function Home() {
     });
     currentPositionMarker.setMap(map);
 
+    // 위험 시설 마커 생성 및 추가
     for (let i = 0; i < POSITIONS.length; i++) {
       const imageSrc = getImageSrc(POSITIONS[i].title);
       const imageSize = new kakao.maps.Size(16, 16);
@@ -75,7 +82,6 @@ function Home() {
       const marker = new kakao.maps.Marker({
         map,
         position: POSITIONS[i].latlng,
-        title: POSITIONS[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
         image: markerImage,
       });
       marker.setMap(map);
