@@ -6,11 +6,7 @@ import useCurrentPosition from '../hooks/useCurruntPosition';
 function EmergencyPage() {
   const mapRef = useRef(null);
   const { currentPosition } = useCurrentPosition();
-  const coordinate = currentPosition ? {
-    lat: currentPosition.coords.latitude,
-    lng: currentPosition.coords.longitude
-  } : null;
-  const { map } = useMap(mapRef, coordinate);
+  const { map } = useMap(mapRef, currentPosition?.coords.latitude, currentPosition?.coords.longitude);
 
   useEffect(() => {
     if(!map || !currentPosition) return;

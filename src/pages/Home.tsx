@@ -8,15 +8,12 @@ import { AddressInfo } from '../types/mapTypes';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
-  // 이게 필요한지 의문
-  const currentCoord = currentPosition
-    ? {
-        lat: currentPosition.coords.latitude,
-        lng: currentPosition.coords.longitude,
-      }
-    : null;
   const mapRef = useRef(null);
-  const { map } = useMap(mapRef, currentCoord);
+  const { map } = useMap(
+    mapRef,
+    currentPosition?.coords.latitude,
+    currentPosition?.coords.longitude,
+  );
   // TODO: 알고리즘 검색을 위해 도로명 주소가 필요함
   // TODO: 카카오 모빌리티 경로 검색을 위해 좌표가 필요함
 

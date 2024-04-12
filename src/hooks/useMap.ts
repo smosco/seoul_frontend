@@ -9,25 +9,20 @@ declare global {
 
 const { kakao } = window;
 
-interface Coordinate {
-    lat: number | undefined
-    lng: number | undefined
-}
-
-function useMap(containerRef: React.RefObject<HTMLDivElement>, coordinate:Coordinate | null) {
+function useMap(containerRef: React.RefObject<HTMLDivElement>, lat: number | undefined, lng: number | undefined) {
   const [map, setMap] = useState(null);
 
   useEffect(() => {
-    if (!coordinate) return;
+    if (!lat || !lng) return;
     if (containerRef.current) {
       const options = {
-        center: new kakao.maps.LatLng(coordinate.lat, coordinate.lng),
+        center: new kakao.maps.LatLng(lat, lng),
         level: 3,
       };
       const Map = new kakao.maps.Map(containerRef.current, options);
       setMap(Map);
     }
-  }, [coordinate?.lat, coordinate?.lng]);
+  }, [lat, lng]);
   return { map };
 }
 

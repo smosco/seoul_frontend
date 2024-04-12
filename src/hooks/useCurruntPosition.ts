@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 function useCurrentPosition() {
   const [currentPosition, setCurrentPosition] =
-    useState<GeolocationPosition | null>(null);
+    useState<GeolocationPosition | undefined>();
 
   useEffect(() => {
     // 위치 정보 요청
