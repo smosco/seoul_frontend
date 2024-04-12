@@ -11,3 +11,8 @@ export interface SearchState {
   isSearching: boolean;
   selectedName: string;
 }
+
+export interface AddressInfo {
+  address: string;
+  coord: { lat: number | undefined; lng: number | undefined };
+}

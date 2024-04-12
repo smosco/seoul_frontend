@@ -30,7 +30,7 @@
       2,
       {
         "SwitchCase": 1,
-        "ignoredNodes": ["ConditionalExpression"]
+        "ignoredNodes": ["ConditionalExpression > ObjectExpression"]
       }
     ], // 들여쓰기 스타일을 설정합니다.
     "semi": ["error", "always"], // 문장의 끝에 세미콜론을 강제합니다.

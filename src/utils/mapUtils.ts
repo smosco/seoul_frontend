@@ -6,7 +6,7 @@ import safetCenter from '../assets/images/safetycenter.png';
 import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
-import { FacilitiesType, SearchState } from '../types/mapTypes';
+import { FacilitiesType, SearchState, AddressInfo } from '../types/mapTypes';
 
 interface AddressResult {
   address: { address_name: string };
@@ -86,6 +86,7 @@ export function updateAddressFromCurrentCoordinates(
   currentPosition: GeolocationPosition | null,
   setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
   startSearchState: SearchState,
+  setStart: React.Dispatch<React.SetStateAction<AddressInfo>>,
 ) {
   if (!currentPosition) return;
 
@@ -99,6 +100,13 @@ export function updateAddressFromCurrentCoordinates(
       setStartSearchState({
         ...startSearchState,
         selectedName: result[0].address.address_name,
+      });
+      setStart({
+        address: result[0].address.address_name,
+        coord: {
+          lat: currentPosition?.coords.latitude,
+          lng: currentPosition?.coords.longitude,
+        },
       });
     }
   };

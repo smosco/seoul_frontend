@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
+import { AddressInfo } from '../types/mapTypes';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
@@ -16,6 +17,19 @@ function Home() {
     : null;
   const mapRef = useRef(null);
   const { map } = useMap(mapRef, currentCoord);
+  // TODO: 알고리즘 검색을 위해 도로명 주소가 필요함
+  // TODO: 카카오 모빌리티 경로 검색을 위해 좌표가 필요함
+
+  const [start, setStart] = useState<AddressInfo>({
+    address: '',
+    coord: { lat: undefined, lng: undefined },
+  });
+  const [end, setEnd] = useState<AddressInfo>({
+    address: '',
+    coord: { lat: undefined, lng: undefined },
+  });
+
+  console.log(start, end);
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -40,7 +54,7 @@ function Home() {
 
   return (
     <>
-      <SearchContainer />
+      <SearchContainer setStart={setStart} setEnd={setEnd} />
       <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
     </>
   );

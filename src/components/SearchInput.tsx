@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
-import { SearchState } from '../types/mapTypes';
+import { AddressInfo, SearchState } from '../types/mapTypes';
 
 interface Place {
   name: string;
@@ -16,6 +16,12 @@ interface SearchBoxProps {
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
   placeholder: string;
   places: Place[];
+  setAddressInfo: React.Dispatch<React.SetStateAction<AddressInfo>>;
+}
+
+interface ContainerProps {
+  setStart: React.Dispatch<React.SetStateAction<AddressInfo>>;
+  setEnd: React.Dispatch<React.SetStateAction<AddressInfo>>;
 }
 
 function SearchBox({
@@ -23,6 +29,7 @@ function SearchBox({
   setSearchState,
   placeholder,
   places,
+  setAddressInfo,
 }: SearchBoxProps) {
   const { keyword, isSearching, selectedName } = searchState;
 
@@ -55,6 +62,13 @@ function SearchBox({
                     isSearching: false,
                     selectedName: place.name,
                   });
+                  setAddressInfo({
+                    address: place.address,
+                    coord: {
+                      lat: place.latitude,
+                      lng: place.longitude,
+                    },
+                  });
                 }}
               >
                 <div>{place.name}</div>
@@ -67,7 +81,7 @@ function SearchBox({
   );
 }
 
-function SearchContainer() {
+function SearchContainer({ setStart, setEnd }: ContainerProps) {
   const { currentPosition } = useCurrentPosition();
   const [startSearchState, setStartSearchState] = useState<SearchState>({
     keyword: '',
@@ -82,14 +96,13 @@ function SearchContainer() {
   });
   const endPlaces = usePlaceSearch(endSearchState.keyword);
 
-  console.log(startSearchState, startPlaces, endSearchState);
-
   // 혹시 나중에 출발지나 도착지를 현재 위치로 변경하는 기능을 추가할 때 유용할 것 같습니다.
   useEffect(() => {
     updateAddressFromCurrentCoordinates(
       currentPosition,
       setStartSearchState,
       startSearchState,
+      setStart,
     );
   }, [currentPosition]);
 
@@ -100,12 +113,14 @@ function SearchContainer() {
         setSearchState={setStartSearchState}
         placeholder="출발지를 입력하세요"
         places={startPlaces}
+        setAddressInfo={setStart}
       />
       <SearchBox
         searchState={endSearchState}
         setSearchState={setEndSearchState}
         placeholder="도착지를 입력하세요"
         places={endPlaces}
+        setAddressInfo={setEnd}
       />
     </>
   );
