@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
+import { AddressInfo, SearchState } from '../types/mapTypes';
 
 interface Place {
   name: string;
@@ -10,30 +11,41 @@ interface Place {
   longitude: number;
 }
 
-interface SearchState {
-  address: string;
-  isSearching: boolean;
-}
-
 interface SearchBoxProps {
   searchState: SearchState;
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
   placeholder: string;
   places: Place[];
+  setAddressInfo: React.Dispatch<React.SetStateAction<AddressInfo>>;
 }
 
-function SearchBox({ searchState, setSearchState, placeholder, places }: SearchBoxProps) {
-  const { address, isSearching } = searchState;
+interface ContainerProps {
+  setStart: React.Dispatch<React.SetStateAction<AddressInfo>>;
+  setEnd: React.Dispatch<React.SetStateAction<AddressInfo>>;
+}
+
+function SearchBox({
+  searchState,
+  setSearchState,
+  placeholder,
+  places,
+  setAddressInfo,
+}: SearchBoxProps) {
+  const { keyword, isSearching, selectedName } = searchState;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchState({ ...searchState, isSearching: true, address: e.target.value });
+    setSearchState({
+      ...searchState,
+      isSearching: true,
+      keyword: e.target.value,
+    });
   };
 
   return (
     <>
       <input
         type="text"
-        value={address}
+        value={isSearching ? keyword : selectedName}
         onChange={handleInputChange}
         placeholder={placeholder}
       />
@@ -45,10 +57,21 @@ function SearchBox({ searchState, setSearchState, placeholder, places }: SearchB
               <button
                 type="button"
                 onClick={() => {
-                  setSearchState({ address: place.address, isSearching: false });
+                  setSearchState({
+                    ...searchState,
+                    isSearching: false,
+                    selectedName: place.name,
+                  });
+                  setAddressInfo({
+                    address: place.address,
+                    coord: {
+                      x: place.longitude,
+                      y: place.latitude,
+                    },
+                  });
                 }}
               >
-                <div>{place.address}</div>
+                <div>{place.name}</div>
               </button>
             </li>
           ))}
@@ -58,22 +81,29 @@ function SearchBox({ searchState, setSearchState, placeholder, places }: SearchB
   );
 }
 
-function SearchContainer() {
+function SearchContainer({ setStart, setEnd }: ContainerProps) {
   const { currentPosition } = useCurrentPosition();
   const [startSearchState, setStartSearchState] = useState<SearchState>({
-    address: '',
+    keyword: '',
     isSearching: false,
+    selectedName: '',
   });
-  const startPlaces = usePlaceSearch(startSearchState.address);
+  const startPlaces = usePlaceSearch(startSearchState.keyword);
   const [endSearchState, setEndSearchState] = useState<SearchState>({
-    address: '',
+    keyword: '',
     isSearching: false,
+    selectedName: '',
   });
-  const endPlaces = usePlaceSearch(endSearchState.address);
+  const endPlaces = usePlaceSearch(endSearchState.keyword);
 
   // 혹시 나중에 출발지나 도착지를 현재 위치로 변경하는 기능을 추가할 때 유용할 것 같습니다.
   useEffect(() => {
-    updateAddressFromCurrentCoordinates(currentPosition, setStartSearchState, startSearchState);
+    updateAddressFromCurrentCoordinates(
+      currentPosition,
+      setStartSearchState,
+      startSearchState,
+      setStart,
+    );
   }, [currentPosition]);
 
   return (
@@ -83,12 +113,14 @@ function SearchContainer() {
         setSearchState={setStartSearchState}
         placeholder="출발지를 입력하세요"
         places={startPlaces}
+        setAddressInfo={setStart}
       />
       <SearchBox
         searchState={endSearchState}
         setSearchState={setEndSearchState}
         placeholder="도착지를 입력하세요"
         places={endPlaces}
+        setAddressInfo={setEnd}
       />
     </>
   );
