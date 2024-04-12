@@ -1,59 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import POSITIONS from '../../constant/mockingPositions';
+import { FacilityButton, ButtonWrapper, Wrapper, ReportBtn, Label} from './style';
 
 function Content(){
   const [isChecked, setIsChecked] = useState(false);
+  const [isClicked, setIsClicked] = useState(new Array(POSITIONS.length).fill(false));
+
+  const handleButtonClick = (index: number) => {
+    const newIsClicked = [...isClicked];
+    newIsClicked[index] = !newIsClicked[index];
+    setIsClicked(newIsClicked);
+  };
 
   const handleChange = () => {
     setIsChecked(!isChecked);
   };
 
+  useEffect(() => {
+    setIsClicked(new Array(POSITIONS.length).fill(isChecked));
+  }, [isChecked]);
+
   function traslateToKorean(input: string): string {
-    let output: string;
 
     switch(input) {
       case 'cctv':
-        output = 'CCTV';
-        break;
+        return 'CCTV';
       case 'safetyFacility':
-        output = '안전시설';
-        break;
+        return '안전시설';
       case 'fireStation':
-        output = '소방서';
-        break;
+        return '소방서';
       case 'heatShelter':
-        output = '무더위 쉼터';
-        break;
+        return '무더위 쉼터';
       case 'saftyCenter':
-        output = '안전센터';
-        break;
+        return '안전센터';
       case 'emergencyBell':
-        output = '비상벨';
-        break;
+        return '비상벨';
       default:
-        output = '알 수 없는 입력값';
+        return '알 수 없는 입력값';
     }
-
-    return output;
   }
 
-
   return(
-    <div>
-      <label htmlFor="safetyCheckbox">
+    <Wrapper>
+      <Label htmlFor="safetyCheckbox">
         <input
           id="safetyCheckbox"
           type="checkbox"
           checked={isChecked}
           onChange={handleChange}
         />
-        안전시설 모두보기
-      </label>
-      {POSITIONS.map((position) => (
-        <button type='button'>{(traslateToKorean(position.title))}</button>
-      ))}
-      <button type='button'>1시간 내 긴급신고</button>
-    </div>
+          안전시설 모두보기
+      </Label>
+      <ButtonWrapper>
+        {POSITIONS.map((position, index) => (
+          <FacilityButton
+            key={`facilityBtn_${position.title}`}
+            isClicked={isClicked[index]}
+            onClick={() => handleButtonClick(index)}
+            type='button'
+          >
+            {(traslateToKorean(position.title))}
+          </FacilityButton>
+        ))}
+      </ButtonWrapper>
+      <ReportBtn type='button'>1시간 내 긴급신고</ReportBtn>
+    </Wrapper>
   );
 }
 
