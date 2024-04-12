@@ -7,12 +7,8 @@ import SearchContainer from '../components/SearchInput';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
-  const coordinate = currentPosition ? {
-    lat: currentPosition.coords.latitude,
-    lng: currentPosition.coords.longitude
-  } : null;
   const mapRef = useRef(null);
-  const { map } = useMap(mapRef, coordinate);
+  const { map } = useMap(mapRef, currentPosition?.coords.latitude, currentPosition?.coords.longitude);
 
   useEffect(() => {
     if (!currentPosition) return;

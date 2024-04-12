@@ -82,7 +82,7 @@ export function generateCircle(lat:number, lng:number) {
   return circle;
 }
 
-export function updateAddressFromCurrentCoordinates(currentPosition: GeolocationPosition | null, setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>, startSearchState: SearchState) {
+export function updateAddressFromCurrentCoordinates(currentPosition: GeolocationPosition | undefined, setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>, startSearchState: SearchState) {
   if (!currentPosition) return;
 
   const geocoder = new kakao.maps.services.Geocoder();
