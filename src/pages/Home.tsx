@@ -6,6 +6,7 @@ import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, findway, kakao } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import { AddressInfo } from '../types/mapTypes';
+import BottomSheet from '../components/BottomSheet';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
@@ -103,6 +104,7 @@ function Home() {
         길찾기
       </button>
       <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
+      <BottomSheet />
     </>
   );
 }
