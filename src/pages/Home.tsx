@@ -7,12 +7,15 @@ import SearchContainer from '../components/SearchInput';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
-  const coordinate = currentPosition ? {
-    lat: currentPosition.coords.latitude,
-    lng: currentPosition.coords.longitude
-  } : null;
+  // 이게 필요한지 의문
+  const currentCoord = currentPosition
+    ? {
+        lat: currentPosition.coords.latitude,
+        lng: currentPosition.coords.longitude,
+      }
+    : null;
   const mapRef = useRef(null);
-  const { map } = useMap(mapRef, coordinate);
+  const { map } = useMap(mapRef, currentCoord);
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -20,7 +23,7 @@ function Home() {
     // 현재 위치 마커 생성 및 추가
     const currentPositionMarker = generateMarker(
       currentPosition.coords.latitude,
-      currentPosition.coords.longitude
+      currentPosition.coords.longitude,
     );
     currentPositionMarker.setMap(map);
 
@@ -29,7 +32,7 @@ function Home() {
       const marker = generateMarker(
         POSITIONS[i].lat,
         POSITIONS[i].lng,
-        POSITIONS[i].title
+        POSITIONS[i].title,
       );
       marker.setMap(map);
     }

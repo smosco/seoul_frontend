@@ -6,12 +6,7 @@ import safetCenter from '../assets/images/safetycenter.png';
 import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
-import { FacilitiesType } from '../types/mapTypes';
-
-interface SearchState {
-  address: string;
-  isSearching: boolean;
-}
+import { FacilitiesType, SearchState } from '../types/mapTypes';
 
 interface AddressResult {
   address: { address_name: string };
@@ -19,14 +14,13 @@ interface AddressResult {
 }
 
 declare global {
-    interface Window {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      kakao: any;
-    }
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    kakao: any;
   }
+}
 
 const { kakao } = window;
-
 
 const getImageSrc = (facilities?: FacilitiesType) => {
   switch (facilities) {
@@ -47,9 +41,15 @@ const getImageSrc = (facilities?: FacilitiesType) => {
   }
 };
 
-export function generateMarker(lat:number, lng:number, facilities?:FacilitiesType) {
+export function generateMarker(
+  lat: number,
+  lng: number,
+  facilities?: FacilitiesType,
+) {
   const imgSrc = getImageSrc(facilities);
-  const imgSize = facilities ? new kakao.maps.Size(16,16) : new kakao.maps.Size(16,22);
+  const imgSize = facilities
+    ? new kakao.maps.Size(16, 16)
+    : new kakao.maps.Size(16, 22);
   const markerImg = new kakao.maps.MarkerImage(imgSrc, imgSize);
   const markerPosition = new kakao.maps.LatLng(lat, lng);
   const marker = new kakao.maps.Marker({
@@ -59,7 +59,7 @@ export function generateMarker(lat:number, lng:number, facilities?:FacilitiesTyp
   return marker;
 }
 
-export function generateInfoWindow(lat:number, lng:number) {
+export function generateInfoWindow(lat: number, lng: number) {
   const iwContent = '<div style="padding:5px;">Hello World!</div>';
   const iwPosition = new kakao.maps.LatLng(lat, lng);
   const infoWindow = new kakao.maps.InfoWindow({
@@ -69,7 +69,7 @@ export function generateInfoWindow(lat:number, lng:number) {
   return infoWindow;
 }
 
-export function generateCircle(lat:number, lng:number) {
+export function generateCircle(lat: number, lng: number) {
   const circle = new kakao.maps.Circle({
     center: new kakao.maps.LatLng(lat, lng),
     radius: 250,
@@ -82,7 +82,11 @@ export function generateCircle(lat:number, lng:number) {
   return circle;
 }
 
-export function updateAddressFromCurrentCoordinates(currentPosition: GeolocationPosition | null, setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>, startSearchState: SearchState) {
+export function updateAddressFromCurrentCoordinates(
+  currentPosition: GeolocationPosition | null,
+  setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
+  startSearchState: SearchState,
+) {
   if (!currentPosition) return;
 
   const geocoder = new kakao.maps.services.Geocoder();
@@ -92,7 +96,10 @@ export function updateAddressFromCurrentCoordinates(currentPosition: Geolocation
   );
   const callback = (result: AddressResult[], status: string) => {
     if (status === kakao.maps.services.Status.OK) {
-      setStartSearchState({ ...startSearchState, address: result[0].address.address_name });
+      setStartSearchState({
+        ...startSearchState,
+        selectedName: result[0].address.address_name,
+      });
     }
   };
 
