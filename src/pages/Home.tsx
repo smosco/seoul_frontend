@@ -4,6 +4,7 @@ import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
+import BottomSheet from '../components/BottomSheet';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
@@ -35,6 +36,7 @@ function Home() {
     <>
       <SearchContainer />
       <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
+      <BottomSheet />
     </>
   );
 }
