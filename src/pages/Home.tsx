@@ -70,6 +70,8 @@ function Home() {
     if (start.coord.x !== undefined && start.coord.y !== undefined) {
       if (startMarker) {
         startMarker.setMap(null);
+      }
+      if (polyline) {
         polyline.setMap(null);
       }
       const newStartMarker = generateMarker(
@@ -83,6 +85,9 @@ function Home() {
     if (end.coord.x !== undefined && end.coord.y !== undefined) {
       if (endMarker) {
         endMarker.setMap(null);
+        polyline.setMap(null);
+      }
+      if (polyline) {
         polyline.setMap(null);
       }
       const newEndMarker = generateMarker(end.coord.y, end.coord.x, 'way');

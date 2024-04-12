@@ -132,6 +132,7 @@ export async function findway(start: AddressInfo, end: AddressInfo) {
     {
       origin: start.coord,
       destination: end.coord,
+      // TODO: 경유지를 받을 수 있도록 수정해야함
       waypoints: [
         {
           name: '서울대학교',
