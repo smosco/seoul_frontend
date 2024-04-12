@@ -8,7 +8,7 @@ export const Wrapper = styled(motion.div)`
   
   position: fixed;
   z-index: 1;
-  top: calc(100% - 90px); /*시트가 얼마나 높이 위치할지*/
+  top: calc(100% - 200px); /*시트가 얼마나 높이 위치할지*/
   left: 0;
   right: 0;
 
