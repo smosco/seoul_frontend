@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
+import axios from 'axios';
 import cctv from '../assets/images/cctv.png';
 import emergencyBell from '../assets/images/emergencybell.png';
 import safetFacility from '../assets/images/safetyfacility.png';
@@ -6,12 +8,8 @@ import safetCenter from '../assets/images/safetycenter.png';
 import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
-import { FacilitiesType } from '../types/mapTypes';
-
-interface SearchState {
-  address: string;
-  isSearching: boolean;
-}
+import way from '../assets/images/way.png';
+import { FacilitiesType, SearchState, AddressInfo } from '../types/mapTypes';
 
 interface AddressResult {
   address: { address_name: string };
@@ -19,14 +17,15 @@ interface AddressResult {
 }
 
 declare global {
-    interface Window {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      kakao: any;
-    }
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    kakao: any;
   }
+}
 
-const { kakao } = window;
+export const { kakao } = window;
 
+const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 
 const getImageSrc = (facilities?: FacilitiesType) => {
   switch (facilities) {
@@ -42,14 +41,22 @@ const getImageSrc = (facilities?: FacilitiesType) => {
       return emergencyBell;
     case 'heatShelter':
       return heatShelter;
+    case 'way':
+      return way;
     default:
       return location;
   }
 };
 
-export function generateMarker(lat:number, lng:number, facilities?:FacilitiesType) {
+export function generateMarker(
+  lat: number,
+  lng: number,
+  facilities?: FacilitiesType,
+) {
   const imgSrc = getImageSrc(facilities);
-  const imgSize = facilities ? new kakao.maps.Size(16,16) : new kakao.maps.Size(16,22);
+  const imgSize = facilities
+    ? new kakao.maps.Size(16, 16)
+    : new kakao.maps.Size(16, 22);
   const markerImg = new kakao.maps.MarkerImage(imgSrc, imgSize);
   const markerPosition = new kakao.maps.LatLng(lat, lng);
   const marker = new kakao.maps.Marker({
@@ -59,7 +66,7 @@ export function generateMarker(lat:number, lng:number, facilities?:FacilitiesTyp
   return marker;
 }
 
-export function generateInfoWindow(lat:number, lng:number) {
+export function generateInfoWindow(lat: number, lng: number) {
   const iwContent = '<div style="padding:5px;">Hello World!</div>';
   const iwPosition = new kakao.maps.LatLng(lat, lng);
   const infoWindow = new kakao.maps.InfoWindow({
@@ -69,7 +76,7 @@ export function generateInfoWindow(lat:number, lng:number) {
   return infoWindow;
 }
 
-export function generateCircle(lat:number, lng:number) {
+export function generateCircle(lat: number, lng: number) {
   const circle = new kakao.maps.Circle({
     center: new kakao.maps.LatLng(lat, lng),
     radius: 250,
@@ -82,7 +89,12 @@ export function generateCircle(lat:number, lng:number) {
   return circle;
 }
 
-export function updateAddressFromCurrentCoordinates(currentPosition: GeolocationPosition | undefined, setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>, startSearchState: SearchState) {
+export function updateAddressFromCurrentCoordinates(
+  currentPosition: GeolocationPosition | undefined,
+  setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
+  startSearchState: SearchState,
+  setStart: React.Dispatch<React.SetStateAction<AddressInfo>>,
+) {
   if (!currentPosition) return;
 
   const geocoder = new kakao.maps.services.Geocoder();
@@ -92,9 +104,71 @@ export function updateAddressFromCurrentCoordinates(currentPosition: Geolocation
   );
   const callback = (result: AddressResult[], status: string) => {
     if (status === kakao.maps.services.Status.OK) {
-      setStartSearchState({ ...startSearchState, address: result[0].address.address_name });
+      setStartSearchState({
+        ...startSearchState,
+        selectedName: result[0].address.address_name,
+      });
+      setStart({
+        address: result[0].address.address_name,
+        coord: {
+          x: currentPosition?.coords.longitude,
+          y: currentPosition?.coords.latitude,
+        },
+      });
     }
   };
 
   geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+}
+
+export async function findway(start: AddressInfo, end: AddressInfo) {
+  if (start.coord.x === undefined || end.coord.x === undefined)
+    return Promise.resolve([]);
+
+  const linePath: any[] = [];
+
+  const { data } = await axios.post(
+    'https://apis-navi.kakaomobility.com/v1/waypoints/directions',
+    {
+      origin: start.coord,
+      destination: end.coord,
+      // TODO: 경유지를 받을 수 있도록 수정해야함
+      waypoints: [
+        {
+          name: '서울대학교',
+          x: 126.9511239870991,
+          y: 37.45978574975834,
+        },
+      ],
+      priority: 'RECOMMEND', // 'RECOMMEND'|'TIME'|'DISTANCE'
+      car_fuel: 'GASOLINE',
+      car_hipass: false,
+      alternatives: false,
+      road_details: false,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `KakaoAK ${REST_API_KEY}`,
+      },
+    },
+  );
+
+  data.routes[0].sections?.forEach((section: any) => {
+    section.roads.forEach((road: any) => {
+      road.vertexes.forEach((_: number, index: number) => {
+        // 짝수 index: lng, 홀수 index: lat
+        if (index % 8 === 0) {
+          linePath.push(
+            new kakao.maps.LatLng(
+              road.vertexes[index + 1],
+              road.vertexes[index],
+            ),
+          );
+        }
+      });
+    });
+  });
+
+  return linePath;
 }

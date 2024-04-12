@@ -1,15 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
-import { generateCircle, generateInfoWindow, generateMarker } from '../utils/mapUtils';
+import {
+  generateMarker,
+  generateCircle,
+  generateInfoWindow,
+} from '../utils/mapUtils';
+
 import useCurrentPosition from '../hooks/useCurruntPosition';
 
 function EmergencyPage() {
   const mapRef = useRef(null);
   const { currentPosition } = useCurrentPosition();
-  const { map } = useMap(mapRef, currentPosition?.coords.latitude, currentPosition?.coords.longitude);
+  const { map } = useMap(
+    mapRef,
+    currentPosition?.coords.latitude,
+    currentPosition?.coords.longitude,
+  );
 
   useEffect(() => {
-    if(!map || !currentPosition) return;
+    if (!map || !currentPosition) return;
 
     const lat = currentPosition.coords.latitude;
     const lng = currentPosition.coords.longitude;
@@ -34,6 +43,6 @@ function EmergencyPage() {
       )} */}
     </div>
   );
-};
+}
 
 export default EmergencyPage;
