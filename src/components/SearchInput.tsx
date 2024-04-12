@@ -65,8 +65,8 @@ function SearchBox({
                   setAddressInfo({
                     address: place.address,
                     coord: {
-                      lat: place.latitude,
-                      lng: place.longitude,
+                      x: place.longitude,
+                      y: place.latitude,
                     },
                   });
                 }}

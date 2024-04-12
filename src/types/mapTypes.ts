@@ -4,7 +4,8 @@ export type FacilitiesType =
   | 'safetyFacility'
   | 'saftyCenter'
   | 'emergencyBell'
-  | 'heatShelter';
+  | 'heatShelter'
+  | 'way';
 
 export interface SearchState {
   keyword: string;
@@ -14,5 +15,6 @@ export interface SearchState {
 
 export interface AddressInfo {
   address: string;
-  coord: { lat: number | undefined; lng: number | undefined };
+  // x: 경도 y: 위도
+  coord: { x: number | undefined; y: number | undefined };
 }
