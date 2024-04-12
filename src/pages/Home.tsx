@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
-import { generateMarker } from '../utils/mapUtils';
+import { generateMarker, findway, kakao } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import { AddressInfo } from '../types/mapTypes';
 
@@ -14,19 +14,33 @@ function Home() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  // TODO: 알고리즘 검색을 위해 도로명 주소가 필요함
-  // TODO: 카카오 모빌리티 경로 검색을 위해 좌표가 필요함
-
   const [start, setStart] = useState<AddressInfo>({
     address: '',
-    coord: { lat: undefined, lng: undefined },
+    coord: { x: undefined, y: undefined },
   });
   const [end, setEnd] = useState<AddressInfo>({
     address: '',
-    coord: { lat: undefined, lng: undefined },
+    coord: { x: undefined, y: undefined },
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [polyline, setPolyline] = useState<any>(null);
 
-  console.log(start, end);
+  const onClick = async () => {
+    const linePath = await findway(start, end);
+
+    if (polyline) {
+      polyline.setMap(null);
+    }
+    const newPolyline = new kakao.maps.Polyline({
+      path: linePath,
+      strokeWeight: 5,
+      strokeColor: '#000000',
+      strokeOpacity: 0.7,
+      strokeStyle: 'solid',
+    });
+    newPolyline.setMap(map);
+    setPolyline(newPolyline);
+  };
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -49,9 +63,24 @@ function Home() {
     }
   }, [map]);
 
+  useEffect(() => {
+    // 시작점 마커 생성 및 추가
+    if (start.coord.x !== undefined && start.coord.y !== undefined) {
+      const startMarker = generateMarker(start.coord.y, start.coord.x, 'way');
+      startMarker.setMap(map);
+    }
+    if (end.coord.x !== undefined && end.coord.y !== undefined) {
+      const endMarker = generateMarker(end.coord.y, end.coord.x, 'way');
+      endMarker.setMap(map);
+    }
+  }, [start, end, map]);
+
   return (
     <>
       <SearchContainer setStart={setStart} setEnd={setEnd} />
+      <button type="button" onClick={onClick}>
+        길찾기
+      </button>
       <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
     </>
   );
