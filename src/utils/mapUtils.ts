@@ -12,10 +12,12 @@ import way from '../assets/images/way.png';
 import { FacilitiesType, SearchState, AddressInfo } from '../types/mapTypes';
 import { Tmapv2 } from '../hooks/useMap';
 
-// interface AddressResult {
-//   address: { address_name: string };
-//   code: string;
-// }
+export interface Place {
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
 
 declare global {
   interface Window {
@@ -172,7 +174,7 @@ export async function updateAddressFromCurrentCoordinates(
     currentPosition?.coords.latitude,
   );
 
-  console.log(response);
+  // console.log(response);
   // TODO: response가 null이 되지 않게
   setStartSearchState({
     ...startSearchState,
@@ -239,3 +241,37 @@ export async function findway(start: AddressInfo, end: AddressInfo) {
 
   return linePath;
 }
+
+export const searchPOI = async (
+  keyword: string,
+  setPlaces: React.Dispatch<React.SetStateAction<Place[]>>,
+) => {
+  try {
+    const headers = {
+      appKey: process.env.REACT_APP_TMAP_API_KEY,
+    };
+
+    const response = await axios.get('https://apis.openapi.sk.com/tmap/pois', {
+      params: {
+        version: 1,
+        format: 'json',
+        searchKeyword: keyword,
+        resCoordType: 'EPSG3857',
+        reqCoordType: 'WGS84GEO',
+        count: 10,
+      },
+      headers,
+    });
+
+    const resultpoisData = response.data.searchPoiInfo?.pois?.poi;
+    if (!resultpoisData) {
+      console.error('No POIs');
+      return;
+    }
+    // console.log(resultpoisData);
+
+    setPlaces(resultpoisData);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};

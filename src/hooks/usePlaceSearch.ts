@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
+import { searchPOI } from '../utils/mapUtils';
 
 declare global {
   interface Window {
@@ -18,27 +19,11 @@ const usePlaceSearch = (keyword: string): Place[] => {
   const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
-    const { kakao } = window;
-    if (!kakao || !keyword) {
-      setPlaces([]);
-      return;
+    if (keyword) {
+      searchPOI(keyword, setPlaces);
     }
 
-    const placesSearch = new kakao.maps.services.Places();
-
-    placesSearch.keywordSearch(keyword, (data: any, status: any) => {
-      if (status === kakao.maps.services.Status.OK) {
-        const newPlaces = data.map((place: any) => ({
-          name: place.place_name,
-          address: place.address_name,
-          latitude: place.y,
-          longitude: place.x,
-        }));
-        setPlaces(newPlaces);
-      } else {
-        setPlaces([]);
-      }
-    });
+    return () => {};
   }, [keyword]);
 
   return places;
