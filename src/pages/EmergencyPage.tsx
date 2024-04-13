@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
 import {
   generateMarker,
-  generateCircle,
+  drawCircle,
   generateInfoWindow,
 } from '../utils/mapUtils';
 
@@ -26,11 +26,9 @@ function EmergencyPage() {
     const marker = generateMarker(map, lat, lng);
     marker.setMap(map);
 
-    const infoWindow = generateInfoWindow(lat, lng);
-    infoWindow.open(map, marker);
+    generateInfoWindow(marker);
 
-    const circle = generateCircle(lat, lng);
-    circle.setMap(map);
+    drawCircle(map, lat, lng);
   }, [map, currentPosition]);
 
   return (

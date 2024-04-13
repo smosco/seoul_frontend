@@ -17,15 +17,6 @@ import {
   Place,
 } from '../types/mapTypes';
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    kakao: any;
-  }
-}
-
-export const { kakao } = window;
-
 const getImageSrc = (facilities?: FacilitiesType) => {
   switch (facilities) {
     case 'cctv':
@@ -68,28 +59,29 @@ export function generateMarker(
   return marker;
 }
 
-export function generateInfoWindow(lat: number, lng: number) {
-  const iwContent = '<div style="padding:5px;">Hello World!</div>';
-  const iwPosition = new kakao.maps.LatLng(lat, lng);
-  const infoWindow = new kakao.maps.InfoWindow({
-    position: iwPosition,
-    content: iwContent,
+export function generateInfoWindow(marker: any) {
+  const infoWindow = new Tmapv2.InfoWindow({
+    content: '신고 위치',
+    position: marker.getPosition(),
   });
   return infoWindow;
 }
 
-export function generateCircle(lat: number, lng: number) {
-  const circle = new kakao.maps.Circle({
-    center: new kakao.maps.LatLng(lat, lng),
-    radius: 250,
+export const drawCircle = (map: any, lat: number, lng: number) => {
+  const drawingObject = new Tmapv2.extension.Drawing({
+    map,
+    center: new Tmapv2.LatLng(lat, lng),
     strokeWeight: 1,
     strokeColor: '#007470',
-    strokeStyle: 'solid',
+    strokeOpacity: 1,
     fillColor: '#007470',
     fillOpacity: 0.15,
   });
-  return circle;
-}
+  // 도형 객체의 원을 그리는 함수
+  if (drawingObject) {
+    drawingObject.drawCircle();
+  }
+};
 
 export async function reverseGeo(lon: number, lat: number) {
   try {
