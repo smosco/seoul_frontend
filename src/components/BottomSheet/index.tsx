@@ -1,11 +1,11 @@
 import React from 'react';
-import useBottomSheetTouch from '../../hooks/useBottomSheetTouch';
 import { BottomSheetContent, Wrapper } from './style';
 import BottomSheetHeader from '../BottomSheetHeader';
 import Content from '../BottomSheetContents';
+import useBottomSheet from '../../hooks/useBottomSheet';
 
 function BottomSheet() {
-  const { sheet, content } = useBottomSheetTouch();
+  const { sheet, content } = useBottomSheet();
 
   return (
     <Wrapper ref={sheet}>
