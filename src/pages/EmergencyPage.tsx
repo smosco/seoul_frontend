@@ -23,7 +23,7 @@ function EmergencyPage() {
     const lat = currentPosition.coords.latitude;
     const lng = currentPosition.coords.longitude;
 
-    const marker = generateMarker(lat, lng);
+    const marker = generateMarker(map, lat, lng);
     marker.setMap(map);
 
     const infoWindow = generateInfoWindow(lat, lng);

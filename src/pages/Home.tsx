@@ -3,19 +3,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
-import { generateMarker, findway, kakao } from '../utils/mapUtils';
+import { generateMarker, findway, kakao, reverseGeo } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import { AddressInfo } from '../types/mapTypes';
 import BottomSheet from '../components/BottomSheet';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
+  console.log(currentPosition);
   const mapRef = useRef(null);
   const { map } = useMap(
     mapRef,
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
+
+  reverseGeo(126.98702028, 37.5652045);
   const [start, setStart] = useState<AddressInfo>({
     address: '',
     coord: { x: undefined, y: undefined },
@@ -50,6 +53,7 @@ function Home() {
 
     // 현재 위치 마커 생성 및 추가
     const currentPositionMarker = generateMarker(
+      map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
@@ -58,6 +62,7 @@ function Home() {
     // 위험 시설 마커 생성 및 추가
     for (let i = 0; i < POSITIONS.length; i++) {
       const marker = generateMarker(
+        map,
         POSITIONS[i].lat,
         POSITIONS[i].lng,
         POSITIONS[i].title,
@@ -76,6 +81,7 @@ function Home() {
         polyline.setMap(null);
       }
       const newStartMarker = generateMarker(
+        map,
         start.coord.y,
         start.coord.x,
         'way',
@@ -91,7 +97,7 @@ function Home() {
       if (polyline) {
         polyline.setMap(null);
       }
-      const newEndMarker = generateMarker(end.coord.y, end.coord.x, 'way');
+      const newEndMarker = generateMarker(map, end.coord.y, end.coord.x, 'way');
       newEndMarker.setMap(map);
       setEndMarker(newEndMarker);
     }
@@ -103,7 +109,11 @@ function Home() {
       <button type="button" onClick={findAndDrawPath}>
         길찾기
       </button>
-      <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
+      <div
+        id="map_div"
+        style={{ width: '500px', height: '500px' }}
+        ref={mapRef}
+      />
       <BottomSheet />
     </>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
+
 import { AddressInfo, SearchState } from '../types/mapTypes';
 
 interface Place {
