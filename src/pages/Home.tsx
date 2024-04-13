@@ -3,9 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
-import { generateMarker, Coord, drawRoute } from '../utils/mapUtils';
+import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import BottomSheet from '../components/BottomSheet';
+import { Coord } from '../types/mapTypes';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
@@ -30,7 +31,7 @@ function Home() {
     { latitude: 37.397153, longitude: 127.113403 },
   ]);
 
-  console.log(startPosition, endPosition);
+  // console.log(startPosition, endPosition);
 
   useEffect(() => {
     if (!currentPosition) return;

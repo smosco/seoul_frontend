@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Tmapv2: any;
-  }
-}
-
-export const { Tmapv2 } = window;
+import { Tmapv2 } from '../types/mapTypes';
 
 function useMap(
   containerRef: React.RefObject<HTMLDivElement>,

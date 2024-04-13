@@ -1,19 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { searchPOI } from '../utils/mapUtils';
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
-
-interface Place {
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
+import { Place } from '../types/mapTypes';
 
 const usePlaceSearch = (keyword: string): Place[] => {
   const [places, setPlaces] = useState<Place[]>([]);

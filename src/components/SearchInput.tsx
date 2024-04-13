@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useCurrentPosition from '../hooks/useCurruntPosition';
-import { Coord, updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
-
-import { SearchState } from '../types/mapTypes';
-
-interface Place {
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
+import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
+import { Coord, SearchState, Place } from '../types/mapTypes';
 
 interface SearchBoxProps {
   searchState: SearchState;
@@ -58,7 +50,6 @@ function SearchBox({
               <button
                 type="button"
                 onClick={() => {
-                  console.log(place);
                   setSearchState({
                     ...searchState,
                     isSearching: false,
@@ -95,7 +86,6 @@ function SearchContainer({ setStartPosition, setEndPosition }: ContainerProps) {
   });
   const endPlaces = usePlaceSearch(endSearchState.keyword);
 
-  console.log(startPlaces, endPlaces);
   // 혹시 나중에 출발지나 도착지를 현재 위치로 변경하는 기능을 추가할 때 유용할 것 같습니다.
   useEffect(() => {
     updateAddressFromCurrentCoordinates(

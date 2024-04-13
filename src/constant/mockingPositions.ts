@@ -1,6 +1,5 @@
-import { FacilitiesType } from '../types/mapTypes';
+import { Tmapv2, FacilitiesType } from '../types/mapTypes';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Tmapv2 } from '../hooks/useMap';
 
 interface MockedPositionType {
   title: FacilitiesType;

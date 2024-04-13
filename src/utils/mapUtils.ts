@@ -9,15 +9,13 @@ import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
 import way from '../assets/images/way.png';
-import { FacilitiesType, SearchState, AddressInfo } from '../types/mapTypes';
-import { Tmapv2 } from '../hooks/useMap';
-
-export interface Place {
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
+import {
+  FacilitiesType,
+  SearchState,
+  Tmapv2,
+  Coord,
+  Place,
+} from '../types/mapTypes';
 
 declare global {
   interface Window {
@@ -27,8 +25,6 @@ declare global {
 }
 
 export const { kakao } = window;
-
-const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 
 const getImageSrc = (facilities?: FacilitiesType) => {
   switch (facilities) {
@@ -187,58 +183,6 @@ export async function updateAddressFromCurrentCoordinates(
   });
 }
 
-export async function findway(start: AddressInfo, end: AddressInfo) {
-  if (start.coord.x === undefined || end.coord.x === undefined)
-    return Promise.resolve([]);
-
-  const linePath: any[] = [];
-
-  const { data } = await axios.post(
-    'https://apis-navi.kakaomobility.com/v1/waypoints/directions',
-    {
-      origin: start.coord,
-      destination: end.coord,
-      // TODO: 경유지를 받을 수 있도록 수정해야함
-      waypoints: [
-        {
-          name: '서울대학교',
-          x: 126.9511239870991,
-          y: 37.45978574975834,
-        },
-      ],
-      priority: 'RECOMMEND', // 'RECOMMEND'|'TIME'|'DISTANCE'
-      car_fuel: 'GASOLINE',
-      car_hipass: false,
-      alternatives: false,
-      road_details: false,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `KakaoAK ${REST_API_KEY}`,
-      },
-    },
-  );
-
-  data.routes[0].sections?.forEach((section: any) => {
-    section.roads.forEach((road: any) => {
-      road.vertexes.forEach((_: number, index: number) => {
-        // 짝수 index: lng, 홀수 index: lat
-        if (index % 8 === 0) {
-          linePath.push(
-            new kakao.maps.LatLng(
-              road.vertexes[index + 1],
-              road.vertexes[index],
-            ),
-          );
-        }
-      });
-    });
-  });
-
-  return linePath;
-}
-
 export const searchPOI = async (
   keyword: string,
   setPlaces: React.Dispatch<React.SetStateAction<Place[]>>,
@@ -265,7 +209,7 @@ export const searchPOI = async (
       console.error('No POIs');
       return;
     }
-    console.log(resultpoisData);
+    // console.log(resultpoisData);
     const modifiedPlaces = resultpoisData.map((poi: any) => ({
       longitude: Number(poi.noorLon),
       latitude: Number(poi.noorLat),
@@ -277,11 +221,6 @@ export const searchPOI = async (
     console.error('Error:', error);
   }
 };
-
-export interface Coord {
-  longitude: number | undefined;
-  latitude: number | undefined;
-}
 
 export const drawMarkers = (
   map: any,
@@ -348,7 +287,7 @@ export const drawRoute = async (
       { headers },
     );
     const { features } = response.data;
-    console.log(features);
+
     const polylines: any[] = [];
     features.forEach((feature: any) => {
       if (feature.geometry.type === 'LineString') {
@@ -366,7 +305,6 @@ export const drawRoute = async (
       }
     });
 
-    console.log(polylines);
     return polylines;
   } catch (error) {
     console.error('Error:', error);
