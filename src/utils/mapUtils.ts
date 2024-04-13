@@ -166,7 +166,7 @@ export async function updateAddressFromCurrentCoordinates(
   currentPosition: GeolocationPosition | undefined,
   setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
   startSearchState: SearchState,
-  setStart: React.Dispatch<React.SetStateAction<AddressInfo>>,
+  setStartPosition: React.Dispatch<React.SetStateAction<Coord>>,
 ) {
   if (!currentPosition) return;
   const response = await reverseGeo(
@@ -181,12 +181,9 @@ export async function updateAddressFromCurrentCoordinates(
     selectedName: response!,
   });
 
-  setStart({
-    address: response!,
-    coord: {
-      x: currentPosition?.coords.longitude,
-      y: currentPosition?.coords.latitude,
-    },
+  setStartPosition({
+    longitude: currentPosition?.coords.longitude,
+    latitude: currentPosition?.coords.latitude,
   });
 }
 
@@ -256,7 +253,7 @@ export const searchPOI = async (
         version: 1,
         format: 'json',
         searchKeyword: keyword,
-        resCoordType: 'EPSG3857',
+        resCoordType: 'WGS84GEO',
         reqCoordType: 'WGS84GEO',
         count: 10,
       },
@@ -268,10 +265,111 @@ export const searchPOI = async (
       console.error('No POIs');
       return;
     }
-    // console.log(resultpoisData);
+    console.log(resultpoisData);
+    const modifiedPlaces = resultpoisData.map((poi: any) => ({
+      longitude: Number(poi.noorLon),
+      latitude: Number(poi.noorLat),
+      name: poi.name,
+    }));
 
-    setPlaces(resultpoisData);
+    setPlaces(modifiedPlaces);
   } catch (error) {
     console.error('Error:', error);
+  }
+};
+
+export interface Coord {
+  longitude: number | undefined;
+  latitude: number | undefined;
+}
+
+export const drawMarkers = (
+  map: any,
+  startPosition: Coord,
+  endPosition: Coord,
+  waypoints: Coord[],
+) => {
+  const markers: any[] = [];
+
+  const drawMarker = (position: Coord, iconPath: string) => {
+    const marker = new window.Tmapv2.Marker({
+      position: new window.Tmapv2.LatLng(position.latitude, position.longitude),
+      icon: iconPath,
+      iconSize: new window.Tmapv2.Size(24, 38),
+      map,
+    });
+    markers.push(marker);
+  };
+
+  drawMarker(startPosition, way);
+  drawMarker(endPosition, way);
+
+  waypoints.forEach((waypoint) => {
+    drawMarker(waypoint, location);
+  });
+
+  return markers;
+};
+
+export const drawRoute = async (
+  map: any,
+  startPosition: Coord,
+  endPosition: Coord,
+  waypoints: Coord[],
+) => {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      appKey: process.env.REACT_APP_TMAP_API_KEY,
+    };
+
+    const requestData = {
+      startName: '출발지',
+      startX: String(startPosition.longitude),
+      startY: String(startPosition.latitude),
+      startTime: '202404141010',
+      endName: '도착지',
+      endX: String(endPosition.longitude),
+      endY: String(endPosition.latitude),
+      viaPoints: waypoints.map((waypoint, index) => ({
+        viaPointId: `test${index + 1}`,
+        viaPointName: `name${index + 1}`,
+        viaX: String(waypoint.longitude),
+        viaY: String(waypoint.latitude),
+      })),
+      reqCoordType: 'WGS84GEO',
+      resCoordType: 'WGS84GEO',
+      searchOption: 0,
+    };
+
+    const response = await axios.post(
+      'https://apis.openapi.sk.com/tmap/routes/routeSequential30?version=1&format=json',
+      requestData,
+      { headers },
+    );
+    const { features } = response.data;
+    console.log(features);
+    const polylines: any[] = [];
+    features.forEach((feature: any) => {
+      if (feature.geometry.type === 'LineString') {
+        const coordinates = feature.geometry.coordinates.map(
+          ([lng, lat]: [lng: number, lat: number]) =>
+            new window.Tmapv2.LatLng(lat, lng),
+        );
+        const polyline = new window.Tmapv2.Polyline({
+          path: coordinates,
+          strokeColor: '#FF0000',
+          strokeWeight: 6,
+          map,
+        });
+        polylines.push(polyline);
+      }
+    });
+
+    console.log(polylines);
+    return polylines;
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
   }
 };
