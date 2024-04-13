@@ -13,7 +13,7 @@ interface BottomSheetMetrics {
   isContentAreaClicked: boolean;
 }
 
-export default function useBottomSheetClick() {
+export default function useBottomSheet() {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   const sheet = useRef<HTMLDivElement>(null);
@@ -33,6 +33,23 @@ export default function useBottomSheetClick() {
   });
 
   useEffect(() => {
+    const canUserMoveBottomSheet = () => {
+      const { clickMove, isContentAreaClicked } = metrics.current;
+
+      if (!isContentAreaClicked) {
+        return true;
+      }
+
+      if (sheet.current!.getBoundingClientRect().y !== MIN_Y) {
+        return true;
+      }
+
+      if (clickMove.movingDirection === 'down') {
+        return content.current!.scrollTop <= 0;
+      }
+      return false;
+    };
+
     const handleMouseDown = (e: MouseEvent) => {
       setIsMouseDown(true);
       const { clickStart } = metrics.current;
@@ -40,8 +57,93 @@ export default function useBottomSheetClick() {
       clickStart.clickY = e.clientY;
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      const { clickStart } = metrics.current;
+      clickStart.sheetY = sheet.current!.getBoundingClientRect().y;
+      clickStart.clickY = e.touches[0].clientY;
+    };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      const { clickStart, clickMove } = metrics.current;
+      const currentTouch = e.touches[0];
+
+      if (clickMove.prevClickY === undefined) {
+        clickMove.prevClickY = clickStart.clickY;
+      }
+
+      if (clickMove.prevClickY === 0) {
+        clickMove.prevClickY = clickStart.clickY;
+      }
+
+      if (clickMove.prevClickY < currentTouch.clientY) {
+        clickMove.movingDirection = 'down';
+      }
+
+      if (clickMove.prevClickY > currentTouch.clientY) {
+        clickMove.movingDirection = 'up';
+      }
+
+      if (canUserMoveBottomSheet()) {
+
+        e.preventDefault();
+
+        const touchOffset = currentTouch.clientY - clickStart.clickY;
+        let nextSheetY = clickStart.sheetY + touchOffset;
+
+        if (nextSheetY <= MIN_Y) {
+          nextSheetY = MIN_Y;
+        }
+
+        if (nextSheetY >= MAX_Y) {
+          nextSheetY = MAX_Y;
+        }
+
+        sheet.current!.style.setProperty('transform', `translate3D(0, ${nextSheetY - MAX_Y}px, 0)`);
+      } else {
+        document.body.style.overflowY = 'hidden';
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      document.body.style.overflowY = 'auto';
+      const { clickMove } = metrics.current;
+
+      const currentSheetY = sheet.current!.getBoundingClientRect().y;
+
+      if (currentSheetY !== MIN_Y) {
+        if (clickMove.movingDirection === 'down') {
+          sheet.current!.style.setProperty('transform', 'translate3D(0, 0, 0)');
+        }
+
+        if (clickMove.movingDirection === 'up') {
+          sheet.current!.style.setProperty('transform', `translate3D(0, ${MIN_Y - MAX_Y}px, 0)`);
+        }
+      }
+
+      metrics.current = {
+        clickStart: {
+          sheetY: 0,
+          clickY: 0,
+        },
+        clickMove: {
+          prevClickY: 0,
+          movingDirection: 'none',
+        },
+        isContentAreaClicked: false
+      };
+    };
+
+    const handleDocumentTouch = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener('touchstart', handleDocumentTouch, { passive: false });
     sheet.current!.addEventListener('mousedown', handleMouseDown);
+    sheet.current!.addEventListener('touchstart', handleTouchStart);
+    sheet.current!.addEventListener('touchmove', handleTouchMove);
+    sheet.current!.addEventListener('touchend', handleTouchEnd);
   }, []);
 
   useEffect(() => {
