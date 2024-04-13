@@ -10,11 +10,12 @@ import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
 import way from '../assets/images/way.png';
 import { FacilitiesType, SearchState, AddressInfo } from '../types/mapTypes';
+import { Tmapv2 } from '../hooks/useMap';
 
-interface AddressResult {
-  address: { address_name: string };
-  code: string;
-}
+// interface AddressResult {
+//   address: { address_name: string };
+//   code: string;
+// }
 
 declare global {
   interface Window {
@@ -49,19 +50,22 @@ const getImageSrc = (facilities?: FacilitiesType) => {
 };
 
 export function generateMarker(
+  currentMap: any,
   lat: number,
   lng: number,
   facilities?: FacilitiesType,
 ) {
   const imgSrc = getImageSrc(facilities);
   const imgSize = facilities
-    ? new kakao.maps.Size(16, 16)
-    : new kakao.maps.Size(16, 22);
-  const markerImg = new kakao.maps.MarkerImage(imgSrc, imgSize);
-  const markerPosition = new kakao.maps.LatLng(lat, lng);
-  const marker = new kakao.maps.Marker({
+    ? new Tmapv2.Size(16, 16)
+    : new Tmapv2.Size(16, 22);
+  const markerImg = imgSrc;
+  const markerPosition = new Tmapv2.LatLng(lat, lng);
+  const marker = new Tmapv2.Marker({
     position: markerPosition,
-    image: markerImg,
+    icon: markerImg,
+    iconSize: imgSize,
+    map: currentMap,
   });
   return marker;
 }
@@ -89,36 +93,99 @@ export function generateCircle(lat: number, lng: number) {
   return circle;
 }
 
-export function updateAddressFromCurrentCoordinates(
+export async function reverseGeo(lon: number, lat: number) {
+  try {
+    const headers = {
+      appKey: process.env.REACT_APP_TMAP_API_KEY,
+    };
+
+    const response = await axios.get(
+      'https://apis.openapi.sk.com/tmap/geo/reversegeocoding',
+      {
+        params: {
+          version: 1,
+          format: 'json',
+          coordType: 'WGS84GEO',
+          addressType: 'A10',
+          lon,
+          lat,
+        },
+        headers,
+      },
+    );
+
+    const arrResult = response.data.addressInfo;
+    let newRoadAddr = `${arrResult.city_do} ${arrResult.gu_gun} `;
+
+    const lastLegal = arrResult.legalDong.charAt(
+      arrResult.legalDong.length - 1,
+    );
+
+    if (
+      arrResult.eup_myun === '' &&
+      (lastLegal === '읍' || lastLegal === '면')
+    ) {
+      newRoadAddr += arrResult.legalDong;
+    } else {
+      newRoadAddr += arrResult.eup_myun;
+    }
+
+    newRoadAddr += ` ${arrResult.roadName} ${arrResult.buildingIndex}`;
+
+    if (
+      arrResult.legalDong !== '' &&
+      lastLegal !== '읍' &&
+      lastLegal !== '면'
+    ) {
+      if (arrResult.buildingName !== '') {
+        newRoadAddr += ` (${arrResult.legalDong}, ${arrResult.buildingName}) `;
+      } else {
+        newRoadAddr += ` (${arrResult.legalDong})`;
+      }
+    } else if (arrResult.buildingName !== '') {
+      newRoadAddr += ` (${arrResult.buildingName}) `;
+    }
+
+    const result = newRoadAddr;
+    // const result = `새주소 : ${newRoadAddr} <br/>
+    //                 지번주소 : ${jibunAddr} <br/>
+    //                 위경도좌표 : ${lat}, ${lon}`;
+
+    // 결과 반환
+    return result;
+  } catch (error) {
+    // 에러 처리
+    console.error('Error:', error);
+    return null;
+  }
+}
+
+export async function updateAddressFromCurrentCoordinates(
   currentPosition: GeolocationPosition | undefined,
   setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
   startSearchState: SearchState,
   setStart: React.Dispatch<React.SetStateAction<AddressInfo>>,
 ) {
   if (!currentPosition) return;
-
-  const geocoder = new kakao.maps.services.Geocoder();
-  const coord = new kakao.maps.LatLng(
-    currentPosition?.coords.latitude,
+  const response = await reverseGeo(
     currentPosition?.coords.longitude,
+    currentPosition?.coords.latitude,
   );
-  const callback = (result: AddressResult[], status: string) => {
-    if (status === kakao.maps.services.Status.OK) {
-      setStartSearchState({
-        ...startSearchState,
-        selectedName: result[0].address.address_name,
-      });
-      setStart({
-        address: result[0].address.address_name,
-        coord: {
-          x: currentPosition?.coords.longitude,
-          y: currentPosition?.coords.latitude,
-        },
-      });
-    }
-  };
 
-  geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+  console.log(response);
+  // TODO: response가 null이 되지 않게
+  setStartSearchState({
+    ...startSearchState,
+    selectedName: response!,
+  });
+
+  setStart({
+    address: response!,
+    coord: {
+      x: currentPosition?.coords.longitude,
+      y: currentPosition?.coords.latitude,
+    },
+  });
 }
 
 export async function findway(start: AddressInfo, end: AddressInfo) {
