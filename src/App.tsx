@@ -13,7 +13,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/emergency',
-    element: <EmergencyPage />
+    element: <EmergencyPage />,
+    children: [
+      {
+        path: ':emergencyId',
+        element: <EmergencyPage />
+      }
+    ]
   }
 ]);
 
