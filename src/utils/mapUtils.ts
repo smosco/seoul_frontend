@@ -39,6 +39,10 @@ const getImageSrc = (facilities?: FacilitiesType) => {
   }
 };
 
+export function setCenter(map: any, lat: number, lng: number) {
+  map.setCenter(new Tmapv2.LatLng(lat, lng));
+}
+
 export function generateMarker(
   currentMap: any,
   lat: number,
@@ -66,7 +70,7 @@ export function generateInfoWindow(
   lng: number,
   msg: string,
 ) {
-  const content = `<div style="position:relative;padding:5px;">${msg}</div>`;
+  const content = `<div style="position:relative;padding:5px; text-align:center">${msg}</div>`;
   const infoWindow = new Tmapv2.InfoWindow({
     map,
     content,

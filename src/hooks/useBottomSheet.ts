@@ -136,24 +136,18 @@ export default function useBottomSheet() {
       handleEventMove(e.touches[0].clientY);
     };
 
-    const handleTouchEnd = (e: TouchEvent) => {
-      e.preventDefault();
+    const handleTouchEnd = () => {
       handleEventEnd();
     };
 
-    const handleDocumentTouch = (e: TouchEvent) => {
-      e.preventDefault();
-    };
-
-    document.addEventListener('touchstart', handleDocumentTouch, { passive: false });
-    sheet.current!.addEventListener('mousedown', handleMouseDown);
-    sheet.current!.addEventListener('touchstart', handleTouchStart, { passive: false });
-    sheet.current!.addEventListener('touchmove', handleTouchMove);
-    sheet.current!.addEventListener('touchend', handleTouchEnd, { passive: false });
+    const firstChild = sheet!.current!.children[0] as HTMLElement;
+    firstChild.addEventListener('mousedown', handleMouseDown);
+    firstChild.addEventListener('touchstart', handleTouchStart, { passive: false });
+    firstChild.addEventListener('touchmove', handleTouchMove);
+    firstChild.addEventListener('touchend', handleTouchEnd);
   }, []);
 
   useEffect(() => {
-
     const handleMouseUp = () => {
       setIsMouseDown(false);
       handleEventEnd();

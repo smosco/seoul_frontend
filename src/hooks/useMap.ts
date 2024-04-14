@@ -10,6 +10,7 @@ function useMap(
   const [map, setMap] = useState<any>(null);
 
   useEffect(() => {
+    if(map) return;
     if (!lat || !lng || !containerRef.current) return;
     if (containerRef.current) {
       const options = {
@@ -23,7 +24,7 @@ function useMap(
     // eslint-disable-next-line consistent-return
     return () => {
       if (map) {
-        map.remove();
+        map.destroy();
       }
     };
   }, [lat, lng, containerRef]);

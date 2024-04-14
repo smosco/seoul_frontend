@@ -46,3 +46,13 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/* 마우스 드래그 시 파란색을 없애는게 좋을 것 같습니다. */
+:root {
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+  
+	-ms-user-select: none;
+	user-select: none;
+  }
