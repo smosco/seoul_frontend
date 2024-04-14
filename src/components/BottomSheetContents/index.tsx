@@ -58,7 +58,7 @@ function Content(){
             <FacilityButton
               key={`facilityBtn_${position.title}`}
               $isClicked={isClicked[index]}
-              onClick={() => handleButtonClick(index)}
+              onMouseDown={() => handleButtonClick(index)}
               type='button'
             >
               {(traslateToKorean(position.title))}

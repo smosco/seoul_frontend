@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   position: relative; 
   padding-top: 24px;
   padding-bottom: 12px;
+  cursor: pointer;
 `;
 
 export const Handle = styled.div`

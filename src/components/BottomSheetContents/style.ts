@@ -9,6 +9,7 @@ export const Wrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 140px;
+    z-index: 1;
 `;
 
 export const Label = styled.label`
@@ -27,6 +28,7 @@ export const FacilityButton = styled.button<FacilityButtonProps>`
     border-radius: 24px;
     background-color: ${(props) => props.$isClicked ? '#F9ECD4' : '#F4F4F4'};
     font-size: 15px;
+    cursor: pointer;
 `;
 
 export const ReportBtn = styled.button`
@@ -37,6 +39,7 @@ export const ReportBtn = styled.button`
     background-color: #FF7757;
     font-size: 16px;
     font-weight: 600;
+    cursor: pointer;
 `;
 
 export const ReportListWrapper = styled.div`
