@@ -55,7 +55,7 @@ function Content(){
         {POSITIONS.map((position, index) => (
           <FacilityButton
             key={`facilityBtn_${position.title}`}
-            isClicked={isClicked[index]}
+            $isClicked={isClicked[index]}
             onClick={() => handleButtonClick(index)}
             type='button'
           >

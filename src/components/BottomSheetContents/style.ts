@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface FacilityButtonProps {
-    isClicked: boolean;
+    $isClicked: boolean;
 }
 
 export const Wrapper = styled.div`
@@ -25,7 +25,7 @@ export const FacilityButton = styled.button<FacilityButtonProps>`
     padding: 8px 14px;
     border: none;
     border-radius: 24px;
-    background-color: ${(props) => props.isClicked ? '#F9ECD4' : '#F4F4F4'};
+    background-color: ${(props) => props.$isClicked ? '#F9ECD4' : '#F4F4F4'};
     font-size: 15px;
 `;
 
