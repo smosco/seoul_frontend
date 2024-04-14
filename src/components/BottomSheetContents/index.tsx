@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import POSITIONS from '../../constant/mockingPositions';
-import { FacilityButton, ButtonWrapper, Wrapper, ReportBtn, Label} from './style';
+import { FacilityButton, ButtonWrapper, Wrapper, ReportBtn, Label, ReportListWrapper} from './style';
+import ReportList from '../ReportList';
 
 function Content(){
   const [isChecked, setIsChecked] = useState(false);
@@ -41,30 +42,35 @@ function Content(){
   }
 
   return(
-    <Wrapper>
-      <Label htmlFor="safetyCheckbox">
-        <input
-          id="safetyCheckbox"
-          type="checkbox"
-          checked={isChecked}
-          onChange={handleChange}
-        />
+    <>
+      <Wrapper>
+        <Label htmlFor="safetyCheckbox">
+          <input
+            id="safetyCheckbox"
+            type="checkbox"
+            checked={isChecked}
+            onChange={handleChange}
+          />
           안전시설 모두보기
-      </Label>
-      <ButtonWrapper>
-        {POSITIONS.map((position, index) => (
-          <FacilityButton
-            key={`facilityBtn_${position.title}`}
-            $isClicked={isClicked[index]}
-            onClick={() => handleButtonClick(index)}
-            type='button'
-          >
-            {(traslateToKorean(position.title))}
-          </FacilityButton>
-        ))}
-      </ButtonWrapper>
-      <ReportBtn type='button'>1시간 내 긴급신고</ReportBtn>
-    </Wrapper>
+        </Label>
+        <ButtonWrapper>
+          {POSITIONS.map((position, index) => (
+            <FacilityButton
+              key={`facilityBtn_${position.title}`}
+              $isClicked={isClicked[index]}
+              onClick={() => handleButtonClick(index)}
+              type='button'
+            >
+              {(traslateToKorean(position.title))}
+            </FacilityButton>
+          ))}
+        </ButtonWrapper>
+        <ReportBtn type='button'>1시간 내 긴급신고</ReportBtn>
+      </Wrapper>
+      <ReportListWrapper>
+        <ReportList />
+      </ReportListWrapper>
+    </>
   );
 }
 
