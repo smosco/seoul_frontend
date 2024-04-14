@@ -1,3 +1,12 @@
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Tmapv2: any;
+  }
+}
+
+export const { Tmapv2 } = window;
+
 export type FacilitiesType =
   | 'cctv'
   | 'fireStation'
@@ -13,8 +22,14 @@ export interface SearchState {
   selectedName: string;
 }
 
-export interface AddressInfo {
+export interface Coord {
+  longitude: number | undefined;
+  latitude: number | undefined;
+}
+
+export interface Place {
+  name: string;
   address: string;
-  // x: 경도 y: 위도
-  coord: { x: number | undefined; y: number | undefined };
+  latitude: number;
+  longitude: number;
 }

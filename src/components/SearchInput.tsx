@@ -2,26 +2,19 @@ import React, { useEffect, useState } from 'react';
 import usePlaceSearch from '../hooks/usePlaceSearch';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
-import { AddressInfo, SearchState } from '../types/mapTypes';
-
-interface Place {
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
+import { Coord, SearchState, Place } from '../types/mapTypes';
 
 interface SearchBoxProps {
   searchState: SearchState;
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
   placeholder: string;
   places: Place[];
-  setAddressInfo: React.Dispatch<React.SetStateAction<AddressInfo>>;
+  setPosition: React.Dispatch<React.SetStateAction<Coord>>;
 }
 
 interface ContainerProps {
-  setStart: React.Dispatch<React.SetStateAction<AddressInfo>>;
-  setEnd: React.Dispatch<React.SetStateAction<AddressInfo>>;
+  setStartPosition: React.Dispatch<React.SetStateAction<Coord>>;
+  setEndPosition: React.Dispatch<React.SetStateAction<Coord>>;
 }
 
 function SearchBox({
@@ -29,7 +22,7 @@ function SearchBox({
   setSearchState,
   placeholder,
   places,
-  setAddressInfo,
+  setPosition,
 }: SearchBoxProps) {
   const { keyword, isSearching, selectedName } = searchState;
 
@@ -62,12 +55,9 @@ function SearchBox({
                     isSearching: false,
                     selectedName: place.name,
                   });
-                  setAddressInfo({
-                    address: place.address,
-                    coord: {
-                      x: place.longitude,
-                      y: place.latitude,
-                    },
+                  setPosition({
+                    longitude: place.longitude,
+                    latitude: place.latitude,
                   });
                 }}
               >
@@ -81,7 +71,7 @@ function SearchBox({
   );
 }
 
-function SearchContainer({ setStart, setEnd }: ContainerProps) {
+function SearchContainer({ setStartPosition, setEndPosition }: ContainerProps) {
   const { currentPosition } = useCurrentPosition();
   const [startSearchState, setStartSearchState] = useState<SearchState>({
     keyword: '',
@@ -102,7 +92,7 @@ function SearchContainer({ setStart, setEnd }: ContainerProps) {
       currentPosition,
       setStartSearchState,
       startSearchState,
-      setStart,
+      setStartPosition,
     );
   }, [currentPosition]);
 
@@ -113,14 +103,14 @@ function SearchContainer({ setStart, setEnd }: ContainerProps) {
         setSearchState={setStartSearchState}
         placeholder="출발지를 입력하세요"
         places={startPlaces}
-        setAddressInfo={setStart}
+        setPosition={setStartPosition}
       />
       <SearchBox
         searchState={endSearchState}
         setSearchState={setEndSearchState}
         placeholder="도착지를 입력하세요"
         places={endPlaces}
-        setAddressInfo={setEnd}
+        setPosition={setEndPosition}
       />
     </>
   );

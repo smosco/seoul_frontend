@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react';
+import { Tmapv2 } from '../types/mapTypes';
 
-declare global {
-    interface Window {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      kakao: any;
-    }
-  }
-
-const { kakao } = window;
-
-function useMap(containerRef: React.RefObject<HTMLDivElement>, lat: number | undefined, lng: number | undefined) {
-  const [map, setMap] = useState(null);
+function useMap(
+  containerRef: React.RefObject<HTMLDivElement>,
+  lat: number | undefined,
+  lng: number | undefined,
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [map, setMap] = useState<any>(null);
 
   useEffect(() => {
-    if (!lat || !lng) return;
+    if (!lat || !lng || !containerRef.current) return;
     if (containerRef.current) {
       const options = {
-        center: new kakao.maps.LatLng(lat, lng),
-        level: 3,
+        center: new Tmapv2.LatLng(lat, lng),
+        zoom: 15,
       };
-      const Map = new kakao.maps.Map(containerRef.current, options);
-      setMap(Map);
+      const newMap = new Tmapv2.Map(containerRef.current, options);
+      setMap(newMap);
     }
-  }, [lat, lng]);
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      if (map) {
+        map.remove();
+      }
+    };
+  }, [lat, lng, containerRef]);
   return { map };
 }
 

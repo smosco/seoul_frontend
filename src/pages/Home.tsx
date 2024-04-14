@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import useMap from '../hooks/useMap';
 import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
-import { generateMarker, findway, kakao } from '../utils/mapUtils';
+import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
-import { AddressInfo } from '../types/mapTypes';
 import BottomSheet from '../components/BottomSheet';
+import { Coord } from '../types/mapTypes';
 
 function Home() {
   const { currentPosition } = useCurrentPosition();
@@ -16,40 +16,29 @@ function Home() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  const [start, setStart] = useState<AddressInfo>({
-    address: '',
-    coord: { x: undefined, y: undefined },
+  const [startPosition, setStartPosition] = useState<Coord>({
+    latitude: undefined,
+    longitude: undefined,
   });
-  const [end, setEnd] = useState<AddressInfo>({
-    address: '',
-    coord: { x: undefined, y: undefined },
+  const [endPosition, setEndPosition] = useState<Coord>({
+    latitude: undefined,
+    longitude: undefined,
   });
-  const [startMarker, setStartMarker] = useState<any>(null);
-  const [endMarker, setEndMarker] = useState<any>(null);
-  const [polyline, setPolyline] = useState<any>(null);
+  const [, setPolylines] = useState<any[]>([]);
+  const [waypoints] = useState([
+    { latitude: 37.399569, longitude: 127.10379 },
+    { latitude: 37.402748, longitude: 127.108913 },
+    { latitude: 37.397153, longitude: 127.113403 },
+  ]);
 
-  const findAndDrawPath = async () => {
-    const linePath = await findway(start, end);
-
-    if (polyline) {
-      polyline.setMap(null);
-    }
-    const newPolyline = new kakao.maps.Polyline({
-      path: linePath,
-      strokeWeight: 5,
-      strokeColor: '#FF7757',
-      strokeOpacity: 0.7,
-      strokeStyle: 'solid',
-    });
-    newPolyline.setMap(map);
-    setPolyline(newPolyline);
-  };
+  // console.log(startPosition, endPosition);
 
   useEffect(() => {
     if (!currentPosition) return;
 
     // 현재 위치 마커 생성 및 추가
     const currentPositionMarker = generateMarker(
+      map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
@@ -58,6 +47,7 @@ function Home() {
     // 위험 시설 마커 생성 및 추가
     for (let i = 0; i < POSITIONS.length; i++) {
       const marker = generateMarker(
+        map,
         POSITIONS[i].lat,
         POSITIONS[i].lng,
         POSITIONS[i].title,
@@ -66,44 +56,31 @@ function Home() {
     }
   }, [map]);
 
-  // 출발, 도착 마커 생성
   useEffect(() => {
-    if (start.coord.x !== undefined && start.coord.y !== undefined) {
-      if (startMarker) {
-        startMarker.setMap(null);
-      }
-      if (polyline) {
-        polyline.setMap(null);
-      }
-      const newStartMarker = generateMarker(
-        start.coord.y,
-        start.coord.x,
-        'way',
-      );
-      newStartMarker.setMap(map);
-      setStartMarker(newStartMarker);
+    if (map) {
+      drawRoute(map, startPosition, endPosition, waypoints)
+        .then((newPolylines) => setPolylines(newPolylines))
+        .catch((error) => console.error('Error drawing route:', error));
     }
-    if (end.coord.x !== undefined && end.coord.y !== undefined) {
-      if (endMarker) {
-        endMarker.setMap(null);
-        polyline.setMap(null);
-      }
-      if (polyline) {
-        polyline.setMap(null);
-      }
-      const newEndMarker = generateMarker(end.coord.y, end.coord.x, 'way');
-      newEndMarker.setMap(map);
-      setEndMarker(newEndMarker);
-    }
-  }, [start, end, map]);
+  }, [startPosition, endPosition, waypoints]);
 
   return (
     <>
-      <SearchContainer setStart={setStart} setEnd={setEnd} />
-      <button type="button" onClick={findAndDrawPath}>
+      <SearchContainer
+        setStartPosition={setStartPosition}
+        setEndPosition={setEndPosition}
+      />
+      <button
+        type="button"
+        onClick={() => drawRoute(map, startPosition, endPosition, waypoints)}
+      >
         길찾기
       </button>
-      <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
+      <div
+        id="map_div"
+        style={{ width: '500px', height: '500px' }}
+        ref={mapRef}
+      />
       <BottomSheet />
     </>
   );
