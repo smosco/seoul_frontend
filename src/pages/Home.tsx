@@ -26,12 +26,12 @@ function Home() {
   });
   const [, setPolylines] = useState<any[]>([]);
   const [waypoints] = useState([
-    { latitude: 37.399569, longitude: 127.10379 },
-    { latitude: 37.402748, longitude: 127.108913 },
-    { latitude: 37.397153, longitude: 127.113403 },
+    { latitude: 37.48213002, longitude: 126.94363778 },
+    { latitude: 37.48223002, longitude: 126.94353778 },
+    { latitude: 37.48209002, longitude: 126.93963778 },
   ]);
 
-  // console.log(startPosition, endPosition);
+  console.log(startPosition, endPosition);
 
   useEffect(() => {
     if (!currentPosition) return;

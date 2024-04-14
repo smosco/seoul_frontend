@@ -258,32 +258,32 @@ export const drawRoute = async (
       startName: '출발지',
       startX: String(startPosition.longitude),
       startY: String(startPosition.latitude),
-      startTime: '202404141010',
       endName: '도착지',
       endX: String(endPosition.longitude),
       endY: String(endPosition.latitude),
-      viaPoints: waypoints.map((waypoint, index) => ({
-        viaPointId: `test${index + 1}`,
-        viaPointName: `name${index + 1}`,
-        viaX: String(waypoint.longitude),
-        viaY: String(waypoint.latitude),
-      })),
+      passList: waypoints
+        .map((waypoint) => `${waypoint.longitude},${waypoint.latitude}`)
+        .join('_'),
       reqCoordType: 'WGS84GEO',
       resCoordType: 'WGS84GEO',
       searchOption: 0,
     };
 
     const response = await axios.post(
-      'https://apis.openapi.sk.com/tmap/routes/routeSequential30?version=1&format=json',
+      'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result',
       requestData,
       { headers },
     );
+
+    console.log(response);
     const { features } = response.data;
 
     const polylines: any[] = [];
     features.forEach((feature: any) => {
-      if (feature.geometry.type === 'LineString') {
-        const coordinates = feature.geometry.coordinates.map(
+      const { geometry, properties } = feature;
+      console.log(geometry, properties);
+      if (geometry.type === 'LineString') {
+        const coordinates = geometry.coordinates.map(
           ([lng, lat]: [lng: number, lat: number]) =>
             new window.Tmapv2.LatLng(lat, lng),
         );
@@ -294,6 +294,35 @@ export const drawRoute = async (
           map,
         });
         polylines.push(polyline);
+      } else {
+        let markerImg = '';
+        let size;
+
+        if (properties.pointType === 'SP') {
+          console.log('출발지');
+          markerImg = location;
+          size = new Tmapv2.Size(24, 38);
+        } else if (properties.pointType === 'EP') {
+          console.log('도착지');
+          markerImg = location;
+
+          size = new Tmapv2.Size(24, 38);
+        } else {
+          console.log('경유지');
+          markerImg = location;
+          size = new Tmapv2.Size(8, 8);
+        }
+
+        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        const markerP = new Tmapv2.Marker({
+          position: new Tmapv2.LatLng(
+            geometry.coordinates[1],
+            geometry.coordinates[0],
+          ),
+          icon: markerImg,
+          iconSize: size,
+          map, // 여기서 map 변수가 정의되어 있어야 합니다.
+        });
       }
     });
 
