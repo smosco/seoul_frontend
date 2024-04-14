@@ -23,11 +23,8 @@ function EmergencyPage() {
     const lat = currentPosition.coords.latitude;
     const lng = currentPosition.coords.longitude;
 
-    const marker = generateMarker(map, lat, lng);
-    marker.setMap(map);
-
-    generateInfoWindow(marker);
-
+    generateMarker(map, lat, lng);
+    generateInfoWindow(map, lat, lng, '2024.4.14');
     drawCircle(map, lat, lng);
   }, [map, currentPosition]);
 

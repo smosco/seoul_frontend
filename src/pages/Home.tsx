@@ -37,22 +37,20 @@ function Home() {
     if (!currentPosition) return;
 
     // 현재 위치 마커 생성 및 추가
-    const currentPositionMarker = generateMarker(
+    generateMarker(
       map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
-    currentPositionMarker.setMap(map);
 
     // 위험 시설 마커 생성 및 추가
     for (let i = 0; i < POSITIONS.length; i++) {
-      const marker = generateMarker(
+      generateMarker(
         map,
         POSITIONS[i].lat,
         POSITIONS[i].lng,
         POSITIONS[i].title,
       );
-      marker.setMap(map);
     }
   }, [map]);
 

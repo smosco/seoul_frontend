@@ -59,28 +59,29 @@ export function generateMarker(
   return marker;
 }
 
-export function generateInfoWindow(marker: any) {
+export function generateInfoWindow(map: any, lat: number, lng: number, msg: string) {
+  const content = `<div style="position:relative;padding:5px;">${msg}</div>`;
   const infoWindow = new Tmapv2.InfoWindow({
-    content: '신고 위치',
-    position: marker.getPosition(),
+    map,
+    content,
+    position : new Tmapv2.LatLng(lat, lng),
+    type: 1,
   });
   return infoWindow;
 }
 
 export const drawCircle = (map: any, lat: number, lng: number) => {
-  const drawingObject = new Tmapv2.extension.Drawing({
+  const circle = new Tmapv2.Circle({
     map,
     center: new Tmapv2.LatLng(lat, lng),
+    radius: 250,
     strokeWeight: 1,
     strokeColor: '#007470',
     strokeOpacity: 1,
     fillColor: '#007470',
     fillOpacity: 0.15,
   });
-  // 도형 객체의 원을 그리는 함수
-  if (drawingObject) {
-    drawingObject.drawCircle();
-  }
+  return circle;
 };
 
 export async function reverseGeo(lon: number, lat: number) {
