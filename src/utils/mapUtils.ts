@@ -8,7 +8,10 @@ import safetCenter from '../assets/images/safetycenter.png';
 import fireStation from '../assets/images/firestation.png';
 import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
-import way from '../assets/images/way.png';
+import sp from '../assets/images/sp.png';
+import ep from '../assets/images/ep.png';
+import pp from '../assets/images/pp.png';
+
 import {
   FacilitiesType,
   SearchState,
@@ -31,8 +34,6 @@ const getImageSrc = (facilities?: FacilitiesType) => {
       return emergencyBell;
     case 'heatShelter':
       return heatShelter;
-    case 'way':
-      return way;
     default:
       return location;
   }
@@ -59,12 +60,17 @@ export function generateMarker(
   return marker;
 }
 
-export function generateInfoWindow(map: any, lat: number, lng: number, msg: string) {
+export function generateInfoWindow(
+  map: any,
+  lat: number,
+  lng: number,
+  msg: string,
+) {
   const content = `<div style="position:relative;padding:5px;">${msg}</div>`;
   const infoWindow = new Tmapv2.InfoWindow({
     map,
     content,
-    position : new Tmapv2.LatLng(lat, lng),
+    position: new Tmapv2.LatLng(lat, lng),
     type: 1,
   });
   return infoWindow;
@@ -215,34 +221,6 @@ export const searchPOI = async (
   }
 };
 
-export const drawMarkers = (
-  map: any,
-  startPosition: Coord,
-  endPosition: Coord,
-  waypoints: Coord[],
-) => {
-  const markers: any[] = [];
-
-  const drawMarker = (position: Coord, iconPath: string) => {
-    const marker = new window.Tmapv2.Marker({
-      position: new window.Tmapv2.LatLng(position.latitude, position.longitude),
-      icon: iconPath,
-      iconSize: new window.Tmapv2.Size(24, 38),
-      map,
-    });
-    markers.push(marker);
-  };
-
-  drawMarker(startPosition, way);
-  drawMarker(endPosition, way);
-
-  waypoints.forEach((waypoint) => {
-    drawMarker(waypoint, location);
-  });
-
-  return markers;
-};
-
 export const drawRoute = async (
   map: any,
   startPosition: Coord,
@@ -259,32 +237,30 @@ export const drawRoute = async (
       startName: '출발지',
       startX: String(startPosition.longitude),
       startY: String(startPosition.latitude),
-      startTime: '202404141010',
       endName: '도착지',
       endX: String(endPosition.longitude),
       endY: String(endPosition.latitude),
-      viaPoints: waypoints.map((waypoint, index) => ({
-        viaPointId: `test${index + 1}`,
-        viaPointName: `name${index + 1}`,
-        viaX: String(waypoint.longitude),
-        viaY: String(waypoint.latitude),
-      })),
+      passList: waypoints
+        .map((waypoint) => `${waypoint.longitude},${waypoint.latitude}`)
+        .join('_'),
       reqCoordType: 'WGS84GEO',
       resCoordType: 'WGS84GEO',
       searchOption: 0,
     };
 
     const response = await axios.post(
-      'https://apis.openapi.sk.com/tmap/routes/routeSequential30?version=1&format=json',
+      'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result',
       requestData,
       { headers },
     );
-    const { features } = response.data;
 
+    const { features } = response.data;
     const polylines: any[] = [];
+
     features.forEach((feature: any) => {
-      if (feature.geometry.type === 'LineString') {
-        const coordinates = feature.geometry.coordinates.map(
+      const { geometry, properties } = feature;
+      if (geometry.type === 'LineString') {
+        const coordinates = geometry.coordinates.map(
           ([lng, lat]: [lng: number, lat: number]) =>
             new window.Tmapv2.LatLng(lat, lng),
         );
@@ -295,7 +271,41 @@ export const drawRoute = async (
           map,
         });
         polylines.push(polyline);
+      } else {
+        let markerImg = '';
+        const size = new Tmapv2.Size(26, 34);
+
+        if (properties.pointType === 'SP') {
+          markerImg = sp;
+        }
+        if (properties.pointType === 'EP') {
+          markerImg = ep;
+        }
+        if (properties.pointType !== 'EP' && properties.pointType !== 'SP') {
+          return;
+        }
+
+        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        const marker = new Tmapv2.Marker({
+          position: new Tmapv2.LatLng(
+            geometry.coordinates[1],
+            geometry.coordinates[0],
+          ),
+          icon: markerImg,
+          iconSize: size,
+          map,
+        });
       }
+
+      waypoints.map((waypoint) => {
+        const marker = new Tmapv2.Marker({
+          position: new Tmapv2.LatLng(waypoint.latitude, waypoint.longitude),
+          icon: pp,
+          iconSize: new Tmapv2.Size(26, 34),
+          map,
+        });
+        return marker;
+      });
     });
 
     return polylines;
