@@ -1,15 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import {
   generateMarker,
   drawCircle,
   generateInfoWindow,
+  setCenter,
 } from '../utils/mapUtils';
 
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import BottomSheet from '../components/BottomSheet';
+import timeStamp from '../constant/mockingTimeStamp';
+import { convertDateFormat } from '../components/ReportList';
 
 function EmergencyPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [marker, setMarker] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [circle, setCircle] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [infoWindow, setInfoWindow] = useState<any>(null);
   const mapRef = useRef(null);
   const { currentPosition } = useCurrentPosition();
   const { map } = useMap(
@@ -17,28 +27,36 @@ function EmergencyPage() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
+  const { emergencyId } = useParams();
 
   useEffect(() => {
-    if (!map || !currentPosition) return;
+    if (!map) return;
+    const { lat, lng } = timeStamp.filter(item => item.id === Number(emergencyId)).map(item => ({ lat: item.lat, lng: item.lng }))[0];
+    const { timestamp } = timeStamp.filter(item => item.id === Number(emergencyId))[0];
 
-    const lat = currentPosition.coords.latitude;
-    const lng = currentPosition.coords.longitude;
+    // 이전에 있던 마커와 원, 윈도우를 지워야함
+    if (marker) marker.setMap(null);
+    if (circle) circle.setVisible(false);
+    if (infoWindow) infoWindow.setMap(null);
 
-    generateMarker(map, lat, lng);
-    generateInfoWindow(map, lat, lng, '2024.4.14');
-    drawCircle(map, lat, lng);
-  }, [map, currentPosition]);
+    setCenter(map, lat, lng);
+
+    const newMarker = generateMarker(map, lat, lng);
+    newMarker.setMap(map);
+    setMarker(newMarker);
+
+    const newInfoWindow = generateInfoWindow(map, lat, lng, convertDateFormat(timestamp));
+    newInfoWindow.setMap(map);
+    setInfoWindow(newInfoWindow);
+
+    const newCircle = drawCircle(map, lat, lng);
+    newCircle.setMap(map);
+    setCircle(newCircle);
+  }, [map, emergencyId]);
 
   return (
     <>
-      <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef}>
-        {/* TODO : 이런식으로 맵 로딩 화면을 만들면 좋을 것 같습니다!! */}
-        {/* {!currentPosition && !map && (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <span role="img" aria-label="loading">⏳</span> 위치 정보를 가져오는 중입니다...
-          </div>
-        )} */}
-      </div>
+      <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
       <BottomSheet />
     </>
   );

@@ -1,8 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ContentsWrapper, Wrapper } from './style';
 import timeStamp from '../../constant/mockingTimeStamp';
 
-function convertDateFormat(isoDateString:string) {
+export function convertDateFormat(isoDateString:string) {
   const date = new Date(isoDateString);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -14,10 +15,16 @@ function convertDateFormat(isoDateString:string) {
 }
 
 function ReportList() {
+  const navigate = useNavigate();
+
+  const handleClick = (id:number) => {
+    navigate(`/emergency/${id}`);
+  };
+
   return (
     <Wrapper>
       {timeStamp.map((item) => (
-        <ContentsWrapper key={item.id}>
+        <ContentsWrapper onMouseDown={() => handleClick(item.id)} key={item.id}>
           <span>{`${convertDateFormat(item.timestamp)} 긴급 신고`}</span>
         </ContentsWrapper>
       ))}
