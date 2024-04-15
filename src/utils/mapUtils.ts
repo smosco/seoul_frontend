@@ -232,6 +232,7 @@ export const drawRoute = async (
   waypoints: Coord[],
   prevPolylines: any[],
   prevMarkers: any[],
+  selected: boolean,
 ) => {
   try {
     // 이전 경로, 마커 제거
@@ -279,8 +280,6 @@ export const drawRoute = async (
     tDistance = `${(totalDistance / 1000).toFixed(1)}km`;
     tTime = `${(totalTime / 60).toFixed(0)}분`;
 
-    console.log(tDistance);
-
     waypoints.forEach((waypoint) => {
       const marker = new Tmapv2.Marker({
         position: new Tmapv2.LatLng(waypoint.latitude, waypoint.longitude),
@@ -303,6 +302,7 @@ export const drawRoute = async (
           path: coordinates,
           strokeColor: '#FF0000',
           strokeWeight: 6,
+          strokeOpacity: selected ? 1 : 0.1,
           map,
         });
         polylines.push(newPolyline);

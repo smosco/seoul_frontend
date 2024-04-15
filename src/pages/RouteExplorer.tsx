@@ -29,6 +29,7 @@ function RouteExplorer() {
   const [routeInfos, setRouteInfos] = useState<
     { time: string; distance: string }[]
   >([]);
+  const [selectedRoute, setSelectedRoute] = useState<number>(0);
 
   const [waypoints] = useState([
     [
@@ -68,6 +69,10 @@ function RouteExplorer() {
   useEffect(() => {
     if (!map) return;
 
+    const selected = waypoints.map(
+      (waypoint, index) => selectedRoute === index,
+    );
+
     Promise.all(
       waypoints.map((waypoint, index) =>
         drawRoute(
@@ -77,6 +82,7 @@ function RouteExplorer() {
           waypoint,
           polylines[index],
           markers[index],
+          selected[index],
         ),
       ),
     )
@@ -94,7 +100,20 @@ function RouteExplorer() {
         setRouteInfos(newRouteInfos);
       })
       .catch((error) => console.error('Error drawing route:', error));
-  }, [map, startPosition, endPosition, waypoints]);
+  }, [map, startPosition, endPosition, waypoints, selectedRoute]);
+
+  const handleRouteClick = (index: number) => {
+    setSelectedRoute(index); // 선택된 경로 설정
+    polylines.forEach((polyline, i) => {
+      if (i === index) {
+        console.log(i, 'selected');
+        // polyline.setColorOptions({ strokeOpacity: 1 }); // 선택된 경로는 진하게 표시
+      } else {
+        console.log(i, 'not selected');
+        // polyline.setColorOptions({ strokeOpacity: 0.1 }); // 선택되지 않은 경로는 연하게 표시
+      }
+    });
+  };
 
   return (
     <>
@@ -111,11 +130,19 @@ function RouteExplorer() {
       <div>
         {routeInfos.map((info, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={index}>
+          <button
+            type="button"
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            onClick={() => handleRouteClick(index)}
+            style={{
+              backgroundColor: selectedRoute === index ? '#FF0000' : '#CCCCCC', // 선택된 경로는 빨간색, 선택되지 않은 경로는 회색으로 설정
+            }}
+          >
             <p>Route {index + 1}</p>
             <p>Time: {info.time}</p>
             <p>Distance: {info.distance}</p>
-          </div>
+          </button>
         ))}
       </div>
     </>
