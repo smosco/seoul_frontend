@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
-import { drawRoute } from '../utils/mapUtils';
+import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
+import { EXTRAPOSITIONS } from '../constant/mockingPositions';
 
 function RouteExplorer() {
   const { state } = useLocation();
@@ -39,26 +40,26 @@ function RouteExplorer() {
     }
   }, [state]);
 
-  // useEffect(() => {
-  //   if (!currentPosition) return;
+  useEffect(() => {
+    if (!currentPosition) return;
 
-  //   // 현재 위치 마커 생성 및 추가
-  //   generateMarker(
-  //     map,
-  //     currentPosition.coords.latitude,
-  //     currentPosition.coords.longitude,
-  //   );
+    // 현재 위치 마커 생성 및 추가
+    generateMarker(
+      map,
+      currentPosition.coords.latitude,
+      currentPosition.coords.longitude,
+    );
 
-  //   // 위험 시설 마커 생성 및 추가
-  //   for (let i = 0; i < POSITIONS.length; i++) {
-  //     generateMarker(
-  //       map,
-  //       POSITIONS[i].lat,
-  //       POSITIONS[i].lng,
-  //       POSITIONS[i].title,
-  //     );
-  //   }
-  // }, [map]);
+    // 위험 시설 마커 생성 및 추가
+    for (let i = 0; i < EXTRAPOSITIONS.length; i++) {
+      generateMarker(
+        map,
+        EXTRAPOSITIONS[i].lat,
+        EXTRAPOSITIONS[i].lng,
+        EXTRAPOSITIONS[i].title,
+      );
+    }
+  }, [map]);
 
   useEffect(() => {
     if (!map) return;

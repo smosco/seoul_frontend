@@ -7,6 +7,7 @@ import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
+import { EXTRAPOSITIONS } from '../constant/mockingPositions';
 
 function Home() {
   const navigate = useNavigate();
@@ -23,13 +24,13 @@ function Home() {
     longitude: undefined,
   });
   const [endName, setEndName] = useState<string>('');
-  console.log(endName);
 
   const findRoute = () => {
     navigate('/routes', {
       state: { endPosition, endName },
     });
   };
+
   useEffect(() => {
     if (!currentPosition) return;
     // 현재 위치 마커 생성 및 추가
@@ -38,6 +39,16 @@ function Home() {
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
+
+    // 위험 시설 마커 생성 및 추가
+    for (let i = 0; i < EXTRAPOSITIONS.length; i++) {
+      generateMarker(
+        map,
+        EXTRAPOSITIONS[i].lat,
+        EXTRAPOSITIONS[i].lng,
+        EXTRAPOSITIONS[i].title,
+      );
+    }
   }, [map]);
 
   return (
