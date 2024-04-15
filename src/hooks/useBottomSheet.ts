@@ -33,6 +33,7 @@ export default function useBottomSheet() {
   });
 
   const handleEventEnd = () => {
+    if(!sheet.current) return;
     document.body.style.overflowY = 'auto';
     const { clickMove } = metrics.current;
     const currentSheetY = sheet.current!.getBoundingClientRect().y;
@@ -61,6 +62,7 @@ export default function useBottomSheet() {
   };
 
   const handleEventStart = (clientY: number) => {
+    if(!sheet.current) return;
     const { clickStart } = metrics.current;
     clickStart.sheetY = sheet.current!.getBoundingClientRect().y;
     clickStart.clickY = clientY;
@@ -84,6 +86,7 @@ export default function useBottomSheet() {
   };
 
   const handleEventMove = (currentPosition: number) => {
+    if(!sheet.current) return;
     const { clickStart, clickMove } = metrics.current;
 
     if (clickMove.prevClickY === undefined) {
