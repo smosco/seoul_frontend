@@ -24,7 +24,8 @@ function Home() {
     latitude: undefined,
     longitude: undefined,
   });
-  const [, setPolylines] = useState<any[]>([]);
+  const [polylines, setPolylines] = useState<any[]>([]);
+  const [markers, setMarkers] = useState<any[]>([]);
   const [waypoints] = useState([
     { latitude: 37.48213002, longitude: 126.94363778 },
     { latitude: 37.48223002, longitude: 126.94353778 },
@@ -32,7 +33,7 @@ function Home() {
   ]);
 
   console.log(startPosition, endPosition);
-
+  console.log(polylines);
   useEffect(() => {
     if (!currentPosition) return;
 
@@ -55,12 +56,23 @@ function Home() {
   }, [map]);
 
   useEffect(() => {
-    if (map) {
-      drawRoute(map, startPosition, endPosition, waypoints)
-        .then((newPolylines) => setPolylines(newPolylines))
-        .catch((error) => console.error('Error drawing route:', error));
-    }
-  }, [startPosition, endPosition, waypoints]);
+    if (!map) return;
+
+    drawRoute(map, startPosition, endPosition, waypoints, polylines, markers)
+      .then(
+        ({
+          newPolylines,
+          newMarkers,
+        }: {
+          newPolylines: any[];
+          newMarkers: any[];
+        }) => {
+          setPolylines(newPolylines);
+          setMarkers(newMarkers);
+        },
+      )
+      .catch((error) => console.error('Error drawing route:', error));
+  }, [map, startPosition, endPosition, waypoints]);
 
   return (
     <>
@@ -68,12 +80,12 @@ function Home() {
         setStartPosition={setStartPosition}
         setEndPosition={setEndPosition}
       />
-      <button
+      {/* <button
         type="button"
         onClick={() => drawRoute(map, startPosition, endPosition, waypoints)}
       >
         길찾기
-      </button>
+      </button> */}
       <div
         id="map_div"
         style={{ width: '500px', height: '500px' }}
