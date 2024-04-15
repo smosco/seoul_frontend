@@ -230,8 +230,18 @@ export const drawRoute = async (
   startPosition: Coord,
   endPosition: Coord,
   waypoints: Coord[],
+  prevPolylines: any[],
+  prevMarkers: any[],
 ) => {
   try {
+    // 이전 경로, 마커 제거
+    prevPolylines.forEach((polyline) => {
+      polyline.setMap(null);
+    });
+    prevMarkers.forEach((marker) => {
+      marker.setMap(null);
+    });
+
     const headers = {
       'Content-Type': 'application/json',
       appKey: process.env.REACT_APP_TMAP_API_KEY,
@@ -258,8 +268,20 @@ export const drawRoute = async (
       { headers },
     );
 
-    const { features } = response.data;
     const polylines: any[] = [];
+    const markers: any[] = [];
+
+    const { features } = response.data;
+
+    waypoints.forEach((waypoint) => {
+      const marker = new Tmapv2.Marker({
+        position: new Tmapv2.LatLng(waypoint.latitude, waypoint.longitude),
+        icon: pp,
+        iconSize: new Tmapv2.Size(26, 34),
+        map,
+      });
+      markers.push(marker);
+    });
 
     features.forEach((feature: any) => {
       const { geometry, properties } = feature;
@@ -268,13 +290,13 @@ export const drawRoute = async (
           ([lng, lat]: [lng: number, lat: number]) =>
             new window.Tmapv2.LatLng(lat, lng),
         );
-        const polyline = new window.Tmapv2.Polyline({
+        const newPolyline = new window.Tmapv2.Polyline({
           path: coordinates,
           strokeColor: '#FF0000',
           strokeWeight: 6,
           map,
         });
-        polylines.push(polyline);
+        polylines.push(newPolyline);
       } else {
         let markerImg = '';
         const size = new Tmapv2.Size(26, 34);
@@ -299,22 +321,14 @@ export const drawRoute = async (
           iconSize: size,
           map,
         });
-      }
 
-      waypoints.map((waypoint) => {
-        const marker = new Tmapv2.Marker({
-          position: new Tmapv2.LatLng(waypoint.latitude, waypoint.longitude),
-          icon: pp,
-          iconSize: new Tmapv2.Size(26, 34),
-          map,
-        });
-        return marker;
-      });
+        markers.push(marker);
+      }
     });
 
-    return polylines;
+    return { newPolylines: polylines, newMarkers: markers };
   } catch (error) {
     console.error('Error:', error);
-    return [];
+    return { newPolylines: [], newMarkers: [] };
   }
 };
