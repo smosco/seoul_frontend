@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import Home from './pages/Home';
 import EmergencyPage from './pages/EmergencyPage';
 
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/emergency',
-    element: <EmergencyPage />,
+    element: null,
     children: [
       {
         path: ':emergencyId',
@@ -25,7 +26,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
   );
 }
 
