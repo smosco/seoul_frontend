@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import POSITIONS from '../../constant/mockingPositions';
+import { useRecoilState } from 'recoil';
+import { POSITIONTITLE } from '../../constant/mockingPositions';
 import { FacilityButton, ButtonWrapper, Wrapper, ReportBtn, Label, ReportListWrapper} from './style';
 import ReportList from '../ReportList';
+import filterState from '../../recoil/atoms';
 
 function Content(){
   const [isChecked, setIsChecked] = useState(false);
-  const [isClicked, setIsClicked] = useState(new Array(POSITIONS.length).fill(false));
+  const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
 
-  const handleButtonClick = (index: number) => {
-    const newIsClicked = [...isClicked];
-    newIsClicked[index] = !newIsClicked[index];
-    setIsClicked(newIsClicked);
+  const handleButtonClick = (title:string) => {
+    setCurrentFilters({
+      ...currentFilters,
+      [title]: !currentFilters[title],
+    });
   };
 
   const handleChange = () => {
@@ -18,11 +21,10 @@ function Content(){
   };
 
   useEffect(() => {
-    setIsClicked(new Array(POSITIONS.length).fill(isChecked));
+    setCurrentFilters(Object.fromEntries(Object.entries(currentFilters).map(([key]) => [key, isChecked])));
   }, [isChecked]);
 
   function traslateToKorean(input: string): string {
-
     switch(input) {
       case 'cctv':
         return 'CCTV';
@@ -54,14 +56,14 @@ function Content(){
           안전시설 모두보기
         </Label>
         <ButtonWrapper>
-          {POSITIONS.map((position, index) => (
+          {POSITIONTITLE.map((position) => (
             <FacilityButton
-              key={`facilityBtn_${position.title}`}
-              $isClicked={isClicked[index]}
-              onMouseDown={() => handleButtonClick(index)}
+              key={`facilityBtn_${position}`}
+              $isClicked={currentFilters[position]}
+              onMouseDown={() => handleButtonClick(position)}
               type='button'
             >
-              {(traslateToKorean(position.title))}
+              {(traslateToKorean(position))}
             </FacilityButton>
           ))}
         </ButtonWrapper>

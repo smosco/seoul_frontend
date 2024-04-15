@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMap from '../hooks/useMap';
-import POSITIONS from '../constant/mockingPositions';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
@@ -33,23 +32,12 @@ function Home() {
   };
   useEffect(() => {
     if (!currentPosition) return;
-
     // 현재 위치 마커 생성 및 추가
     generateMarker(
       map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
-
-    // 위험 시설 마커 생성 및 추가
-    for (let i = 0; i < POSITIONS.length; i++) {
-      generateMarker(
-        map,
-        POSITIONS[i].lat,
-        POSITIONS[i].lng,
-        POSITIONS[i].title,
-      );
-    }
   }, [map]);
 
   return (
@@ -67,7 +55,7 @@ function Home() {
         style={{ width: '500px', height: '500px' }}
         ref={mapRef}
       />
-      <BottomSheet />
+      <BottomSheet map={map} />
     </>
   );
 }

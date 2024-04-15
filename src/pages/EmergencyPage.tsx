@@ -15,11 +15,12 @@ import { convertDateFormat } from '../components/ReportList';
 
 function EmergencyPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [marker, setMarker] = useState<any>(null);
+  const [dangerMarker, setDangerMarker] = useState<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [circle, setCircle] = useState<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [infoWindow, setInfoWindow] = useState<any>(null);
+
   const mapRef = useRef(null);
   const { currentPosition } = useCurrentPosition();
   const { map } = useMap(
@@ -35,7 +36,7 @@ function EmergencyPage() {
     const { timestamp } = timeStamp.filter(item => item.id === Number(emergencyId))[0];
 
     // 이전에 있던 마커와 원, 윈도우를 지워야함
-    if (marker) marker.setMap(null);
+    if (dangerMarker) dangerMarker.setMap(null);
     if (circle) circle.setVisible(false);
     if (infoWindow) infoWindow.setMap(null);
 
@@ -43,7 +44,7 @@ function EmergencyPage() {
 
     const newMarker = generateMarker(map, lat, lng);
     newMarker.setMap(map);
-    setMarker(newMarker);
+    setDangerMarker(newMarker);
 
     const newInfoWindow = generateInfoWindow(map, lat, lng, convertDateFormat(timestamp));
     newInfoWindow.setMap(map);
@@ -57,7 +58,7 @@ function EmergencyPage() {
   return (
     <>
       <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
-      <BottomSheet />
+      <BottomSheet map={map} />
     </>
   );
 }

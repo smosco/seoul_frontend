@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import Home from './pages/Home';
 import EmergencyPage from './pages/EmergencyPage';
 import RouteExplorer from './pages/RouteExplorer';
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/emergency',
-    element: <EmergencyPage />,
+    element: null,
     children: [
       {
         path: ':emergencyId',
@@ -26,7 +27,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
+  );
 }
 
 export default App;
