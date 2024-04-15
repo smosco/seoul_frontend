@@ -85,6 +85,7 @@ function RouteExplorer() {
       <SearchContainer
         setStartPosition={setStartPosition}
         setEndPosition={setEndPosition}
+        endName={state?.endName}
       />
       <div
         id="map_div"

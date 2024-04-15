@@ -23,10 +23,12 @@ function Home() {
     latitude: undefined,
     longitude: undefined,
   });
+  const [endName, setEndName] = useState<string>('');
+  console.log(endName);
 
   const findRoute = () => {
     navigate('/routes', {
-      state: { endPosition },
+      state: { endPosition, endName },
     });
   };
   useEffect(() => {
@@ -52,7 +54,11 @@ function Home() {
 
   return (
     <>
-      <SearchContainer setEndPosition={setEndPosition} />
+      <SearchContainer
+        setEndPosition={setEndPosition}
+        endName={endName}
+        setEndName={setEndName}
+      />
       <button type="button" onClick={findRoute}>
         길찾기
       </button>
