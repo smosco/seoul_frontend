@@ -75,7 +75,7 @@ export function generateInfoWindow(
     map,
     content,
     position: new Tmapv2.LatLng(lat, lng),
-    type: 1,
+    type: 2,
   });
   return infoWindow;
 }
