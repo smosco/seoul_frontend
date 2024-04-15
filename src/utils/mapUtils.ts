@@ -270,8 +270,16 @@ export const drawRoute = async (
 
     const polylines: any[] = [];
     const markers: any[] = [];
+    let tTime: string = '';
+    let tDistance: string = '';
 
     const { features } = response.data;
+
+    const { totalTime, totalDistance } = features[0].properties;
+    tDistance = `${(totalDistance / 1000).toFixed(1)}km`;
+    tTime = `${(totalTime / 60).toFixed(0)}분`;
+
+    console.log(tDistance);
 
     waypoints.forEach((waypoint) => {
       const marker = new Tmapv2.Marker({
@@ -285,6 +293,7 @@ export const drawRoute = async (
 
     features.forEach((feature: any) => {
       const { geometry, properties } = feature;
+
       if (geometry.type === 'LineString') {
         const coordinates = geometry.coordinates.map(
           ([lng, lat]: [lng: number, lat: number]) =>
@@ -326,9 +335,9 @@ export const drawRoute = async (
       }
     });
 
-    return { newPolylines: polylines, newMarkers: markers };
+    return { newPolylines: polylines, newMarkers: markers, tTime, tDistance };
   } catch (error) {
     console.error('Error:', error);
-    return { newPolylines: [], newMarkers: [] };
+    return { newPolylines: [], newMarkers: [], tTime: '', tDistance: '' };
   }
 };
