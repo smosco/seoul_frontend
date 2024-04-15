@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { MockedPositionType } from '../constant/mockingPositions';
+import { EXTRAPOSITIONS } from '../constant/mockingPositions';
 import { generateMarker } from '../utils/mapUtils';
 import filterState from '../recoil/atoms';
 
@@ -12,12 +12,13 @@ interface FacilityMarkerType {
   }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useFilteringMarker(map:any, facilityData: MockedPositionType[]) {
+function useFilteringMarker(map:any) {
   const [facilityMarker, setFacilityMarker] = useState<FacilityMarkerType[]>([]);
   const filterValue = useRecoilValue(filterState);
 
   useEffect(() => {
-    const filteredMarkerData = facilityData.map(position => {
+    // TODO : 여기 API로 모든 facility를 불러오는 로직이 필요합니다.
+    const filteredMarkerData = EXTRAPOSITIONS.map(position => {
       const marker = generateMarker(map, position.lat, position.lng, position.title);
       return {
         title: position.title,
@@ -26,7 +27,7 @@ function useFilteringMarker(map:any, facilityData: MockedPositionType[]) {
       };
     });
     setFacilityMarker(filteredMarkerData);
-  }, [map, facilityData]);
+  }, [map]);
 
   // 필터링값을 확인하고, facilityMarker 데이터를 업데이트함
   useEffect(() => {

@@ -8,6 +8,7 @@ import SearchContainer from '../components/SearchInput';
 import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
 import { EXTRAPOSITIONS } from '../constant/mockingPositions';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function Home() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Home() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-
+  useFilteringMarker(map);
   const [endPosition, setEndPosition] = useState<Coord>({
     latitude: undefined,
     longitude: undefined,
@@ -66,7 +67,7 @@ function Home() {
         style={{ width: '500px', height: '500px' }}
         ref={mapRef}
       />
-      <BottomSheet map={map} />
+      <BottomSheet />
     </>
   );
 }

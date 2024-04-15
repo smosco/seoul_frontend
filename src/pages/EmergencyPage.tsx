@@ -12,6 +12,7 @@ import useCurrentPosition from '../hooks/useCurruntPosition';
 import BottomSheet from '../components/BottomSheet';
 import timeStamp from '../constant/mockingTimeStamp';
 import { convertDateFormat } from '../components/ReportList';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function EmergencyPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +30,7 @@ function EmergencyPage() {
     currentPosition?.coords.longitude,
   );
   const { emergencyId } = useParams();
+  useFilteringMarker(map);
 
   useEffect(() => {
     if (!map) return;
@@ -58,7 +60,7 @@ function EmergencyPage() {
   return (
     <>
       <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
-      <BottomSheet map={map} />
+      <BottomSheet />
     </>
   );
 }
