@@ -9,11 +9,11 @@ export const { Tmapv2 } = window;
 
 export type FacilitiesType =
   | 'cctv'
-  | 'fireStation'
-  | 'safetyFacility'
-  | 'saftyCenter'
-  | 'emergencyBell'
-  | 'heatShelter'
+  | 'firestation'
+  | 'safetyfacility'
+  | 'saftycenter'
+  | 'emergencybell'
+  | 'heatshelter'
   | 'way';
 
 export interface SearchState {

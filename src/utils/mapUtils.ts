@@ -24,15 +24,15 @@ const getImageSrc = (facilities?: FacilitiesType) => {
   switch (facilities) {
     case 'cctv':
       return cctv;
-    case 'fireStation':
+    case 'firestation':
       return fireStation;
-    case 'safetyFacility':
+    case 'safetyfacility':
       return safetFacility;
-    case 'saftyCenter':
+    case 'saftycenter':
       return safetCenter;
-    case 'emergencyBell':
+    case 'emergencybell':
       return emergencyBell;
-    case 'heatShelter':
+    case 'heatshelter':
       return heatShelter;
     default:
       return location;
