@@ -21,6 +21,7 @@ function Content(){
   };
 
   useEffect(() => {
+    // 필터 값을 전부 isChecked로 맞춘다.
     setCurrentFilters(Object.fromEntries(Object.entries(currentFilters).map(([key]) => [key, isChecked])));
   }, [isChecked]);
 
@@ -28,15 +29,15 @@ function Content(){
     switch(input) {
       case 'cctv':
         return 'CCTV';
-      case 'safetyFacility':
+      case 'safetyfacility':
         return '안전시설';
-      case 'fireStation':
+      case 'firestation':
         return '소방서';
-      case 'heatShelter':
+      case 'heatshelter':
         return '무더위 쉼터';
-      case 'saftyCenter':
+      case 'saftycenter':
         return '안전센터';
-      case 'emergencyBell':
+      case 'emergencybell':
         return '비상벨';
       default:
         return '알 수 없는 입력값';
