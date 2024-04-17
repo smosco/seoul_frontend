@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
-import SearchContainer from '../components/SearchInput';
+import SearchContainer from '../components/Search';
 import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
 import useFilteringMarker from '../hooks/useFilteringMarker';
+import { WrapperContainer } from '../components/common/Wrapper/style';
 
 function Home() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ function Home() {
   }, [map]);
 
   return (
-    <>
+    <WrapperContainer>
       <SearchContainer
         setEndPosition={setEndPosition}
         endName={endName}
@@ -56,13 +57,9 @@ function Home() {
       <button type="button" onClick={findRoute}>
         길찾기
       </button>
-      <div
-        id="map_div"
-        style={{ width: '500px', height: '500px' }}
-        ref={mapRef}
-      />
+      <div id="map_div" ref={mapRef} />
       <BottomSheet />
-    </>
+    </WrapperContainer>
   );
 }
 

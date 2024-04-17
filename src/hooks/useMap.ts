@@ -10,12 +10,12 @@ function useMap(
   const [map, setMap] = useState<any>(null);
 
   useEffect(() => {
-    if(map) return;
+    if (map) return;
     if (!lat || !lng || !containerRef.current) return;
     if (containerRef.current) {
       const options = {
         center: new Tmapv2.LatLng(lat, lng),
-        zoom: 15,
+        zoom: 14,
       };
       const newMap = new Tmapv2.Map(containerRef.current, options);
       setMap(newMap);

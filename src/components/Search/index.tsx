@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import usePlaceSearch from '../hooks/usePlaceSearch';
-import useCurrentPosition from '../hooks/useCurruntPosition';
-import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
-import { Coord, SearchState, Place } from '../types/mapTypes';
+import usePlaceSearch from '../../hooks/usePlaceSearch';
+import useCurrentPosition from '../../hooks/useCurruntPosition';
+import { updateAddressFromCurrentCoordinates } from '../../utils/mapUtils';
+import { Coord, SearchState, Place } from '../../types/mapTypes';
+import {
+  SearchWrapper,
+  SearchInput,
+  SearchResultContainer,
+  SearchResultList,
+} from './style';
 
 interface SearchBoxProps {
   searchState: SearchState;
@@ -43,7 +49,7 @@ function SearchBox({
   };
 
   return (
-    <>
+    <SearchInput>
       <input
         type="text"
         value={isSearching ? keyword : selectedName}
@@ -51,34 +57,32 @@ function SearchBox({
         placeholder={placeholder}
       />
       {isSearching && (
-        <ul>
+        <SearchResultContainer>
           {places.map((place, index) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <li key={index}>
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchState({
-                    ...searchState,
-                    isSearching: false,
-                    selectedName: place.name,
-                  });
-                  setPosition({
-                    longitude: place.longitude,
-                    latitude: place.latitude,
-                  });
-                  if (setName) {
-                    setName(place.name);
-                  }
-                }}
-              >
-                <div>{place.name}</div>
-              </button>
-            </li>
+            <SearchResultList
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              onClick={() => {
+                setSearchState({
+                  ...searchState,
+                  isSearching: false,
+                  selectedName: place.name,
+                });
+                setPosition({
+                  longitude: place.longitude,
+                  latitude: place.latitude,
+                });
+                if (setName) {
+                  setName(place.name);
+                }
+              }}
+            >
+              {place.name}
+            </SearchResultList>
           ))}
-        </ul>
+        </SearchResultContainer>
       )}
-    </>
+    </SearchInput>
   );
 }
 
@@ -114,7 +118,7 @@ function SearchContainer({
   }, [currentPosition]);
 
   return (
-    <>
+    <SearchWrapper>
       {setStartPosition && (
         <SearchBox
           searchState={startSearchState}
@@ -132,7 +136,7 @@ function SearchContainer({
         setPosition={setEndPosition}
         setName={setEndName}
       />
-    </>
+    </SearchWrapper>
   );
 }
 

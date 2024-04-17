@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { POSITIONTITLE } from '../../constant/mockingPositions';
-import { FacilityButton, ButtonWrapper, Wrapper, ReportBtn, Label, ReportListWrapper} from './style';
+import {
+  FacilityButton,
+  ButtonWrapper,
+  Wrapper,
+  ReportBtn,
+  Label,
+  ReportListWrapper,
+} from './style';
 import ReportList from '../ReportList';
 import filterState from '../../recoil/atoms';
 
-function Content(){
+function Content() {
   const [isChecked, setIsChecked] = useState(false);
   const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
 
-  const handleButtonClick = (title:string) => {
+  const handleButtonClick = (title: string) => {
     setCurrentFilters({
       ...currentFilters,
       [title]: !currentFilters[title],
@@ -22,11 +29,15 @@ function Content(){
 
   useEffect(() => {
     // 필터 값을 전부 isChecked로 맞춘다.
-    setCurrentFilters(Object.fromEntries(Object.entries(currentFilters).map(([key]) => [key, isChecked])));
+    setCurrentFilters(
+      Object.fromEntries(
+        Object.entries(currentFilters).map(([key]) => [key, isChecked]),
+      ),
+    );
   }, [isChecked]);
 
   function traslateToKorean(input: string): string {
-    switch(input) {
+    switch (input) {
       case 'cctv':
         return 'CCTV';
       case 'safetyfacility':
@@ -44,7 +55,7 @@ function Content(){
     }
   }
 
-  return(
+  return (
     <>
       <Wrapper>
         <Label htmlFor="safetyCheckbox">
@@ -62,13 +73,13 @@ function Content(){
               key={`facilityBtn_${position}`}
               $isClicked={currentFilters[position]}
               onMouseDown={() => handleButtonClick(position)}
-              type='button'
+              type="button"
             >
-              {(traslateToKorean(position))}
+              {traslateToKorean(position)}
             </FacilityButton>
           ))}
         </ButtonWrapper>
-        <ReportBtn type='button'>1시간 내 긴급신고</ReportBtn>
+        <ReportBtn type="button">1시간 내 긴급신고</ReportBtn>
       </Wrapper>
       <ReportListWrapper>
         <ReportList />
