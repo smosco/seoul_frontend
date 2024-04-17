@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import usePlaceSearch from '../hooks/usePlaceSearch';
-import useCurrentPosition from '../hooks/useCurruntPosition';
-import { updateAddressFromCurrentCoordinates } from '../utils/mapUtils';
-import { Coord, SearchState, Place } from '../types/mapTypes';
+import usePlaceSearch from '../../hooks/usePlaceSearch';
+import useCurrentPosition from '../../hooks/useCurruntPosition';
+import { updateAddressFromCurrentCoordinates } from '../../utils/mapUtils';
+import { Coord, SearchState, Place } from '../../types/mapTypes';
+import { SearchWrapper } from './style';
 
 interface SearchBoxProps {
   searchState: SearchState;
@@ -114,7 +115,7 @@ function SearchContainer({
   }, [currentPosition]);
 
   return (
-    <>
+    <SearchWrapper>
       {setStartPosition && (
         <SearchBox
           searchState={startSearchState}
@@ -132,7 +133,7 @@ function SearchContainer({
         setPosition={setEndPosition}
         setName={setEndName}
       />
-    </>
+    </SearchWrapper>
   );
 }
 
