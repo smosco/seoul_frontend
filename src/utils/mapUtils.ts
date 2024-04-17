@@ -232,7 +232,6 @@ export const drawRoute = async (
   waypoints: Coord[],
   prevPolylines: any[],
   prevMarkers: any[],
-  selected: boolean,
 ) => {
   try {
     // 이전 경로, 마커 제거
@@ -302,7 +301,6 @@ export const drawRoute = async (
           path: coordinates,
           strokeColor: '#FF0000',
           strokeWeight: 6,
-          strokeOpacity: selected ? 1 : 0.1,
           map,
         });
         polylines.push(newPolyline);
