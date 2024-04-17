@@ -4,7 +4,7 @@ import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import useEmergencyMarker from '../hooks/useEmergencyMarker';
 import { WrapperContainer } from '../components/common/Wrapper/style';
-// import useFilteringMarker from '../hooks/useFilteringMarkerWithAPI';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function EmergencyPage() {
   const mapRef = useRef(null);
@@ -16,7 +16,11 @@ function EmergencyPage() {
   );
   const { emergencyId } = useParams();
   useEmergencyMarker(map, emergencyId);
-  // useFilteringMarker(map);
+  useFilteringMarker({
+    map,
+    lat: 37.598,
+    lng: 127.073,
+  });
 
   return (
     <WrapperContainer>

@@ -7,7 +7,7 @@ import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
 import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
-import { EXTRAPOSITIONS } from '../constant/mockingPositions';
+// import { EXTRAPOSITIONS } from '../constant/mockingPositions';
 import useFilteringMarker from '../hooks/useFilteringMarker';
 import { WrapperContainer } from '../components/common/Wrapper/style';
 
@@ -20,7 +20,12 @@ function Home() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  useFilteringMarker(map);
+
+  useFilteringMarker({
+    map,
+    lat: 37.606,
+    lng: 126.9576788,
+  });
   const [endPosition, setEndPosition] = useState<Coord>({
     latitude: undefined,
     longitude: undefined,
@@ -43,14 +48,14 @@ function Home() {
     );
 
     // 위험 시설 마커 생성 및 추가
-    for (let i = 0; i < EXTRAPOSITIONS.length; i++) {
-      generateMarker(
-        map,
-        EXTRAPOSITIONS[i].lat,
-        EXTRAPOSITIONS[i].lng,
-        EXTRAPOSITIONS[i].title,
-      );
-    }
+    // for (let i = 0; i < EXTRAPOSITIONS.length; i++) {
+    //   generateMarker(
+    //     map,
+    //     EXTRAPOSITIONS[i].lat,
+    //     EXTRAPOSITIONS[i].lng,
+    //     EXTRAPOSITIONS[i].title,
+    //   );
+    // }
   }, [map]);
 
   return (
