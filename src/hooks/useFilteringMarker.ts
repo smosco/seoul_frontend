@@ -1,53 +1,77 @@
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { EXTRAPOSITIONS } from '../constant/mockingPositions';
-import { generateMarker } from '../utils/mapUtils';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import filterState from '../recoil/atoms';
+import { generateMarker } from '../utils/mapUtils';
+import { FacilitiesType } from '../types/mapTypes';
 
-interface FacilityMarkerType {
-    title: string;
-    visible: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    marker: any;
-  }
+interface UseFilteringMarkerProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map : any;
+    lat : number | undefined;
+    lng : number | undefined;
+}
 
+interface FilteringPosition {
+  id: number;
+  name: string;
+  type: FacilitiesType;
+  lon: number;
+  lat: number;
+}
+
+// 위치 정보 가져오기
+async function fetchPositionData(key: string, lat: number, lng: number) {
+  const url = `http://3.34.25.245:80/api/${key}?userLat=${lat}&userLon=${lng}`;
+  const response = await axios.get(url);
+  return { key, data: response.data };
+}
+
+// 마커 추가 함수
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useFilteringMarker(map:any) {
-  const [facilityMarker, setFacilityMarker] = useState<FacilityMarkerType[]>([]);
+function addMarkers(map: any, key: string, positions: FilteringPosition[]) {
+  const newMarkers = positions.map(position =>
+    generateMarker(map, position.lat, position.lon, position.type)
+  );
+  newMarkers.forEach(marker => marker.setMap(map));
+  return { key, markers: newMarkers };
+}
+
+function useFilteringMarker({ map, lat, lng }: UseFilteringMarkerProps): void {
   const filterValue = useRecoilValue(filterState);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [markers, setMarkers] = useState<{ [key: string]: any[] }>({});
 
   useEffect(() => {
-    // TODO : 여기 API로 모든 facility를 불러오는 로직이 필요합니다.
-    const filteredMarkerData = EXTRAPOSITIONS.map(position => {
-      const marker = generateMarker(map, position.lat, position.lng, position.title);
-      return {
-        title: position.title,
-        visible: false,
-        marker,
-      };
-    });
-    setFacilityMarker(filteredMarkerData);
-  }, [map]);
+    console.log('Hi');
+    if (!lat || !lng) return;
 
-  // 필터링값을 확인하고, facilityMarker 데이터를 업데이트함
-  useEffect(() => {
-    const newFacilityMarker = facilityMarker.map(marker => {
-      return {
-        ...marker,
-        visible: filterValue[marker.title]
-      };
-    });
-    setFacilityMarker(newFacilityMarker);
-  }, [filterValue]);
+    const trueKeys = Object.keys(filterValue).filter(key => filterValue[key]);
+    if (!trueKeys.length) {
+      // 필터된 값에서 true인 값이 하나도 없으면 모든 마커 제거
+      Object.values(markers).flat().forEach(marker => marker.setMap(null));
+      setMarkers({});
+      return;
+    }
 
-  useEffect(() => {
-    facilityMarker.forEach(marker => {
-      if (marker.visible) marker.marker.setMap(map);
-      else marker.marker.setMap(null);
-    });
-  }, [facilityMarker]);
+    Promise.all(trueKeys.map(key => fetchPositionData(key, lat, lng)))
+      .then(responses => {
+        // 이전 마커 제거
+        Object.values(markers).flat().forEach(marker => marker.setMap(null));
 
+        // 새로운 마커 추가
+        const newMarkers = responses.reduce((acc, res) => {
+          const { key, markers: markersArray } = addMarkers(map, res.key, res.data);
+          return { ...acc, [key]: markersArray };
+        }, {});
+
+        // 새로운 마커 설정
+        setMarkers(newMarkers);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [filterValue, lat, lng]);
 }
 
 export default useFilteringMarker;
-

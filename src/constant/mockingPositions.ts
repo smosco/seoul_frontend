@@ -114,7 +114,7 @@ export const EXTRAPOSITIONS: MockedPositionType[] = [{
   'lat': 37.64269276933789,
   'lng': 127.09306797623269
 }, {
-  'title': 'saftycenter',
+  'title': 'safetycenter',
   'latlng': new Tmapv2.LatLng(37.58359991403163, 126.93638213559551),
   'lat': 37.58359991403163,
   'lng': 126.93638213559551
@@ -134,7 +134,7 @@ export const EXTRAPOSITIONS: MockedPositionType[] = [{
   'lat': 37.53668800482912,
   'lng': 127.02166820551248
 }, {
-  'title': 'saftycenter',
+  'title': 'safetycenter',
   'latlng': new Tmapv2.LatLng(37.447135955201055, 127.08560447109214),
   'lat': 37.447135955201055,
   'lng': 127.08560447109214
@@ -160,4 +160,4 @@ export const EXTRAPOSITIONS: MockedPositionType[] = [{
   'lng': 126.79833336814202
 }];
 
-export const POSITIONTITLE = [ 'cctv', 'firestation', 'safetyfacility', 'saftycenter', 'emergencybell', 'heatshelter'];
+export const POSITIONTITLE = [ 'cctv', 'firestation', 'safetyfacility', 'safetycenter', 'emergencybell', 'heatshelter'];

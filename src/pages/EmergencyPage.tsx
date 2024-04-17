@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import useEmergencyMarker from '../hooks/useEmergencyMarker';
-// import useFilteringMarker from '../hooks/useFilteringMarkerWithAPI';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function EmergencyPage() {
   const mapRef = useRef(null);
@@ -15,7 +15,11 @@ function EmergencyPage() {
   );
   const { emergencyId } = useParams();
   useEmergencyMarker(map, emergencyId);
-  // useFilteringMarker(map);
+  useFilteringMarker({
+    map,
+    lat: 37.598,
+    lng: 127.073,
+  });
 
   return (
     <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />

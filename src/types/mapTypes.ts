@@ -11,7 +11,7 @@ export type FacilitiesType =
   | 'cctv'
   | 'firestation'
   | 'safetyfacility'
-  | 'saftycenter'
+  | 'safetycenter'
   | 'emergencybell'
   | 'heatshelter'
   | 'way';
