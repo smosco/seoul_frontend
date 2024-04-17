@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { POSITIONTITLE } from '../../constant/mockingPositions';
 import {
   FacilityButton,
   ButtonWrapper,
@@ -35,6 +34,8 @@ function Content() {
       ),
     );
   }, [isChecked]);
+
+  const POSITIONTITLE = ['cctv', 'firestation', 'safetyfacility', 'safetycenter', 'emergencybell', 'heatshelter'];
 
   function traslateToKorean(input: string): string {
     switch (input) {
