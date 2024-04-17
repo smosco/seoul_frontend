@@ -12,6 +12,7 @@ export const SearchWrapper = styled.div`
 `;
 
 export const SearchInput = styled.div`
+  position: relative;
   input {
     width: 340px;
     height: 2.5rem;
@@ -27,5 +28,32 @@ export const SearchInput = styled.div`
 
   input::placeholder {
     color: #bcbab6;
+  }
+`;
+export const SearchResultContainer = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%; /* 부모 요소와 같은 너비로 설정 */
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const SearchResultList = styled.li`
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  height: 44px;
+  line-height: 1.5;
+  font-size: 13px;
+  border-bottom: 1px solid #f4f4f4;
+
+  &:hover,
+  &:active {
+    background-color: #fcf4e7;
+    cursor: pointer;
   }
 `;
