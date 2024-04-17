@@ -43,7 +43,6 @@ function useFilteringMarker({ map, lat, lng }: UseFilteringMarkerProps): void {
   const [markers, setMarkers] = useState<{ [key: string]: any[] }>({});
 
   useEffect(() => {
-    console.log('Hi');
     if (!lat || !lng) return;
 
     const trueKeys = Object.keys(filterValue).filter(key => filterValue[key]);

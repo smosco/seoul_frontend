@@ -7,7 +7,6 @@ import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
-// import { EXTRAPOSITIONS } from '../constant/mockingPositions';
 import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function Home() {
@@ -45,16 +44,6 @@ function Home() {
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
-
-    // 위험 시설 마커 생성 및 추가
-    // for (let i = 0; i < EXTRAPOSITIONS.length; i++) {
-    //   generateMarker(
-    //     map,
-    //     EXTRAPOSITIONS[i].lat,
-    //     EXTRAPOSITIONS[i].lng,
-    //     EXTRAPOSITIONS[i].title,
-    //   );
-    // }
   }, [map]);
 
   return (
