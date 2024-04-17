@@ -6,6 +6,7 @@ import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/SearchInput';
 import { Coord } from '../types/mapTypes';
+import RouteCarousel from '../components/RouteCarousel';
 
 function RouteExplorer() {
   const { state } = useLocation();
@@ -85,10 +86,7 @@ function RouteExplorer() {
         ref={mapRef}
       />
       {routeInfo && (
-        <button type="button">
-          <p>Time: {routeInfo.time}</p>
-          <p>Distance: {routeInfo.distance}</p>
-        </button>
+        <RouteCarousel routeInfo={routeInfo} waypoints={waypoints} />
       )}
     </>
   );
