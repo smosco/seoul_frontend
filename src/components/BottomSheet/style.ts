@@ -1,14 +1,20 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { BOTTOM_SHEET_DEFAULT_HEIGHT, BOTTOM_SHEET_HEIGHT } from '../../constant/bottomSheetPosition';
+import {
+  BOTTOM_SHEET_DEFAULT_HEIGHT,
+  BOTTOM_SHEET_HEIGHT,
+} from '../../constant/bottomSheetPosition';
 
 export const Wrapper = styled(motion.div)`
+  width: 360px;
   display: flex;
   flex-direction: column;
-  
+
   position: fixed;
   z-index: 1;
-  top: calc(100% - ${BOTTOM_SHEET_DEFAULT_HEIGHT}px); /*시트가 얼마나 높이 위치할지*/
+  top: calc(
+    100% - ${BOTTOM_SHEET_DEFAULT_HEIGHT}px
+  ); /*시트가 얼마나 높이 위치할지*/
   left: 0;
   right: 0;
 

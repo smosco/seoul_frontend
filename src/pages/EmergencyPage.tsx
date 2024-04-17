@@ -20,7 +20,7 @@ function EmergencyPage() {
 
   return (
     <WrapperContainer>
-      <div id="map" ref={mapRef} />
+      <div id="map_div" ref={mapRef} />
     </WrapperContainer>
   );
 }
