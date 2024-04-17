@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import useEmergencyMarker from '../hooks/useEmergencyMarker';
+import { WrapperContainer } from '../components/common/Wrapper/style';
 // import useFilteringMarker from '../hooks/useFilteringMarkerWithAPI';
 
 function EmergencyPage() {
@@ -18,7 +19,9 @@ function EmergencyPage() {
   // useFilteringMarker(map);
 
   return (
-    <div id="map" style={{ width: '500px', height: '500px' }} ref={mapRef} />
+    <WrapperContainer>
+      <div id="map" ref={mapRef} />
+    </WrapperContainer>
   );
 }
 

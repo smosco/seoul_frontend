@@ -4,9 +4,10 @@ import { useLocation } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
-import SearchContainer from '../components/SearchInput';
+import SearchContainer from '../components/Search';
 import { Coord } from '../types/mapTypes';
 import RouteCarousel from '../components/RouteCarousel';
+import Wrapper from '../components/common/Wrapper';
 
 function RouteExplorer() {
   const { state } = useLocation();
@@ -74,21 +75,19 @@ function RouteExplorer() {
   }, [map, startPosition, endPosition, waypoints]);
 
   return (
-    <>
+    <Wrapper>
       <SearchContainer
         setStartPosition={setStartPosition}
         setEndPosition={setEndPosition}
         endName={state?.endName}
       />
-      <div
-        id="map_div"
-        style={{ width: '500px', height: '500px' }}
-        ref={mapRef}
-      />
+
+      <div id="map_div" ref={mapRef} />
+
       {routeInfo && (
         <RouteCarousel routeInfo={routeInfo} waypoints={waypoints} />
       )}
-    </>
+    </Wrapper>
   );
 }
 
