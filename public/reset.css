@@ -105,6 +105,9 @@ nav,
 section {
   display: block;
 }
+* {
+  box-sizing: border-box;
+}
 body {
   line-height: 1;
   color: #2e2d2c;

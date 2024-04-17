@@ -10,6 +10,7 @@ export const Carousel = styled.div`
   justify-content: center;
   padding-inline: 1rem;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
   position: fixed;
   bottom: 1.2rem;
   left: 1.25rem;
