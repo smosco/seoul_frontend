@@ -28,7 +28,7 @@ const getImageSrc = (facilities?: FacilitiesType) => {
       return fireStation;
     case 'safetyfacility':
       return safetFacility;
-    case 'saftycenter':
+    case 'safetycenter':
       return safetCenter;
     case 'emergencybell':
       return emergencyBell;

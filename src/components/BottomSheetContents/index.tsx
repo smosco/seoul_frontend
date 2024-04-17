@@ -35,7 +35,7 @@ function Content(){
         return '소방서';
       case 'heatshelter':
         return '무더위 쉼터';
-      case 'saftycenter':
+      case 'safetycenter':
         return '안전센터';
       case 'emergencybell':
         return '비상벨';

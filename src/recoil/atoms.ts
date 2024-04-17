@@ -4,11 +4,11 @@ const filterState = atom<{[key:string] : boolean}>({
   key: 'filterState',
   default: {
     cctv: false,
-    fireStation: false,
-    safetyFacility: false,
-    saftyCenter: false,
-    emergencyBell: false,
-    heatShelter: false
+    firestation: false,
+    safetyfacility: false,
+    safetycenter: false,
+    emergencybell: false,
+    heatshelter: false
   }
 });
 
