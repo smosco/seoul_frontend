@@ -3,7 +3,7 @@ import usePlaceSearch from '../../hooks/usePlaceSearch';
 import useCurrentPosition from '../../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../../utils/mapUtils';
 import { Coord, SearchState, Place } from '../../types/mapTypes';
-import { SearchWrapper } from './style';
+import { SearchWrapper, SearchInput } from './style';
 
 interface SearchBoxProps {
   searchState: SearchState;
@@ -44,7 +44,7 @@ function SearchBox({
   };
 
   return (
-    <>
+    <SearchInput>
       <input
         type="text"
         value={isSearching ? keyword : selectedName}
@@ -79,7 +79,7 @@ function SearchBox({
           ))}
         </ul>
       )}
-    </>
+    </SearchInput>
   );
 }
 
