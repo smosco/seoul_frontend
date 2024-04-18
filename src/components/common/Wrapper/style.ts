@@ -5,7 +5,7 @@ export const WrapperContainer = styled.div`
   /* 공통 스타일링 */
   max-width: 360px;
   /* background-color: yellow; */
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
