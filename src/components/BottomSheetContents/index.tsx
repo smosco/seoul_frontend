@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
-  FacilityButton,
   Wrapper,
   ReportBtn,
   Label,
@@ -9,20 +8,11 @@ import {
 } from './style';
 import ReportList from '../ReportList';
 import filterState from '../../recoil/atoms';
-import ScrollWrapper from '../ScrollWrapper';
+import FilterWrapper from '../FilterWrapper';
 
 function Content() {
   const [isChecked, setIsChecked] = useState(false);
   const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
-
-  const handleButtonClick = (e: React.MouseEvent, title: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentFilters({
-      ...currentFilters,
-      [title]: !currentFilters[title],
-    });
-  };
 
   const handleChange = () => {
     setIsChecked(!isChecked);
@@ -37,27 +27,6 @@ function Content() {
     );
   }, [isChecked]);
 
-  const POSITIONTITLE = ['cctv', 'firestation', 'safetyfacility', 'safetycenter', 'emergencybell', 'heatshelter'];
-
-  function traslateToKorean(input: string): string {
-    switch (input) {
-      case 'cctv':
-        return 'CCTV';
-      case 'safetyfacility':
-        return '안전시설';
-      case 'firestation':
-        return '소방서';
-      case 'heatshelter':
-        return '무더위 쉼터';
-      case 'safetycenter':
-        return '안전센터';
-      case 'emergencybell':
-        return '비상벨';
-      default:
-        return '알 수 없는 입력값';
-    }
-  }
-
   return (
     <>
       <Wrapper>
@@ -70,18 +39,7 @@ function Content() {
           />
           안전시설 모두보기
         </Label>
-        <ScrollWrapper>
-          {POSITIONTITLE.map((position) => (
-            <FacilityButton
-              key={`facilityBtn_${position}`}
-              $isClicked={currentFilters[position]}
-              onMouseDown={(e) => handleButtonClick(e, position)}
-              type="button"
-            >
-              {traslateToKorean(position)}
-            </FacilityButton>
-          ))}
-        </ScrollWrapper>
+        <FilterWrapper />
         <ReportBtn type="button">1시간 내 긴급신고</ReportBtn>
       </Wrapper>
       <ReportListWrapper>

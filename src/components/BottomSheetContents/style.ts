@@ -1,9 +1,5 @@
 import styled from 'styled-components';
 
-interface FacilityButtonProps {
-  $isClicked: boolean;
-}
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,19 +10,6 @@ export const Wrapper = styled.div`
 
 export const Label = styled.label`
   margin-left: 1rem;
-`;
-
-export const FacilityButton = styled.button<FacilityButtonProps>`
-  min-width: 4.5rem;
-  width: fit-content;
-  height: 2rem;
-  padding: 6px 6px;
-  border: none;
-  border-radius: 2rem;
-  background-color: ${(props) => (props.$isClicked ? '#F9ECD4' : '#F4F4F4')};
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
 `;
 
 export const ReportBtn = styled.button`
