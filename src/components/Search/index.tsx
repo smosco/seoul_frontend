@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import usePlaceSearch from '../../hooks/usePlaceSearch';
 import useCurrentPosition from '../../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../../utils/mapUtils';
@@ -9,6 +10,7 @@ import {
   SearchResultContainer,
   SearchResultList,
 } from './style';
+import { endNameState, endPositionState } from '../../recoil/atoms';
 
 interface SearchBoxProps {
   searchState: SearchState;
@@ -23,11 +25,6 @@ interface SearchBoxProps {
 interface ContainerProps {
   // eslint-disable-next-line react/require-default-props
   setStartPosition?: React.Dispatch<React.SetStateAction<Coord>>;
-  setEndPosition: React.Dispatch<React.SetStateAction<Coord>>;
-  // eslint-disable-next-line react/require-default-props
-  endName?: string;
-  // eslint-disable-next-line react/require-default-props
-  setEndName?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function SearchBox({
@@ -86,12 +83,9 @@ function SearchBox({
   );
 }
 
-function SearchContainer({
-  setStartPosition,
-  setEndPosition,
-  endName,
-  setEndName,
-}: ContainerProps) {
+function SearchContainer({ setStartPosition }: ContainerProps) {
+  const setEndPosition = useSetRecoilState(endPositionState);
+  const [endName, setEndName] = useRecoilState(endNameState);
   const { currentPosition } = useCurrentPosition();
   const [startSearchState, setStartSearchState] = useState<SearchState>({
     keyword: '',

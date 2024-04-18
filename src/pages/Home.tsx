@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
 import BottomSheet from '../components/BottomSheet';
-import { Coord } from '../types/mapTypes';
 import useFilteringMarker from '../hooks/useFilteringMarker';
 import { WrapperContainer } from '../components/common/Wrapper/style';
 
@@ -25,16 +24,9 @@ function Home() {
     lat: 37.606,
     lng: 126.9576788,
   });
-  const [endPosition, setEndPosition] = useState<Coord>({
-    latitude: undefined,
-    longitude: undefined,
-  });
-  const [endName, setEndName] = useState<string>('');
 
   const findRoute = () => {
-    navigate('/routes', {
-      state: { endPosition, endName },
-    });
+    navigate('/routes');
   };
 
   useEffect(() => {
@@ -49,11 +41,7 @@ function Home() {
 
   return (
     <WrapperContainer>
-      <SearchContainer
-        setEndPosition={setEndPosition}
-        endName={endName}
-        setEndName={setEndName}
-      />
+      <SearchContainer />
       <button type="button" onClick={findRoute}>
         길찾기
       </button>
