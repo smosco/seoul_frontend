@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
 import { Coord } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
-import { endNameState } from '../recoil/atoms';
+import { endPositionState } from '../recoil/atoms';
 
 function DetailRoute() {
-  const [endName, setEndName] = useRecoilState(endNameState);
-
-  const { state } = useLocation();
   const { currentPosition } = useCurrentPosition();
   const mapRef = useRef(null);
   const { map } = useMap(
@@ -25,10 +21,7 @@ function DetailRoute() {
     latitude: undefined,
     longitude: undefined,
   });
-  const [endPosition, setEndPosition] = useState<Coord>({
-    latitude: undefined,
-    longitude: undefined,
-  });
+  const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [markers, setMarkers] = useState<any[]>([]);
   const [, setRouteInfo] = useState<{
@@ -73,12 +66,6 @@ function DetailRoute() {
   ]);
 
   useEffect(() => {
-    if (state && state.endPosition) {
-      setEndPosition(state.endPosition);
-    }
-  }, [state]);
-
-  useEffect(() => {
     if (!currentPosition) return;
 
     // 현재 위치 마커 생성 및 추가
@@ -109,12 +96,7 @@ function DetailRoute() {
 
   return (
     <Wrapper>
-      <SearchContainer
-        setStartPosition={setStartPosition}
-        setEndPosition={setEndPosition}
-        setEndName={setEndName}
-        endName={endName}
-      />
+      <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
 
