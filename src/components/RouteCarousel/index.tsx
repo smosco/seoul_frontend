@@ -6,12 +6,13 @@ import danger from '../../assets/images/danger.svg';
 interface RouteInfoProps {
   routeInfo: { time: string; distance: string };
   waypoints: Coord[];
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-function RouteCarousel({ routeInfo, waypoints }: RouteInfoProps) {
+function RouteCarousel({ routeInfo, waypoints, onClick }: RouteInfoProps) {
   const { time, distance } = routeInfo;
   return (
-    <Carousel>
+    <Carousel onClick={onClick}>
       <Info>
         <p className="time">{time}</p>
         <p className="distance">{distance}</p>

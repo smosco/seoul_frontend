@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
 import { Coord } from '../types/mapTypes';
-import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
 
-function RouteExplorer() {
-  const navigate = useNavigate();
+function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
   const mapRef = useRef(null);
   const { map } = useMap(
@@ -27,7 +24,7 @@ function RouteExplorer() {
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [markers, setMarkers] = useState<any[]>([]);
-  const [routeInfo, setRouteInfo] = useState<{
+  const [, setRouteInfo] = useState<{
     time: string;
     distance: string;
   }>();
@@ -97,25 +94,15 @@ function RouteExplorer() {
       .catch((error) => console.error('Error drawing route:', error));
   }, [map, startPosition, endPosition, waypoints]);
 
-  const onClick = () => {
-    navigate('/route-detail');
-  };
-
   return (
     <Wrapper>
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
 
-      {routeInfo && (
-        <RouteCarousel
-          routeInfo={routeInfo}
-          waypoints={waypoints}
-          onClick={onClick}
-        />
-      )}
+      <button type="button">신고하기</button>
     </Wrapper>
   );
 }
 
-export default RouteExplorer;
+export default DetailRoute;
