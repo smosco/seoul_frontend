@@ -10,7 +10,7 @@ function FilterWrapper() {
   const [isDrag, setIsDrag] = useState<boolean>(false);
   const [startX, setStartX] = useState<number>();
   const [prevX, setPrevX] = useState<number>(0);
-  const [diff, setDiff] = useState<number>(0);
+  const [diff, setDiff] = useState<number | undefined>(undefined);
   const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
 
   const handleButtonClick = (title: string) => {
