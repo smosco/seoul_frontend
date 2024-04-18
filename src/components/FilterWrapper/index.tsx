@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import filterState from '../../recoil/atoms';
 import { FacilityButton, Wrapper } from './style';
+import POSITION_TITLES from '../../constant/filterButtonTitle';
+import throttle from '../../utils/commonUtils';
 
 function FilterWrapper() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -11,28 +13,7 @@ function FilterWrapper() {
   const [diff, setDiff] = useState<number>(0);
   const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
 
-  const POSITIONTITLE = ['cctv', 'firestation', 'safetyfacility', 'safetycenter', 'emergencybell', 'heatshelter'];
-
-  function traslateToKorean(input: string): string {
-    switch (input) {
-      case 'cctv':
-        return 'CCTV';
-      case 'safetyfacility':
-        return '안전시설';
-      case 'firestation':
-        return '소방서';
-      case 'heatshelter':
-        return '무더위 쉼터';
-      case 'safetycenter':
-        return '안전센터';
-      case 'emergencybell':
-        return '비상벨';
-      default:
-        return '알 수 없는 입력값';
-    }
-  }
-
-  const handleButtonClick = (e: React.MouseEvent, title: string) => {
+  const handleButtonClick = (title: string) => {
     if(diff === 0) {
       setCurrentFilters({
         ...currentFilters,
@@ -41,25 +22,8 @@ function FilterWrapper() {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const throttle = (func: (...args: any[]) => void, delay: number) => {
-    let throttled = false;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (...args: any[]) => {
-      if (!throttled) {
-        throttled = true;
-        setTimeout(() => {
-          func(...args);
-          throttled = false;
-        }, delay);
-      }
-    };
-  };
-
   const onDragStart = (e: React.MouseEvent) => {
     if(!scrollRef.current) return;
-    e.preventDefault();
-    e.stopPropagation();
 
     setStartX(e.pageX + scrollRef.current.scrollLeft);
     setPrevX(e.pageX);
@@ -74,8 +38,6 @@ function FilterWrapper() {
   const onDragMove = (e: React.MouseEvent):void => {
     if(!scrollRef.current || !startX ) return;
     if(isDrag) {
-      e.preventDefault();
-      e.stopPropagation();
       const {scrollWidth, clientWidth, scrollLeft} = scrollRef.current;
       scrollRef.current.scrollLeft = startX - e.pageX;
 
@@ -98,14 +60,14 @@ function FilterWrapper() {
       onMouseUp={DragEnd}
       onMouseLeave={DragEnd}
     >
-      {POSITIONTITLE.map((position) => (
+      {Object.entries(POSITION_TITLES).map(([position, label]) => (
         <FacilityButton
-          key={`facilityBtn_${position}`}
+          key={position}
           $isClicked={currentFilters[position]}
-          onMouseUp={(e: React.MouseEvent) => handleButtonClick(e, position)}
+          onMouseUp={() => handleButtonClick(position)}
           type="button"
         >
-          {traslateToKorean(position)}
+          {label}
         </FacilityButton>
       ))}
     </Wrapper >
