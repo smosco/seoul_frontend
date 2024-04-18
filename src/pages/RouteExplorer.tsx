@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
@@ -8,6 +9,7 @@ import SearchContainer from '../components/Search';
 import { Coord } from '../types/mapTypes';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
+import { endNameState } from '../recoil/atoms';
 
 function RouteExplorer() {
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ function RouteExplorer() {
     time: string;
     distance: string;
   }>();
+  const [endName, setEndName] = useRecoilState(endNameState);
 
   const [waypoints] = useState([
     {
@@ -116,7 +119,8 @@ function RouteExplorer() {
       <SearchContainer
         setStartPosition={setStartPosition}
         setEndPosition={setEndPosition}
-        endName={state?.endName}
+        endName={endName}
+        setEndName={setEndName}
       />
 
       <div id="map_div" ref={mapRef} />

@@ -1,16 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
 import { Coord } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
+import { endNameState } from '../recoil/atoms';
 
 function DetailRoute() {
+  const [endName, setEndName] = useRecoilState(endNameState);
+
   const { state } = useLocation();
-  console.log(state);
   const { currentPosition } = useCurrentPosition();
   const mapRef = useRef(null);
   const { map } = useMap(
@@ -109,7 +112,8 @@ function DetailRoute() {
       <SearchContainer
         setStartPosition={setStartPosition}
         setEndPosition={setEndPosition}
-        endName={state?.endName}
+        setEndName={setEndName}
+        endName={endName}
       />
 
       <div id="map_div" ref={mapRef} />

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
@@ -9,6 +10,7 @@ import BottomSheet from '../components/BottomSheet';
 import { Coord } from '../types/mapTypes';
 import useFilteringMarker from '../hooks/useFilteringMarker';
 import { WrapperContainer } from '../components/common/Wrapper/style';
+import { endNameState } from '../recoil/atoms';
 
 function Home() {
   const navigate = useNavigate();
@@ -29,11 +31,11 @@ function Home() {
     latitude: undefined,
     longitude: undefined,
   });
-  const [endName, setEndName] = useState<string>('');
+  const [endName, setEndName] = useRecoilState<string>(endNameState);
 
   const findRoute = () => {
     navigate('/routes', {
-      state: { endPosition, endName },
+      state: { endPosition },
     });
   };
 
