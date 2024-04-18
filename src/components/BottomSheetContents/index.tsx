@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   FacilityButton,
-  ButtonWrapper,
   Wrapper,
   ReportBtn,
   Label,
@@ -10,12 +9,15 @@ import {
 } from './style';
 import ReportList from '../ReportList';
 import filterState from '../../recoil/atoms';
+import ScrollWrapper from '../ScrollWrapper';
 
 function Content() {
   const [isChecked, setIsChecked] = useState(false);
   const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
 
-  const handleButtonClick = (title: string) => {
+  const handleButtonClick = (e: React.MouseEvent, title: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     setCurrentFilters({
       ...currentFilters,
       [title]: !currentFilters[title],
@@ -68,18 +70,18 @@ function Content() {
           />
           안전시설 모두보기
         </Label>
-        <ButtonWrapper>
+        <ScrollWrapper>
           {POSITIONTITLE.map((position) => (
             <FacilityButton
               key={`facilityBtn_${position}`}
               $isClicked={currentFilters[position]}
-              onMouseDown={() => handleButtonClick(position)}
+              onMouseDown={(e) => handleButtonClick(e, position)}
               type="button"
             >
               {traslateToKorean(position)}
             </FacilityButton>
           ))}
-        </ButtonWrapper>
+        </ScrollWrapper>
         <ReportBtn type="button">1시간 내 긴급신고</ReportBtn>
       </Wrapper>
       <ReportListWrapper>

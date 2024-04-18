@@ -16,21 +16,6 @@ export const Label = styled.label`
   margin-left: 1rem;
 `;
 
-export const ButtonWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  gap: 0.5rem;
-  padding: 1rem;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-`;
-
 export const FacilityButton = styled.button<FacilityButtonProps>`
   min-width: 4.5rem;
   width: fit-content;
