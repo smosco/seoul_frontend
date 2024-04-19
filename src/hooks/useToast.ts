@@ -10,7 +10,6 @@ export default function useToast() {
   const createToast = (toast: ToastStateType) => {
     setToasts(toast);
 
-    // 5초 후에 토스트 상태를 초기화합니다.
     setTimeout(() => {
       setToasts(null);
     }, LAST_SECONDS * 1000);

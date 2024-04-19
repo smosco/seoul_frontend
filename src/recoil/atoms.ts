@@ -31,8 +31,5 @@ export const endPositionState = atom<Coord>({
 
 export const toastState = atom<ToastStateType | null>({
   key: 'toastState',
-  default: {
-    msg : undefined,
-    type : undefined,
-  }
+  default: null
 });

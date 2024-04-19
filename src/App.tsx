@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import EmergencyPage from './pages/EmergencyPage';
 import RouteExplorer from './pages/RouteExplorer';
 import DetailRoute from './pages/DetailRoute';
-import Toast from './components/Toast';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +35,6 @@ function App() {
   return (
     <RecoilRoot>
       <RouterProvider router={router} />
-      <Toast />
     </RecoilRoot>
   );
 }

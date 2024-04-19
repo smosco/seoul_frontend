@@ -7,7 +7,7 @@ import { generateMarker } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
 import BottomSheet from '../components/BottomSheet';
 import useFilteringMarker from '../hooks/useFilteringMarker';
-import { WrapperContainer } from '../components/common/Wrapper/style';
+import Wrapper from '../components/common/Wrapper';
 
 function Home() {
   const navigate = useNavigate();
@@ -40,14 +40,14 @@ function Home() {
   }, [map]);
 
   return (
-    <WrapperContainer>
+    <Wrapper>
       <SearchContainer />
       <button type="button" onClick={findRoute}>
         길찾기
       </button>
       <div id="map_div" ref={mapRef} />
       <BottomSheet />
-    </WrapperContainer>
+    </Wrapper>
   );
 }
 
