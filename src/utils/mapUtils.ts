@@ -18,6 +18,7 @@ import {
   Tmapv2,
   Coord,
   Place,
+  WaypointInfo,
 } from '../types/mapTypes';
 
 const getImageSrc = (facilities?: FacilitiesType) => {
@@ -229,9 +230,12 @@ export const drawRoute = async (
   map: any,
   startPosition: Coord,
   endPosition: Coord,
-  waypoints: Coord[],
+  waypoints: WaypointInfo[],
   prevPolylines: any[],
   prevMarkers: any[],
+  setSelectedMarkerId?: React.Dispatch<
+    React.SetStateAction<number | undefined>
+  >,
 ) => {
   try {
     // 이전 경로, 마커 제거
@@ -286,6 +290,11 @@ export const drawRoute = async (
         iconSize: new Tmapv2.Size(26, 34),
         map,
       });
+      if (setSelectedMarkerId) {
+        marker.addListener('click', () => {
+          setSelectedMarkerId(waypoint.id);
+        });
+      }
       markers.push(marker);
     });
 
@@ -340,7 +349,8 @@ export const drawRoute = async (
   }
 };
 
-export const transformData = (data: any) => {
+export const transformData = (data: WaypointInfo | undefined) => {
+  if (!data) return [];
   return [
     { subject: 'Emergency Bell', A: data.emergency_bell_and_distance_score },
     { subject: 'Safety Center', A: data.safety_center_and_distacne_score },

@@ -65,7 +65,10 @@ function DetailRoute() {
       number_of_cctv_score: 100.0,
     },
   ]);
-
+  const [selectedMarkerId, setSelectedMarkerId] = useState<
+    number | undefined
+  >();
+  console.log(selectedMarkerId);
   useEffect(() => {
     if (!currentPosition) return;
 
@@ -80,7 +83,15 @@ function DetailRoute() {
   useEffect(() => {
     if (!map) return;
 
-    drawRoute(map, startPosition, endPosition, waypoints, polylines, markers)
+    drawRoute(
+      map,
+      startPosition,
+      endPosition,
+      waypoints,
+      polylines,
+      markers,
+      setSelectedMarkerId,
+    )
       .then(({ newPolylines, newMarkers, tTime, tDistance }) => {
         setPolylines(newPolylines);
         setMarkers(newMarkers);
@@ -100,7 +111,12 @@ function DetailRoute() {
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
-      <Chart data={waypoints[1]} />
+
+      {selectedMarkerId !== undefined && (
+        <Chart
+          data={waypoints.find((waypoint) => waypoint.id === selectedMarkerId)}
+        />
+      )}
 
       <button type="button">신고하기</button>
     </Wrapper>

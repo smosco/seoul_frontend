@@ -11,7 +11,7 @@ import { transformData } from '../../utils/mapUtils';
 import { WaypointInfo } from '../../types/mapTypes';
 
 interface ChartProps {
-  data: WaypointInfo;
+  data: WaypointInfo | undefined;
 }
 
 function Chart({ data }: ChartProps) {
