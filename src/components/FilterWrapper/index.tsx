@@ -4,6 +4,7 @@ import filterState from '../../recoil/atoms';
 import { FacilityButton, Wrapper } from './style';
 import POSITION_TITLES from '../../constant/filterButtonTitle';
 import { throttle } from '../../utils/commonUtils';
+import useToast from '../../hooks/useToast';
 
 function FilterWrapper() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -12,6 +13,7 @@ function FilterWrapper() {
   const [prevX, setPrevX] = useState<number>(0);
   const [diff, setDiff] = useState<number | undefined>(undefined);
   const [currentFilters, setCurrentFilters] = useRecoilState(filterState);
+  const { createToast } = useToast();
 
   const handleButtonClick = (title: string) => {
     if(diff === 0) {
@@ -20,6 +22,10 @@ function FilterWrapper() {
         [title]: !currentFilters[title],
       });
     }
+    createToast({
+      type: 'success',
+      msg: `${title}(${!currentFilters[title] ? 'ON' : 'OFF'})`
+    });
   };
 
   const onDragStart = (e: React.MouseEvent) => {
