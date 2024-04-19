@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 
 export const WrapperContainer = styled.div`
+  position: relative;
   /* 공통 스타일링 */
   max-width: 360px;
   /* background-color: yellow; */
