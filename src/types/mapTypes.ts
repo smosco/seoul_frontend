@@ -33,3 +33,15 @@ export interface Place {
   latitude: number;
   longitude: number;
 }
+
+export interface WaypointInfo {
+  id: number;
+  longitude: number;
+  latitude: number;
+  rank_score: number;
+  emergency_bell_and_distance_score: number;
+  safety_center_and_distacne_score: number;
+  grid_shelter_distance_score: number;
+  grid_facilities_distance_score: number;
+  number_of_cctv_score: number;
+}

@@ -18,6 +18,7 @@ import {
   Tmapv2,
   Coord,
   Place,
+  WaypointInfo,
 } from '../types/mapTypes';
 
 const getImageSrc = (facilities?: FacilitiesType) => {
@@ -229,9 +230,12 @@ export const drawRoute = async (
   map: any,
   startPosition: Coord,
   endPosition: Coord,
-  waypoints: Coord[],
+  waypoints: WaypointInfo[],
   prevPolylines: any[],
   prevMarkers: any[],
+  setSelectedMarkerId?: React.Dispatch<
+    React.SetStateAction<number | undefined>
+  >,
 ) => {
   try {
     // 이전 경로, 마커 제거
@@ -286,6 +290,14 @@ export const drawRoute = async (
         iconSize: new Tmapv2.Size(26, 34),
         map,
       });
+      if (setSelectedMarkerId) {
+        marker.addListener('click', () => {
+          setSelectedMarkerId(waypoint.id);
+        });
+        marker.addListener('touchstart', () => {
+          setSelectedMarkerId(waypoint.id);
+        });
+      }
       markers.push(marker);
     });
 
@@ -338,4 +350,15 @@ export const drawRoute = async (
     console.error('Error:', error);
     return { newPolylines: [], newMarkers: [], tTime: '', tDistance: '' };
   }
+};
+
+export const transformData = (data: WaypointInfo | undefined) => {
+  if (!data) return [];
+  return [
+    { risk: '응급상황벨', A: data.emergency_bell_and_distance_score },
+    { risk: '안전센터', A: data.safety_center_and_distacne_score },
+    { risk: '보호시설', A: data.grid_shelter_distance_score },
+    { risk: '안전시설', A: data.grid_facilities_distance_score },
+    { risk: 'CCTV', A: data.number_of_cctv_score },
+  ];
 };
