@@ -8,6 +8,7 @@ import SearchContainer from '../components/Search';
 import { Coord } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
+import ReportButton from '../components/ReportButton';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -100,7 +101,7 @@ function DetailRoute() {
 
       <div id="map_div" ref={mapRef} />
 
-      <button type="button">신고하기</button>
+      <ReportButton />
     </Wrapper>
   );
 }

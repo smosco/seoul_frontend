@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import filterState from '../../recoil/atoms';
 import { FacilityButton, Wrapper } from './style';
 import POSITION_TITLES from '../../constant/filterButtonTitle';
-import throttle from '../../utils/commonUtils';
+import { throttle } from '../../utils/commonUtils';
 
 function FilterWrapper() {
   const scrollRef = useRef<HTMLDivElement>(null);
