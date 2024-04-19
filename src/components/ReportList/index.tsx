@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ContentsWrapper, Wrapper } from './style';
 import timeStamp from '../../constant/mockingTimeStamp';
 
-export function convertDateFormat(isoDateString:string) {
+export function convertDateFormat(isoDateString:string):string {
   const date = new Date(isoDateString);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
