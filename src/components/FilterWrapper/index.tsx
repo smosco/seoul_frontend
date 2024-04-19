@@ -25,14 +25,15 @@ function FilterWrapper() {
   const onDragStart = (e: React.MouseEvent) => {
     if(!scrollRef.current) return;
 
+    setDiff(0);
     setStartX(e.pageX + scrollRef.current.scrollLeft);
     setPrevX(e.pageX);
     setIsDrag(true);
   };
 
   const DragEnd = (e: React.MouseEvent) => {
-    setIsDrag(false);
     setDiff(Math.abs(prevX - e.pageX));
+    setIsDrag(false);
   };
 
   const onDragMove = (e: React.MouseEvent):void => {
@@ -40,7 +41,7 @@ function FilterWrapper() {
     if(isDrag) {
       const {scrollWidth, clientWidth, scrollLeft} = scrollRef.current;
       scrollRef.current.scrollLeft = startX - e.pageX;
-
+      setDiff(Math.abs(prevX - e.pageX));
       if(scrollLeft === 0) {
         setStartX(e.pageX);
       } else if (scrollWidth <= clientWidth + scrollLeft) {
