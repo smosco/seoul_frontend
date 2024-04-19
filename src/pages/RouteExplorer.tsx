@@ -6,7 +6,7 @@ import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
-import { Coord } from '../types/mapTypes';
+import { Coord, WaypointInfo } from '../types/mapTypes';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
@@ -32,7 +32,7 @@ function RouteExplorer() {
     distance: string;
   }>();
 
-  const [waypoints] = useState([
+  const [waypoints] = useState<WaypointInfo[]>([
     {
       id: 16684.0,
       longitude: 127.013,
