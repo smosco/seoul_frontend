@@ -294,6 +294,9 @@ export const drawRoute = async (
         marker.addListener('click', () => {
           setSelectedMarkerId(waypoint.id);
         });
+        marker.addListener('touchstart', () => {
+          setSelectedMarkerId(waypoint.id);
+        });
       }
       markers.push(marker);
     });
@@ -352,10 +355,10 @@ export const drawRoute = async (
 export const transformData = (data: WaypointInfo | undefined) => {
   if (!data) return [];
   return [
-    { subject: 'Emergency Bell', A: data.emergency_bell_and_distance_score },
-    { subject: 'Safety Center', A: data.safety_center_and_distacne_score },
-    { subject: 'Grid Shelter', A: data.grid_shelter_distance_score },
-    { subject: 'Grid Facilities', A: data.grid_facilities_distance_score },
-    { subject: 'Number of CCTV', A: data.number_of_cctv_score },
+    { risk: '응급상황벨', A: data.emergency_bell_and_distance_score },
+    { risk: '안전센터', A: data.safety_center_and_distacne_score },
+    { risk: '보호시설', A: data.grid_shelter_distance_score },
+    { risk: '안전시설', A: data.grid_facilities_distance_score },
+    { risk: 'CCTV', A: data.number_of_cctv_score },
   ];
 };

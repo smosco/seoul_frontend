@@ -68,7 +68,7 @@ function DetailRoute() {
   const [selectedMarkerId, setSelectedMarkerId] = useState<
     number | undefined
   >();
-  console.log(selectedMarkerId);
+
   useEffect(() => {
     if (!currentPosition) return;
 

@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 import { transformData } from '../../utils/mapUtils';
 import { WaypointInfo } from '../../types/mapTypes';
+import { ChartWrapper, Content } from './style';
 
 interface ChartProps {
   data: WaypointInfo | undefined;
@@ -16,19 +17,27 @@ interface ChartProps {
 
 function Chart({ data }: ChartProps) {
   const riskData = transformData(data);
+
   return (
-    <RadarChart width={200} height={200} data={riskData}>
-      <PolarGrid />
-      <PolarAngleAxis dataKey="subject" />
-      <PolarRadiusAxis />
-      <Radar
-        name="Scores"
-        dataKey="A"
-        stroke="#8884d8"
-        fill="#8884d8"
-        fillOpacity={0.6}
-      />
-    </RadarChart>
+    <ChartWrapper>
+      <RadarChart width={170} height={130} data={riskData}>
+        <PolarGrid />
+        <PolarAngleAxis dataKey="risk" tick={{ fontSize: 8 }} />
+        <PolarRadiusAxis tick={{ fontSize: 5 }} />
+        <Radar
+          name="risk-scores"
+          dataKey="A"
+          stroke="#FF5757"
+          fill="#FF5757"
+          fillOpacity={0.6}
+        />
+      </RadarChart>
+      <Content>
+        <p>cctv가 별로 없어요</p>
+        <p>안전시설이 멀어요</p>
+        <p>더위 쉼터가 없어요</p>
+      </Content>
+    </ChartWrapper>
   );
 }
 
