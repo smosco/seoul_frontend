@@ -5,9 +5,10 @@ import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
-import { Coord } from '../types/mapTypes';
+import { Coord, WaypointInfo } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
+import Chart from '../components/Chart';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -29,7 +30,7 @@ function DetailRoute() {
     distance: string;
   }>();
 
-  const [waypoints] = useState([
+  const [waypoints] = useState<WaypointInfo[]>([
     {
       id: 16684.0,
       longitude: 127.013,
@@ -99,6 +100,7 @@ function DetailRoute() {
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
+      <Chart data={waypoints[1]} />
 
       <button type="button">신고하기</button>
     </Wrapper>

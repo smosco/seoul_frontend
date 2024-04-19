@@ -339,3 +339,13 @@ export const drawRoute = async (
     return { newPolylines: [], newMarkers: [], tTime: '', tDistance: '' };
   }
 };
+
+export const transformData = (data: any) => {
+  return [
+    { subject: 'Emergency Bell', A: data.emergency_bell_and_distance_score },
+    { subject: 'Safety Center', A: data.safety_center_and_distacne_score },
+    { subject: 'Grid Shelter', A: data.grid_shelter_distance_score },
+    { subject: 'Grid Facilities', A: data.grid_facilities_distance_score },
+    { subject: 'Number of CCTV', A: data.number_of_cctv_score },
+  ];
+};
