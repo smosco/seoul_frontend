@@ -5,6 +5,9 @@ import useCurrentPosition from '../hooks/useCurruntPosition';
 import useEmergencyMarker from '../hooks/useEmergencyMarker';
 import { WrapperContainer } from '../components/common/Wrapper/style';
 import useFilteringMarker from '../hooks/useFilteringMarker';
+import EmergencyHeader from '../components/EmergencyHeader';
+import timeStamp from '../constant/mockingTimeStamp';
+import { convertDateFormat } from '../components/ReportList';
 
 function EmergencyPage() {
   const mapRef = useRef(null);
@@ -22,8 +25,11 @@ function EmergencyPage() {
     lng: 127.073,
   });
 
+  const STAMP = timeStamp.filter(item => item.id === Number(emergencyId))[0];
+
   return (
     <WrapperContainer>
+      <EmergencyHeader title={convertDateFormat(STAMP.timestamp)} />
       <div id="map_div" ref={mapRef} />
     </WrapperContainer>
   );

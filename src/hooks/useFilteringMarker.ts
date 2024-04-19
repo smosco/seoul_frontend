@@ -70,7 +70,7 @@ function useFilteringMarker({ map, lat, lng }: UseFilteringMarkerProps): void {
       .catch(err => {
         console.error(err);
       });
-  }, [filterValue, lat, lng]);
+  }, [filterValue, lat, lng, map]);
 }
 
 export default useFilteringMarker;
