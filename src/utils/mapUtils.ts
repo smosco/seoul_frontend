@@ -10,7 +10,11 @@ import heatShelter from '../assets/images/heatshelter.png';
 import location from '../assets/images/location.png';
 import sp from '../assets/images/sp.png';
 import ep from '../assets/images/ep.png';
-import pp from '../assets/images/pp.png';
+import pp1 from '../assets/images/pp1.png';
+import pp2 from '../assets/images/pp2.png';
+import pp3 from '../assets/images/pp3.png';
+import pp4 from '../assets/images/pp4.png';
+import pp5 from '../assets/images/pp5.png';
 
 import {
   FacilitiesType,
@@ -226,6 +230,24 @@ export const searchPOI = async (
   }
 };
 
+const getMarkerIcon = (rankScore: number) => {
+  let iconUrl;
+  // rank score에 따라 다른 아이콘 선택
+  if (rankScore >= 97) {
+    iconUrl = pp5;
+  } else if (rankScore >= 95) {
+    iconUrl = pp4;
+  } else if (rankScore >= 92) {
+    iconUrl = pp3;
+  } else if (rankScore >= 90) {
+    iconUrl = pp2;
+  } else {
+    iconUrl = pp1;
+  }
+
+  return iconUrl;
+};
+
 export const drawRoute = async (
   map: any,
   startPosition: Coord,
@@ -286,7 +308,7 @@ export const drawRoute = async (
     waypoints.forEach((waypoint) => {
       const marker = new Tmapv2.Marker({
         position: new Tmapv2.LatLng(waypoint.latitude, waypoint.longitude),
-        icon: pp,
+        icon: getMarkerIcon(waypoint.rank_score),
         iconSize: new Tmapv2.Size(26, 34),
         map,
       });
