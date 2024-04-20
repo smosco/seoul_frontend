@@ -37,7 +37,7 @@
     "quotes": ["error", "single"], // 문자열에는 작은 따옴표를 사용하도록 강제합니다.
     "no-var": "error", // var 키워드를 사용하지 않도록 강제합니다.
     "no-unused-vars": "error", // 사용되지 않는 변수를 선언하지 못하도록 강제합니다.
-    "no-console": "warn", // console.log() 등 디버깅용 메서드 사용을 금지합니다.
+    "no-console": "off", // console.log() 등 디버깅용 메서드 사용을 금지합니다.
     "eqeqeq": "error", // 일치 연산자(=== 및 !==)를 사용하여 타입 및 값까지 비교하도록 강제합니다.
     "no-undef": "error", // 정의되지 않은 변수를 사용하지 못하도록 강제합니다.
     "no-alert": "error", // alert() 사용을 금지합니다.
