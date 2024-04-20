@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import usePlaceSearch from '../../hooks/usePlaceSearch';
 import useCurrentPosition from '../../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../../utils/mapUtils';
@@ -9,6 +10,7 @@ import {
   SearchInput,
   SearchResultContainer,
   SearchResultList,
+  Button,
 } from './style';
 import { endNameState, endPositionState } from '../../recoil/atoms';
 
@@ -84,6 +86,7 @@ function SearchBox({
 }
 
 function SearchContainer({ setStartPosition }: ContainerProps) {
+  const navigate = useNavigate();
   const setEndPosition = useSetRecoilState(endPositionState);
   const [endName, setEndName] = useRecoilState(endNameState);
   const { currentPosition } = useCurrentPosition();
@@ -99,6 +102,9 @@ function SearchContainer({ setStartPosition }: ContainerProps) {
     selectedName: endName || '',
   });
   const endPlaces = usePlaceSearch(endSearchState.keyword);
+  const findRoute = () => {
+    navigate('/routes');
+  };
 
   // 혹시 나중에 출발지나 도착지를 현재 위치로 변경하는 기능을 추가할 때 유용할 것 같습니다.
   useEffect(() => {
@@ -130,6 +136,11 @@ function SearchContainer({ setStartPosition }: ContainerProps) {
         setPosition={setEndPosition}
         setName={setEndName}
       />
+      {!setStartPosition && (
+        <Button type="button" onClick={findRoute}>
+          길찾기
+        </Button>
+      )}
     </SearchWrapper>
   );
 }
