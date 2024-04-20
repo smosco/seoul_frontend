@@ -8,12 +8,12 @@ function ReportButton() {
   const { currentPosition } = useCurrentPosition();
 
   const postReport = async () => {
-    if(!currentPosition) return;
+    if (!currentPosition) return;
     try {
       await axios.post('http://3.34.25.245:80/api/report', {
-        'time' : getCurrentTimestamp(),
-        'longitude' : currentPosition?.coords.longitude,
-        'latitude': currentPosition?.coords.latitude
+        time: getCurrentTimestamp(),
+        longitude: currentPosition?.coords.longitude,
+        latitude: currentPosition?.coords.latitude,
       });
       // TODO : 정상 처리 시 신고 완료되었다는 toastUI가 있으면 좋겠다.
     } catch (err) {
@@ -21,10 +21,7 @@ function ReportButton() {
     }
   };
 
-
-  return (
-    <Button onMouseDown={postReport}>신고하기</Button>
-  );
+  return <Button onMouseDown={postReport}>신고하기</Button>;
 }
 
 export default ReportButton;
