@@ -4,7 +4,7 @@ import {
   Wrapper,
   ReportBtn,
   Label,
-  ReportListWrapper,
+  // ReportListWrapper,
 } from './style';
 import ReportList from '../ReportList';
 import filterState from '../../recoil/atoms';
@@ -42,9 +42,7 @@ function Content() {
         <FilterWrapper />
         <ReportBtn type="button">1시간 내 긴급신고</ReportBtn>
       </Wrapper>
-      <ReportListWrapper>
-        <ReportList />
-      </ReportListWrapper>
+      <ReportList />
     </>
   );
 }

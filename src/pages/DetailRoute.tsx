@@ -8,8 +8,8 @@ import SearchContainer from '../components/Search';
 import { Coord, WaypointInfo } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
-import ReportButton from '../components/ReportButton';
 import Chart from '../components/Chart';
+import ReportButton from '../components/ReportButton';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
