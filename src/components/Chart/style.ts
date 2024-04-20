@@ -10,7 +10,7 @@ export const ChartWrapper = styled.div`
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
   position: fixed;
-  bottom: 3rem;
+  bottom: 6rem;
   left: 1.25rem;
 `;
 

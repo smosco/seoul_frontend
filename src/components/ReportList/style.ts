@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { BOTTOM_SHEET_DEFAULT_HEIGHT, BOTTOM_SHEET_HEIGHT } from '../../constant/bottomSheetPosition';
 
 export const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
     background-color: #FFFBF3;
     height: ${BOTTOM_SHEET_HEIGHT - BOTTOM_SHEET_DEFAULT_HEIGHT}px;
     overflow: auto;
@@ -13,4 +15,9 @@ export const ContentsWrapper = styled.div`
     padding: 16px 0px;
     text-align: center;
     cursor: pointer;
+`;
+
+export const ErrorWrapper = styled.div`
+    text-align: center;
+    margin-top: 4rem
 `;

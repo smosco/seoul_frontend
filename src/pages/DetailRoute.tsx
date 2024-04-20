@@ -8,8 +8,8 @@ import SearchContainer from '../components/Search';
 import { Coord, WaypointInfo } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
-import ReportButton from '../components/ReportButton';
 import Chart from '../components/Chart';
+import ReportButton from '../components/ReportButton';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -113,7 +113,12 @@ function DetailRoute() {
 
       <div id="map_div" ref={mapRef} />
 
-      <button type="button">신고하기</button>
+      {selectedMarkerId !== undefined && (
+        <Chart
+          data={waypoints.find((waypoint) => waypoint.id === selectedMarkerId)}
+        />
+      )}
+      <ReportButton />
     </Wrapper>
   );
 }
