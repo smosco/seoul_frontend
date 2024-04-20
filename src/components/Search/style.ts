@@ -57,3 +57,15 @@ export const SearchResultList = styled.li`
     cursor: pointer;
   }
 `;
+
+export const Button = styled.button`
+  width: 340px;
+  height: 2.5rem;
+  border: none;
+  border-radius: 1.5rem;
+  color: #fff;
+  background-color: #ff7757;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+`;
