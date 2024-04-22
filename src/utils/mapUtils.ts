@@ -1,6 +1,16 @@
+/* eslint-disable indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import axios from 'axios';
+import {
+  WaypointMean,
+  FacilitiesType,
+  SearchState,
+  Tmapv2,
+  Coord,
+  Place,
+  WaypointInfo,
+} from '../types/mapTypes';
 import cctv from '../assets/images/cctv.png';
 import emergencyBell from '../assets/images/emergencybell.png';
 import safetFacility from '../assets/images/safetyfacility.png';
@@ -15,15 +25,6 @@ import pp2 from '../assets/images/pp2.png';
 import pp3 from '../assets/images/pp3.png';
 import pp4 from '../assets/images/pp4.png';
 import pp5 from '../assets/images/pp5.png';
-
-import {
-  FacilitiesType,
-  SearchState,
-  Tmapv2,
-  Coord,
-  Place,
-  WaypointInfo,
-} from '../types/mapTypes';
 
 const getImageSrc = (facilities?: FacilitiesType) => {
   switch (facilities) {
@@ -374,13 +375,52 @@ export const drawRoute = async (
   }
 };
 
-export const transformData = (data: WaypointInfo | undefined) => {
+function isWaypointInfo(data: any): data is WaypointInfo {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'emergency_bell_and_distance_score' in data &&
+    'safety_center_and_distacne_score' in data &&
+    'grid_shelter_distance_score' in data &&
+    'grid_facilities_distance_score' in data &&
+    'number_of_cctv_score' in data
+  );
+}
+
+function isWaypointMean(data: any): data is WaypointMean {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'emergency_bell_and_distance_score_mean' in data &&
+    'safety_center_and_distacne_score_mean' in data &&
+    'grid_shelter_distance_score_mean' in data &&
+    'grid_facilities_distance_score_mean' in data &&
+    'number_of_cctv_score_mean' in data
+  );
+}
+
+export const transformData = (
+  data: WaypointInfo | WaypointMean | undefined,
+  type: 'info' | 'mean',
+) => {
   if (!data) return [];
-  return [
-    { risk: '응급상황벨', A: data.emergency_bell_and_distance_score },
-    { risk: '안전센터', A: data.safety_center_and_distacne_score },
-    { risk: '보호시설', A: data.grid_shelter_distance_score },
-    { risk: '안전시설', A: data.grid_facilities_distance_score },
-    { risk: 'CCTV', A: data.number_of_cctv_score },
-  ];
+  if (type === 'info' && isWaypointInfo(data)) {
+    return [
+      { risk: '응급상황벨', A: data.emergency_bell_and_distance_score },
+      { risk: '안전센터', A: data.safety_center_and_distacne_score },
+      { risk: '보호시설', A: data.grid_shelter_distance_score },
+      { risk: '안전시설', A: data.grid_facilities_distance_score },
+      { risk: 'CCTV', A: data.number_of_cctv_score },
+    ];
+  }
+  if (type === 'mean' && isWaypointMean(data)) {
+    return [
+      { risk: '응급상황벨', A: data.emergency_bell_and_distance_score_mean },
+      { risk: '안전센터', A: data.safety_center_and_distacne_score_mean },
+      { risk: '보호시설', A: data.grid_shelter_distance_score_mean },
+      { risk: '안전시설', A: data.grid_facilities_distance_score_mean },
+      { risk: 'CCTV', A: data.number_of_cctv_score_mean },
+    ];
+  }
+  return [];
 };

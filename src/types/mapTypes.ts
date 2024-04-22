@@ -45,3 +45,12 @@ export interface WaypointInfo {
   grid_facilities_distance_score: number;
   number_of_cctv_score: number;
 }
+
+export interface WaypointMean {
+  rank_score_mean: number;
+  emergency_bell_and_distance_score_mean: number;
+  safety_center_and_distacne_score_mean: number;
+  grid_shelter_distance_score_mean: number;
+  grid_facilities_distance_score_mean: number;
+  number_of_cctv_score_mean: number;
+}
