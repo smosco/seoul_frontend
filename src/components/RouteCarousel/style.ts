@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Carousel = styled.div`
-  width: 20rem;
+  width: 80%;
   height: 7rem;
   border-radius: 0.4rem;
   display: flex;
@@ -11,9 +11,8 @@ export const Carousel = styled.div`
   padding-inline: 1rem;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
-  position: fixed;
+  position: absolute;
   bottom: 1.2rem;
-  left: 1.25rem;
 `;
 
 export const Info = styled.div`
