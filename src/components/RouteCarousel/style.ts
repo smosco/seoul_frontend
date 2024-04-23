@@ -14,6 +14,10 @@ export const Carousel = styled.div`
   position: fixed;
   bottom: 1.2rem;
   left: 1.25rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Info = styled.div`
