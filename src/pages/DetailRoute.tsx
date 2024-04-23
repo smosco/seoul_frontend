@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+import { useQuery } from '@tanstack/react-query';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
@@ -10,6 +11,7 @@ import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
 import Chart from '../components/Chart';
 import ReportButton from '../components/ReportButton';
+import getWaypoints from '../api/routeAPI';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -30,45 +32,23 @@ function DetailRoute() {
     time: string;
     distance: string;
   }>();
-
-  const [waypoints] = useState<WaypointInfo[]>([
-    {
-      id: 16684.0,
-      longitude: 127.013,
-      latitude: 37.4932,
-      rank_score: 56.84,
-      emergency_bell_and_distance_score: 11.89,
-      safety_center_and_distacne_score: 19.85,
-      grid_shelter_distance_score: 77.78,
-      grid_facilities_distance_score: 55.56,
-      number_of_cctv_score: 5.48,
-    },
-    {
-      id: 17009.0,
-      longitude: 127.018,
-      latitude: 37.4554,
-      rank_score: 98.97,
-      emergency_bell_and_distance_score: 49.88,
-      safety_center_and_distacne_score: 52.04,
-      grid_shelter_distance_score: 100.0,
-      grid_facilities_distance_score: 100.0,
-      number_of_cctv_score: 24.94,
-    },
-    {
-      id: 17161.0,
-      longitude: 127.02,
-      latitude: 37.4554,
-      rank_score: 98.76,
-      emergency_bell_and_distance_score: 49.76,
-      safety_center_and_distacne_score: 50.22,
-      grid_shelter_distance_score: 100.0,
-      grid_facilities_distance_score: 100.0,
-      number_of_cctv_score: 100.0,
-    },
-  ]);
   const [selectedMarkerId, setSelectedMarkerId] = useState<
     number | undefined
   >();
+
+  const { data } = useQuery({
+    queryKey: ['waypoints', startPosition, endPosition],
+    queryFn: () => getWaypoints(startPosition, endPosition),
+  });
+
+  const waypoints = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return data.slice(1, 4);
+  }, [data]);
+
+  const mean = data ? data[data.length - 1][0] : null;
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -112,13 +92,17 @@ function DetailRoute() {
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
-      {selectedMarkerId !== undefined && (
+      {selectedMarkerId !== undefined ? (
         <Chart
-          data={waypoints.find((waypoint) => waypoint.id === selectedMarkerId)}
+          data={waypoints.find(
+            (waypoint: WaypointInfo) => waypoint.id === selectedMarkerId,
+          )}
+          type="info"
         />
+      ) : (
+        <Chart data={mean} type="mean" />
       )}
       <ReportButton />
-      {/* <button type="button">신고하기</button> */}
     </Wrapper>
   );
 }

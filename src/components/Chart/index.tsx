@@ -8,15 +8,16 @@ import {
   PolarRadiusAxis,
 } from 'recharts';
 import { transformData } from '../../utils/mapUtils';
-import { WaypointInfo } from '../../types/mapTypes';
+import { WaypointInfo, WaypointMean } from '../../types/mapTypes';
 import { ChartWrapper, Content } from './style';
 
 interface ChartProps {
-  data: WaypointInfo | undefined;
+  data: WaypointInfo | WaypointMean | undefined;
+  type: 'info' | 'mean';
 }
 
-function Chart({ data }: ChartProps) {
-  const riskData = transformData(data);
+function Chart({ data, type }: ChartProps) {
+  const riskData = transformData(data, type);
 
   return (
     <ChartWrapper>
