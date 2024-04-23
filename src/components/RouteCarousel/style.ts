@@ -13,6 +13,9 @@ export const Carousel = styled.div`
   background-color: #ffffff;
   position: absolute;
   bottom: 1.2rem;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Info = styled.div`
