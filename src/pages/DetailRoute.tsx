@@ -39,6 +39,7 @@ function DetailRoute() {
   const { data } = useQuery({
     queryKey: ['waypoints', startPosition, endPosition],
     queryFn: () => getWaypoints(startPosition, endPosition),
+    staleTime: 60000,
   });
 
   const waypoints = useMemo(() => {

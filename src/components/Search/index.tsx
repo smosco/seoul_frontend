@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import usePlaceSearch from '../../hooks/usePlaceSearch';
 import useCurrentPosition from '../../hooks/useCurruntPosition';
 import { updateAddressFromCurrentCoordinates } from '../../utils/mapUtils';
-import { Coord, SearchState, Place } from '../../types/mapTypes';
+import { Coord, SearchState, Place, Tmapv2 } from '../../types/mapTypes';
 import {
   SearchWrapper,
   SearchInput,
@@ -13,6 +13,7 @@ import {
   Button,
 } from './style';
 import { endNameState, endPositionState } from '../../recoil/atoms';
+import ep from '../../assets/images/ep.png';
 
 interface SearchBoxProps {
   searchState: SearchState;
@@ -27,6 +28,8 @@ interface SearchBoxProps {
 interface ContainerProps {
   // eslint-disable-next-line react/require-default-props
   setStartPosition?: React.Dispatch<React.SetStateAction<Coord>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/require-default-props
+  map?: any;
 }
 
 function SearchBox({
@@ -85,9 +88,9 @@ function SearchBox({
   );
 }
 
-function SearchContainer({ setStartPosition }: ContainerProps) {
+function SearchContainer({ setStartPosition, map }: ContainerProps) {
   const navigate = useNavigate();
-  const setEndPosition = useSetRecoilState(endPositionState);
+  const [endPosition, setEndPosition] = useRecoilState(endPositionState);
   const [endName, setEndName] = useRecoilState(endNameState);
   const { currentPosition } = useCurrentPosition();
   const [startSearchState, setStartSearchState] = useState<SearchState>({
@@ -102,6 +105,8 @@ function SearchContainer({ setStartPosition }: ContainerProps) {
     selectedName: endName || '',
   });
   const endPlaces = usePlaceSearch(endSearchState.keyword);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [previousMarker, setPreviousMarker] = useState<any>(null);
   const findRoute = () => {
     navigate('/routes');
   };
@@ -116,6 +121,31 @@ function SearchContainer({ setStartPosition }: ContainerProps) {
       setStartPosition,
     );
   }, [currentPosition]);
+
+  useEffect(() => {
+    if (!setStartPosition && map && endSearchState.selectedName) {
+      if (previousMarker) {
+        previousMarker.setMap(null);
+      }
+
+      map.setCenter(
+        new Tmapv2.LatLng(endPosition.latitude, endPosition.longitude),
+      );
+      map.setZoom(17);
+
+      const marker = new Tmapv2.Marker({
+        position: new Tmapv2.LatLng(
+          endPosition.latitude,
+          endPosition.longitude,
+        ),
+        icon: ep,
+        iconSize: new Tmapv2.Size(26, 34),
+        map,
+      });
+
+      setPreviousMarker(marker);
+    }
+  }, [endSearchState.selectedName]);
 
   return (
     <SearchWrapper>
