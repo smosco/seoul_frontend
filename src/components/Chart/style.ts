@@ -9,7 +9,7 @@ export const ChartWrapper = styled.div`
   padding: 0.5rem;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
-  position: relative;
+  position: absolute;
   bottom: 6rem;
 `;
 
