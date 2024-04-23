@@ -4,9 +4,15 @@ import {
   BOTTOM_SHEET_DEFAULT_HEIGHT,
   BOTTOM_SHEET_HEIGHT,
 } from '../../constant/bottomSheetPosition';
+import device from '../../constant/device';
 
 export const Wrapper = styled(motion.div)`
-  width: 360px;
+  width: 600px;
+
+  ${device.mobile} {
+    width: 100%
+  }
+
   display: flex;
   flex-direction: column;
 
@@ -15,7 +21,8 @@ export const Wrapper = styled(motion.div)`
   top: calc(
     100% - ${BOTTOM_SHEET_DEFAULT_HEIGHT}px
   ); /*시트가 얼마나 높이 위치할지*/
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   right: 0;
 
   border-top-left-radius: 12px;

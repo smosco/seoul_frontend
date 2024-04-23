@@ -1,6 +1,6 @@
 import React from 'react';
-import { WrapperContainer } from './style';
 import Toast from '../../Toast';
+import WrapperContainer from './style';
 
 interface WrapperProps {
   children: React.ReactNode;

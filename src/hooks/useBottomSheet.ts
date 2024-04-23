@@ -40,11 +40,11 @@ export default function useBottomSheet() {
 
     if (currentSheetY !== MIN_Y) {
       if (clickMove.movingDirection === 'down') {
-        sheet.current!.style.setProperty('transform', 'translate3D(0, 0, 0)');
+        sheet.current!.style.setProperty('transform', 'translate3D(-50%, 0, 0)');
       }
 
       if (clickMove.movingDirection === 'up') {
-        sheet.current!.style.setProperty('transform', `translate3D(0, ${MIN_Y - MAX_Y}px, 0)`);
+        sheet.current!.style.setProperty('transform', `translate3D(-50%, ${MIN_Y - MAX_Y}px, 0)`);
       }
     }
 
@@ -117,7 +117,7 @@ export default function useBottomSheet() {
         nextSheetY = MAX_Y;
       }
 
-      sheet.current!.style.setProperty('transform', `translate3D(0, ${nextSheetY - MAX_Y}px, 0)`);
+      sheet.current!.style.setProperty('transform', `translate3D(-50%, ${nextSheetY - MAX_Y}px, 0)`);
     } else {
       document.body.style.overflowY = 'hidden';
     }

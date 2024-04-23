@@ -1,35 +1,27 @@
 // Wrapper/styles.ts
 import styled from 'styled-components';
+import device from '../../../constant/device';
 
-export const WrapperContainer = styled.div`
+const WrapperContainer = styled.div`
   position: relative;
   /* 공통 스타일링 */
-  max-width: 360px;
-  /* background-color: yellow; */
+  /* max-width: 360px; */
+  width: 100vw;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 auto;
 
   #map_div {
-    /* position: fixed;
-    top: 0;
-    left: 0; */
-    width: 360px;
+    width: 100%;
     height: 100%;
   }
+
+  ${device.desktop} {
+    max-width: 600px;
+  }
+
 `;
 
-export const MobileWrapperContainer = styled(WrapperContainer)`
-  /* 모바일 화면에 대한 스타일링 */
-  @media (min-width: 768px) {
-    display: none;
-  }
-`;
-
-export const DesktopWrapperContainer = styled(WrapperContainer)`
-  /* 데스크톱 화면에 대한 스타일링 */
-  @media (max-width: 767px) {
-    display: none;
-  }
-`;
+export default WrapperContainer;
