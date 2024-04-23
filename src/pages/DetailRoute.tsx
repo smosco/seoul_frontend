@@ -118,7 +118,6 @@ function DetailRoute() {
         />
       )}
       <ReportButton />
-      {/* <button type="button">신고하기</button> */}
     </Wrapper>
   );
 }
