@@ -3,18 +3,22 @@ import styled from 'styled-components';
 
 export const SearchWrapper = styled.div`
   width: 100%;
-  height: 9rem;
+  height: 9.5rem;
   background-color: #ffffff;
   padding: 2rem 10px 1rem 10px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 0.5rem;
 `;
 
 export const SearchInput = styled.div`
   position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   input {
-    width: 340px;
+    width: 80%;
     height: 2.5rem;
     border-radius: 1.5rem;
     border: 1px solid #868581;
@@ -59,7 +63,7 @@ export const SearchResultList = styled.li`
 `;
 
 export const Button = styled.button`
-  width: 340px;
+  width: 80%;
   height: 2.5rem;
   border: none;
   border-radius: 1.5rem;
