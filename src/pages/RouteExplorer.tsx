@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import getWaypoints from '../api/routeAPI';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
-import { Coord, WaypointInfo, WaypointMean } from '../types/mapTypes';
+import { Coord } from '../types/mapTypes';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
@@ -33,33 +34,17 @@ function RouteExplorer() {
     distance: string;
   }>();
 
-  const [waypoints, setWaypoints] = useState<WaypointInfo[]>([]);
-  const [mean, setMean] = useState<WaypointMean | null>(null);
+  const { data } = useQuery({
+    queryKey: ['waypoints', startPosition, endPosition],
+    queryFn: () => getWaypoints(startPosition, endPosition),
+  });
 
-  const fetchWaypoints = async () => {
-    try {
-      const response = await axios.get(
-        `https://jcigc40pak.execute-api.ap-northeast-2.amazonaws.com/seoul-public/route?start_lon=${startPosition.longitude}&start_lat=${startPosition.latitude}&arrival_lon=${endPosition.longitude}&arrival_lat=${endPosition.latitude}`,
-      );
-      const data = response.data.body;
-      const extractedWaypoints = data.slice(0, 5);
-      setWaypoints(extractedWaypoints);
-      setMean(data[data.length - 1][0]);
-    } catch (error) {
-      console.error('Error fetching waypoints:', error);
+  const waypoints = useMemo(() => {
+    if (!data) {
+      return [];
     }
-  };
-
-  useEffect(() => {
-    if (
-      !startPosition.latitude ||
-      !startPosition.longitude ||
-      !endPosition.latitude ||
-      !endPosition.longitude
-    )
-      return;
-    fetchWaypoints();
-  }, [endPosition, startPosition]);
+    return data.slice(1, 4);
+  }, [data]);
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -90,7 +75,7 @@ function RouteExplorer() {
   }, [map, startPosition, endPosition, waypoints]);
 
   const onClick = () => {
-    navigate('/route-detail', { state: mean });
+    navigate('/route-detail');
   };
 
   return (

@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
-import { Coord, WaypointInfo, WaypointMean } from '../types/mapTypes';
+import { Coord, WaypointInfo } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
 import Chart from '../components/Chart';
 import ReportButton from '../components/ReportButton';
+import getWaypoints from '../api/routeAPI';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -31,37 +32,23 @@ function DetailRoute() {
     time: string;
     distance: string;
   }>();
-
-  const [waypoints, setWaypoints] = useState<WaypointInfo[]>([]);
-  const [mean, setMean] = useState<WaypointMean | undefined>(undefined);
   const [selectedMarkerId, setSelectedMarkerId] = useState<
     number | undefined
   >();
 
-  const fetchWaypoints = async () => {
-    try {
-      const response = await axios.get(
-        `https://jcigc40pak.execute-api.ap-northeast-2.amazonaws.com/seoul-public/route?start_lon=${startPosition.longitude}&start_lat=${startPosition.latitude}&arrival_lon=${endPosition.longitude}&arrival_lat=${endPosition.latitude}`,
-      );
-      const data = response.data.body;
-      const extractedWaypoints = data.slice(0, 5);
-      setWaypoints(extractedWaypoints);
-      setMean(data[data.length - 1][0]);
-    } catch (error) {
-      console.error('Error fetching waypoints:', error);
-    }
-  };
+  const { data } = useQuery({
+    queryKey: ['waypoints', startPosition, endPosition],
+    queryFn: () => getWaypoints(startPosition, endPosition),
+  });
 
-  useEffect(() => {
-    if (
-      !startPosition.latitude ||
-      !startPosition.longitude ||
-      !endPosition.latitude ||
-      !endPosition.longitude
-    )
-      return;
-    fetchWaypoints();
-  }, [endPosition, startPosition]);
+  const waypoints = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return data.slice(1, 4);
+  }, [data]);
+
+  const mean = data ? data[data.length - 1][0] : null;
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -107,18 +94,15 @@ function DetailRoute() {
       <div id="map_div" ref={mapRef} />
       {selectedMarkerId !== undefined ? (
         <Chart
-          data={
-            waypoints.find(
-              (waypoint) => waypoint.id === selectedMarkerId,
-            ) as WaypointInfo
-          }
+          data={waypoints.find(
+            (waypoint: WaypointInfo) => waypoint.id === selectedMarkerId,
+          )}
           type="info"
         />
       ) : (
-        <Chart data={mean as WaypointMean} type="mean" />
+        <Chart data={mean} type="mean" />
       )}
       <ReportButton />
-      {/* <button type="button">신고하기</button> */}
     </Wrapper>
   );
 }
