@@ -12,6 +12,8 @@ import { endPositionState } from '../recoil/atoms';
 import Chart from '../components/Chart';
 import ReportButton from '../components/ReportButton';
 import getWaypoints from '../api/routeAPI';
+import ReportModalContents from '../components/ModalContents/ReportModal';
+import Modal from '../components/common/Modal';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -103,7 +105,14 @@ function DetailRoute() {
       ) : (
         <Chart data={mean} type="mean" />
       )}
-      <ReportButton />
+      <Modal>
+        <Modal.Toggle>
+          <ReportButton />
+        </Modal.Toggle>
+        <Modal.Content>
+          <ReportModalContents />
+        </Modal.Content>
+      </Modal>
     </Wrapper>
   );
 }
