@@ -12,6 +12,7 @@ import { Coord } from '../types/mapTypes';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
 import { endPositionState } from '../recoil/atoms';
+import Skeleton from '../components/Skeleton';
 
 function RouteExplorer() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function RouteExplorer() {
     distance: string;
   }>();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['waypoints', startPosition, endPosition],
     queryFn: () => getWaypoints(startPosition, endPosition),
     staleTime: 60000,
@@ -84,13 +85,16 @@ function RouteExplorer() {
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
-
-      {routeInfo && (
-        <RouteCarousel
-          routeInfo={routeInfo}
-          waypoints={waypoints}
-          onClick={onClick}
-        />
+      {isLoading ? (
+        <Skeleton />
+      ) : (
+        routeInfo && (
+          <RouteCarousel
+            routeInfo={routeInfo}
+            waypoints={waypoints}
+            onClick={onClick}
+          />
+        )
       )}
     </Wrapper>
   );
