@@ -19,8 +19,8 @@ function Home() {
 
   useFilteringMarker({
     map,
-    lat: 37.606,
-    lng: 126.9576788,
+    lat: 37.4812298,
+    lng: 126.9441014,
   });
 
   useEffect(() => {

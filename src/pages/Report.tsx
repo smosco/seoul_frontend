@@ -19,8 +19,8 @@ function EmergencyPage() {
   useEmergencyMarker(map, location.state);
   useFilteringMarker({
     map,
-    lat: 37.598,
-    lng: 127.073,
+    lat: 37.4812298,
+    lng: 126.9441014,
   });
 
   return (
