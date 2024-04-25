@@ -19,7 +19,12 @@ export const Content = styled.div`
   justify-content: center;
   gap: 0.5rem;
 
-  p {
-    font-size: 0.7rem;
+  span {
+    font-size: 0.8rem;
   }
+`;
+
+export const Facility = styled.span`
+  font-weight: bold;
+  color: #f56c00;
 `;
