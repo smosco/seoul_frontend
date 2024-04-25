@@ -5,14 +5,25 @@ import { Place } from '../types/mapTypes';
 
 const usePlaceSearch = (keyword: string): Place[] => {
   const [places, setPlaces] = useState<Place[]>([]);
+  const [debouncedKeyword, setDebouncedKeyword] = useState<string>('');
 
   useEffect(() => {
-    if (keyword) {
-      searchPOI(keyword, setPlaces);
+    const debounceTimer = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 300);
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [keyword]);
+
+  useEffect(() => {
+    if (debouncedKeyword) {
+      searchPOI(debouncedKeyword, setPlaces);
     }
 
     return () => {};
-  }, [keyword]);
+  }, [debouncedKeyword]);
 
   return places;
 };
