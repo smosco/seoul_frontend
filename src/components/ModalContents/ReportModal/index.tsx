@@ -29,7 +29,8 @@ function ReportModalContents() {
       const data = {
         'time' : getCurrentTimestamp(),
         'longitude' : currentPosition.coords.longitude,
-        'latitude': currentPosition.coords.latitude
+        'latitude': currentPosition.coords.latitude,
+        'contents' : reportContents
       };
       mutation.mutate(data, {
         onSuccess: () => {

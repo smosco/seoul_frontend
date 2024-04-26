@@ -76,7 +76,8 @@ export function generateInfoWindow(
   lng: number,
   msg: string,
 ) {
-  const content = `<div style="position:relative;padding:5px; text-align:center">${msg}</div>`;
+  // TODO : 스타일 변경
+  const content = `<p style="position:relative; padding:5px; text-align:center">${msg}</p>`;
   const infoWindow = new Tmapv2.InfoWindow({
     map,
     content,

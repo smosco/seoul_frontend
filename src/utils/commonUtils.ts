@@ -23,7 +23,3 @@ export function getCurrentTimestamp() {
 
   return `${year}-${month}-${date} ${hours}:${minutes}`;
 }
-
-export function convertDateFormat(dateString: string) {
-  return dateString.replace(/-/g, '.');
-}
