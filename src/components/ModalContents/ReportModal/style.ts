@@ -18,6 +18,8 @@ export const Title = styled.p`
 export const Input = styled.div`
 width: 100%;
 display: flex;
+flex-direction: column;
+gap: 0.5rem;
 justify-content: center;
 input {
   width: 100%;
@@ -34,6 +36,10 @@ input:focus {
 
 input::placeholder {
   color: #bcbab6;
+}
+
+p {
+  color: red;
 }
 `;
 
