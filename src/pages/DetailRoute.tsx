@@ -44,7 +44,7 @@ function DetailRoute() {
   });
 
   const waypoints = useMemo(() => {
-    if (!data) {
+    if (!data || data.length === 0) {
       return [];
     }
     // TODO : 잘못된 데이터가 들어갈 수 있음 (length를 보고 선택할 수 있는 알고리즘이 필요함)
@@ -55,7 +55,7 @@ function DetailRoute() {
     return data.slice(1, 4);
   }, [data]);
 
-  const mean = data ? data[data.length - 1][0] : null;
+  const mean = data && data.length > 0 ? data[data.length - 1][0] : null;
 
   useEffect(() => {
     if (!currentPosition) return;
