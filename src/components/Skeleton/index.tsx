@@ -1,11 +1,21 @@
 import React from 'react';
-import { SkeletonWrapper, SkeletonText } from './style';
+import { SkeletonWrapper, SkeletonText, SkeletonChart, Group } from './style';
 
-function Skeleton() {
+function Skeleton({ type }: { type: string }) {
   return (
-    <SkeletonWrapper>
-      <SkeletonText />
-      <SkeletonText />
+    <SkeletonWrapper $type={type}>
+      {type === 'chart' && <SkeletonChart />}
+      {type === 'chart' ? (
+        <Group>
+          <SkeletonText />
+          <SkeletonText />
+        </Group>
+      ) : (
+        <>
+          <SkeletonText />
+          <SkeletonText />
+        </>
+      )}
     </SkeletonWrapper>
   );
 }

@@ -83,7 +83,7 @@ function RouteExplorer() {
 
       <div id="map_div" ref={mapRef} />
       {isLoading ? (
-        <Skeleton />
+        <Skeleton type="info" />
       ) : (
         routeInfo && (
           <RouteCarousel

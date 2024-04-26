@@ -15,6 +15,7 @@ import ReportButton from '../components/ReportButton';
 import getWaypoints from '../api/routeAPI';
 import ReportModalContents from '../components/ModalContents/ReportModal';
 import Modal from '../components/common/Modal';
+import Skeleton from '../components/Skeleton';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -36,7 +37,7 @@ function DetailRoute() {
     number | undefined
   >();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['waypoints', startPosition, endPosition],
     queryFn: () => getWaypoints(startPosition, endPosition),
     staleTime: 60000,
@@ -95,7 +96,9 @@ function DetailRoute() {
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
-      {selectedMarkerId !== undefined ? (
+      {isLoading ? (
+        <Skeleton type="chart" />
+      ) : selectedMarkerId !== undefined ? (
         <Chart
           data={waypoints.find(
             (waypoint: WaypointInfo) => waypoint.id === selectedMarkerId,
