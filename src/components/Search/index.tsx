@@ -16,6 +16,7 @@ import { endNameState, endPositionState } from '../../recoil/atoms';
 import ep from '../../assets/images/ep.png';
 
 interface SearchBoxProps {
+  currentPosition: GeolocationPosition | undefined;
   searchState: SearchState;
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
   placeholder: string;
@@ -33,6 +34,7 @@ interface ContainerProps {
 }
 
 function SearchBox({
+  currentPosition,
   searchState,
   setSearchState,
   placeholder,
@@ -50,6 +52,15 @@ function SearchBox({
     });
   };
 
+  const selectCurrent = () => {
+    updateAddressFromCurrentCoordinates(
+      currentPosition,
+      setSearchState,
+      searchState,
+      setPosition,
+    );
+  };
+
   return (
     <SearchInput>
       <input
@@ -60,6 +71,9 @@ function SearchBox({
       />
       {isSearching && (
         <SearchResultContainer>
+          <button type="button" onClick={selectCurrent}>
+            현위치로 설정
+          </button>
           {places.map((place, index) => (
             <SearchResultList
               // eslint-disable-next-line react/no-array-index-key
@@ -114,12 +128,15 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
   // 혹시 나중에 출발지나 도착지를 현재 위치로 변경하는 기능을 추가할 때 유용할 것 같습니다.
   useEffect(() => {
     if (!setStartPosition) return;
-    updateAddressFromCurrentCoordinates(
-      currentPosition,
-      setStartSearchState,
-      startSearchState,
-      setStartPosition,
-    );
+    const fetchAddress = async () => {
+      await updateAddressFromCurrentCoordinates(
+        currentPosition,
+        setStartSearchState,
+        startSearchState,
+        setStartPosition,
+      );
+    };
+    fetchAddress();
   }, [currentPosition]);
 
   useEffect(() => {
@@ -151,6 +168,7 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
     <SearchWrapper>
       {setStartPosition && (
         <SearchBox
+          currentPosition={currentPosition}
           searchState={startSearchState}
           setSearchState={setStartSearchState}
           placeholder="출발지를 입력하세요"
@@ -159,6 +177,7 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
         />
       )}
       <SearchBox
+        currentPosition={currentPosition}
         searchState={endSearchState}
         setSearchState={setEndSearchState}
         placeholder="도착지를 입력하세요"
