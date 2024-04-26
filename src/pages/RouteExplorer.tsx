@@ -78,7 +78,7 @@ function RouteExplorer() {
   }, [map, startPosition, endPosition, waypoints]);
 
   const onClick = () => {
-    navigate('/route-detail');
+    if (waypoints.length > 0) navigate('/route-detail');
   };
 
   return (
