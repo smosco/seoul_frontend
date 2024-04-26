@@ -29,7 +29,8 @@ function ReportModalContents() {
       const data = {
         'time' : getCurrentTimestamp(),
         'longitude' : currentPosition.coords.longitude,
-        'latitude': currentPosition.coords.latitude
+        'latitude': currentPosition.coords.latitude,
+        'contents' : reportContents
       };
       mutation.mutate(data, {
         onSuccess: () => {
@@ -52,7 +53,9 @@ function ReportModalContents() {
     <Wrapper>
       <Title>무슨 일 있나요?</Title>
       <Input>
-        <input type='text' onChange={(e) => setReportContents(e.target.value)} value={reportContents} />
+        {/* TODO : p가 나올때 UI 변경 최소화하기 */}
+        <input type='text' onChange={(e) => setReportContents(e.target.value)} value={reportContents} maxLength={100} />
+        <p>{reportContents.length >= 100 && '신고 내용은 최대 100자까지 가능합니다.'}</p>
       </Input>
       <Main>
         <p>상황을 알려주세요!!</p>

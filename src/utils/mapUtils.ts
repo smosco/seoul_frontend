@@ -76,7 +76,14 @@ export function generateInfoWindow(
   lng: number,
   msg: string,
 ) {
-  const content = `<div style="position:relative;padding:5px; text-align:center">${msg}</div>`;
+  // TODO : 스타일 변경
+  const content = `
+  <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0.5rem; text-align:center; width:150px; padding:5px;">
+    <p style="font-weight: bold; font-size: 14px; color: #FF7757";>신고 사유</p>
+    <p>${msg}</p>
+  </div>
+
+  `;
   const infoWindow = new Tmapv2.InfoWindow({
     map,
     content,

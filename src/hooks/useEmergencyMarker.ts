@@ -6,7 +6,6 @@ import {
   setCenter,
 } from '../utils/mapUtils';
 import { ReportData } from '../types/reportTypes';
-import { convertDateFormat } from '../utils/commonUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function useEmergencyMarker(map: any, data: ReportData) {
@@ -31,9 +30,11 @@ function useEmergencyMarker(map: any, data: ReportData) {
     newMarker.setMap(map);
     setDangerMarker(newMarker);
 
-    const newInfoWindow = generateInfoWindow(map, data.latitude, data.longitude, convertDateFormat(data.time));
-    newInfoWindow.setMap(map);
-    setInfoWindow(newInfoWindow);
+    if(data.contents) {
+      const newInfoWindow = generateInfoWindow(map, data.latitude, data.longitude, data.contents);
+      newInfoWindow.setMap(map);
+      setInfoWindow(newInfoWindow);
+    }
 
     const newCircle = drawCircle(map, data.latitude, data.longitude);
     newCircle.setMap(map);
