@@ -64,9 +64,10 @@ function DetailRoute() {
   }, [map]);
 
   useEffect(() => {
-    // TODO: 거리가 짧아서 받아온 waypoints가 빈 배열인 경우와
-    // 경로 데이터를 아직 받아오지 못해서 waypoints가 빈 배열인 경우를 구분해야함
-    if (!map || waypoints.length === 0) return;
+    // !data => 경유지 응답이 안 왔는데 티맵에 경로 요청 해서 먼저 그리는 것 방지
+    // !end || !start => 출도착지 없는데 티맵에 경로 요청 방지
+    if (!map || !endPosition.latitude || !startPosition.latitude || !data)
+      return;
 
     drawRoute(
       map,

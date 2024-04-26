@@ -282,9 +282,11 @@ export const drawRoute = async (
       endName: '도착지',
       endX: String(endPosition.longitude),
       endY: String(endPosition.latitude),
-      passList: waypoints
-        .map((waypoint) => `${waypoint.longitude},${waypoint.latitude}`)
-        .join('_'),
+      ...(waypoints.length > 0 && {
+        passList: waypoints
+          .map((waypoint) => `${waypoint.longitude},${waypoint.latitude}`)
+          .join('_'),
+      }),
       reqCoordType: 'WGS84GEO',
       resCoordType: 'WGS84GEO',
       searchOption: 0,

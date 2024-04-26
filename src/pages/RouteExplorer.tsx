@@ -38,7 +38,8 @@ function RouteExplorer() {
   });
 
   const waypoints = useMemo(() => {
-    if (!data) {
+    // console.log('지금', data);
+    if (!data || data.length === 0) {
       return [];
     }
     return data.slice(1, 4);
@@ -56,7 +57,10 @@ function RouteExplorer() {
   }, [map]);
 
   useEffect(() => {
-    if (!map || waypoints.length === 0) return;
+    // !data => 경유지 응답이 안 왔는데 티맵에 경로 요청 해서 먼저 그리는 것 방지
+    // !end || !start => 출도착지 없는데 티맵에 경로 요청 방지
+    if (!map || !endPosition.latitude || !startPosition.latitude || !data)
+      return;
 
     drawRoute(map, startPosition, endPosition, waypoints, polylines, markers)
       .then(({ newPolylines, newMarkers, tTime, tDistance }) => {
