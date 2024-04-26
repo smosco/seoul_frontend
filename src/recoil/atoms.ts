@@ -21,6 +21,14 @@ export const endNameState = atom<string>({
   default: '',
 });
 
+export const startPositionState = atom<Coord>({
+  key: 'startPositionState',
+  default: {
+    latitude: undefined,
+    longitude: undefined,
+  },
+});
+
 export const endPositionState = atom<Coord>({
   key: 'endPositionState',
   default: {
@@ -31,5 +39,5 @@ export const endPositionState = atom<Coord>({
 
 export const toastState = atom<ToastStateType | null>({
   key: 'toastState',
-  default: null
+  default: null,
 });

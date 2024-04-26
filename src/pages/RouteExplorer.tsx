@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import getWaypoints from '../api/routeAPI';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
-import { Coord } from '../types/mapTypes';
+import { startPositionState, endPositionState } from '../recoil/atoms';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
-import { endPositionState } from '../recoil/atoms';
 import Skeleton from '../components/Skeleton';
 
 function RouteExplorer() {
@@ -23,10 +22,7 @@ function RouteExplorer() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  const [startPosition, setStartPosition] = useState<Coord>({
-    latitude: undefined,
-    longitude: undefined,
-  });
+  const [startPosition, setStartPosition] = useRecoilState(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [markers, setMarkers] = useState<any[]>([]);
@@ -42,7 +38,8 @@ function RouteExplorer() {
   });
 
   const waypoints = useMemo(() => {
-    if (!data) {
+    // console.log('지금', data);
+    if (!data || data.length === 0) {
       return [];
     }
     return data.slice(1, 4);
@@ -60,7 +57,11 @@ function RouteExplorer() {
   }, [map]);
 
   useEffect(() => {
-    if (waypoints.length === 0) return;
+    // !data => 경유지 응답이 안 왔는데 티맵에 경로 요청 해서 먼저 그리는 것 방지
+    // !end || !start => 출도착지 없는데 티맵에 경로 요청 방지
+    if (!map || !endPosition.latitude || !startPosition.latitude || !data)
+      return;
+
     drawRoute(map, startPosition, endPosition, waypoints, polylines, markers)
       .then(({ newPolylines, newMarkers, tTime, tDistance }) => {
         setPolylines(newPolylines);
@@ -77,7 +78,7 @@ function RouteExplorer() {
   }, [map, startPosition, endPosition, waypoints]);
 
   const onClick = () => {
-    navigate('/route-detail');
+    if (waypoints.length > 0) navigate('/route-detail');
   };
 
   return (
@@ -86,7 +87,7 @@ function RouteExplorer() {
 
       <div id="map_div" ref={mapRef} />
       {isLoading ? (
-        <Skeleton />
+        <Skeleton type="info" />
       ) : (
         routeInfo && (
           <RouteCarousel

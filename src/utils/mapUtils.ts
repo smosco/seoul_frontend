@@ -176,24 +176,25 @@ export async function reverseGeo(lon: number, lat: number) {
 
 export async function updateAddressFromCurrentCoordinates(
   currentPosition: GeolocationPosition | undefined,
-  setStartSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
-  startSearchState: SearchState,
-  setStartPosition: React.Dispatch<React.SetStateAction<Coord>>,
+  setSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
+  searchState: SearchState,
+  setPosition: React.Dispatch<React.SetStateAction<Coord>>,
 ) {
   if (!currentPosition) return;
+
   const response = await reverseGeo(
     currentPosition?.coords.longitude,
     currentPosition?.coords.latitude,
   );
 
-  // console.log(response);
   // TODO: response가 null이 되지 않게
-  setStartSearchState({
-    ...startSearchState,
+  setSearchState({
+    ...searchState,
+    isSearching: false,
     selectedName: response!,
   });
 
-  setStartPosition({
+  setPosition({
     longitude: currentPosition?.coords.longitude,
     latitude: currentPosition?.coords.latitude,
   });
@@ -288,9 +289,11 @@ export const drawRoute = async (
       endName: '도착지',
       endX: String(endPosition.longitude),
       endY: String(endPosition.latitude),
-      passList: waypoints
-        .map((waypoint) => `${waypoint.longitude},${waypoint.latitude}`)
-        .join('_'),
+      ...(waypoints.length > 0 && {
+        passList: waypoints
+          .map((waypoint) => `${waypoint.longitude},${waypoint.latitude}`)
+          .join('_'),
+      }),
       reqCoordType: 'WGS84GEO',
       resCoordType: 'WGS84GEO',
       searchOption: 0,

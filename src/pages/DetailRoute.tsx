@@ -1,19 +1,21 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker, drawRoute } from '../utils/mapUtils';
 import SearchContainer from '../components/Search';
-import { Coord, WaypointInfo } from '../types/mapTypes';
+import { WaypointInfo } from '../types/mapTypes';
 import Wrapper from '../components/common/Wrapper';
-import { endPositionState } from '../recoil/atoms';
+import { startPositionState, endPositionState } from '../recoil/atoms';
 import Chart from '../components/Chart';
 import ReportButton from '../components/ReportButton';
 import getWaypoints from '../api/routeAPI';
 import ReportModalContents from '../components/ModalContents/ReportModal';
 import Modal from '../components/common/Modal';
+import Skeleton from '../components/Skeleton';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -23,10 +25,7 @@ function DetailRoute() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  const [startPosition, setStartPosition] = useState<Coord>({
-    latitude: undefined,
-    longitude: undefined,
-  });
+  const [startPosition, setStartPosition] = useRecoilState(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [markers, setMarkers] = useState<any[]>([]);
@@ -38,14 +37,14 @@ function DetailRoute() {
     number | undefined
   >();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['waypoints', startPosition, endPosition],
     queryFn: () => getWaypoints(startPosition, endPosition),
     staleTime: 60000,
   });
 
   const waypoints = useMemo(() => {
-    if (!data) {
+    if (!data || data.length === 0) {
       return [];
     }
     // TODO : 잘못된 데이터가 들어갈 수 있음 (length를 보고 선택할 수 있는 알고리즘이 필요함)
@@ -56,7 +55,7 @@ function DetailRoute() {
     return data.slice(1, 4);
   }, [data]);
 
-  const mean = data ? data[data.length - 1][0] : null;
+  const mean = data && data.length > 0 ? data[data.length - 1][0] : null;
 
   useEffect(() => {
     if (!currentPosition) return;
@@ -70,7 +69,10 @@ function DetailRoute() {
   }, [map]);
 
   useEffect(() => {
-    if (!map) return;
+    // !data => 경유지 응답이 안 왔는데 티맵에 경로 요청 해서 먼저 그리는 것 방지
+    // !end || !start => 출도착지 없는데 티맵에 경로 요청 방지
+    if (!map || !endPosition.latitude || !startPosition.latitude || !data)
+      return;
 
     drawRoute(
       map,
@@ -101,7 +103,9 @@ function DetailRoute() {
       <SearchContainer setStartPosition={setStartPosition} />
 
       <div id="map_div" ref={mapRef} />
-      {selectedMarkerId !== undefined ? (
+      {isLoading ? (
+        <Skeleton type="chart" />
+      ) : selectedMarkerId !== undefined ? (
         <Chart
           data={waypoints.find(
             (waypoint: WaypointInfo) => waypoint.id === selectedMarkerId,
