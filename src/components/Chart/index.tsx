@@ -34,7 +34,7 @@ function Chart({ data, type }: ChartProps) {
         />
       </RadarChart>
       <Content>
-        {riskData && riskData.length > 0 ? (
+        {riskData && riskData.length > 0 &&
           <>
             <p>위험도 : {riskData.find(item => item.mean)?.A}점</p>
             <DangerList>
@@ -45,10 +45,7 @@ function Chart({ data, type }: ChartProps) {
               ))}
             </DangerList>
           </>
-        ) : (
-        // TODO : 로딩 중인지, 데이터가 없어서 오류가 난건지 사용자에게 알릴 필요가 있음 (그리고 여기도 스켈레톤 UI 적용하면 좋을 듯!!)
-          <span>데이터를 불러오는 중입니다...</span>
-        )}
+        }
       </Content>
     </ChartWrapper>
   );
