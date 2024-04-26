@@ -411,6 +411,7 @@ export const transformData = (
       { risk: '보호시설', A: data.grid_shelter_distance_score },
       { risk: '안전시설', A: data.grid_facilities_distance_score },
       { risk: 'CCTV', A: data.number_of_cctv_score },
+      { mean: '평균', A: Math.round(data.rank_score) },
     ];
   }
   if (type === 'mean' && isWaypointMean(data)) {
@@ -420,6 +421,7 @@ export const transformData = (
       { risk: '보호시설', A: data.grid_shelter_distance_score_mean },
       { risk: '안전시설', A: data.grid_facilities_distance_score_mean },
       { risk: 'CCTV', A: data.number_of_cctv_score_mean },
+      { mean: '평균', A: Math.round(data.rank_score_mean) },
     ];
   }
   return [];
