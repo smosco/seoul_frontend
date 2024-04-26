@@ -16,10 +16,24 @@ export const ChartWrapper = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
+  p {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+`;
+
+export const DangerList = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 
-  p {
-    font-size: 0.7rem;
-  }
+  span {
+      font-size: 0.8rem;
+    }
+`;
+
+export const Facility = styled.span`
+  font-weight: bold;
+  color: #f56c00;
 `;
