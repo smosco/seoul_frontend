@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import getWaypoints from '../api/routeAPI';
 import useMap from '../hooks/useMap';
@@ -22,7 +22,7 @@ function RouteExplorer() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  const [startPosition, setStartPosition] = useRecoilState(startPositionState);
+  const startPosition = useRecoilValue(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [markers, setMarkers] = useState<any[]>([]);
@@ -83,7 +83,7 @@ function RouteExplorer() {
 
   return (
     <Wrapper>
-      <SearchContainer setStartPosition={setStartPosition} />
+      <SearchContainer type="start" />
 
       <div id="map_div" ref={mapRef} />
       {isLoading ? (

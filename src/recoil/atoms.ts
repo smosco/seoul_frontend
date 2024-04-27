@@ -21,6 +21,11 @@ export const endNameState = atom<string>({
   default: '',
 });
 
+export const startNameState = atom<string>({
+  key: 'startNameState',
+  default: '',
+});
+
 export const startPositionState = atom<Coord>({
   key: 'startPositionState',
   default: {

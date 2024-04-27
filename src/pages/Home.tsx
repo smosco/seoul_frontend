@@ -35,7 +35,7 @@ function Home() {
 
   return (
     <Wrapper>
-      <SearchContainer map={map} />
+      <SearchContainer map={map} type="end" />
       <div id="map_div" ref={mapRef} />
       <BottomSheet />
     </Wrapper>

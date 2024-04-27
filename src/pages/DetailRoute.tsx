@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
@@ -25,7 +25,7 @@ function DetailRoute() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
-  const [startPosition, setStartPosition] = useRecoilState(startPositionState);
+  const startPosition = useRecoilValue(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [markers, setMarkers] = useState<any[]>([]);
@@ -100,7 +100,7 @@ function DetailRoute() {
 
   return (
     <Wrapper>
-      <SearchContainer setStartPosition={setStartPosition} />
+      <SearchContainer type="start" />
 
       <div id="map_div" ref={mapRef} />
       {isLoading ? (
