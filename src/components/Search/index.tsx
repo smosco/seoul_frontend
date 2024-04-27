@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import usePlaceSearch from '../../hooks/usePlaceSearch';
 import useCurrentPosition from '../../hooks/useCurruntPosition';
@@ -12,7 +12,12 @@ import {
   SearchResultList,
   Button,
 } from './style';
-import { endNameState, endPositionState } from '../../recoil/atoms';
+import {
+  endNameState,
+  startNameState,
+  endPositionState,
+  startPositionState,
+} from '../../recoil/atoms';
 import ep from '../../assets/images/ep.png';
 
 interface SearchBoxProps {
@@ -23,12 +28,12 @@ interface SearchBoxProps {
   places: Place[];
   setPosition: React.Dispatch<React.SetStateAction<Coord>>;
   // eslint-disable-next-line react/require-default-props
-  setName?: React.Dispatch<React.SetStateAction<string>>;
+  setName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface ContainerProps {
   // eslint-disable-next-line react/require-default-props
-  setStartPosition?: React.Dispatch<React.SetStateAction<Coord>>;
+  type?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/require-default-props
   map?: any;
 }
@@ -58,6 +63,7 @@ function SearchBox({
       setSearchState,
       searchState,
       setPosition,
+      setName,
     );
   };
 
@@ -88,9 +94,8 @@ function SearchBox({
                   longitude: place.longitude,
                   latitude: place.latitude,
                 });
-                if (setName) {
-                  setName(place.name);
-                }
+
+                setName(place.name);
               }}
             >
               {place.name}
@@ -102,15 +107,17 @@ function SearchBox({
   );
 }
 
-function SearchContainer({ setStartPosition, map }: ContainerProps) {
+function SearchContainer({ type, map }: ContainerProps) {
   const navigate = useNavigate();
+  const setStartPosition = useSetRecoilState(startPositionState);
   const [endPosition, setEndPosition] = useRecoilState(endPositionState);
   const [endName, setEndName] = useRecoilState(endNameState);
+  const [startName, setStartName] = useRecoilState(startNameState);
   const { currentPosition } = useCurrentPosition();
   const [startSearchState, setStartSearchState] = useState<SearchState>({
     keyword: '',
     isSearching: false,
-    selectedName: '',
+    selectedName: startName || '',
   });
   const startPlaces = usePlaceSearch(startSearchState.keyword);
   const [endSearchState, setEndSearchState] = useState<SearchState>({
@@ -125,22 +132,26 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
     navigate('/routes');
   };
 
+  // console.log(startSearchState, endSearchState, startName, endName);
+
   // 혹시 나중에 출발지나 도착지를 현재 위치로 변경하는 기능을 추가할 때 유용할 것 같습니다.
   useEffect(() => {
-    if (!setStartPosition) return;
+    if (startName) return;
+
     const fetchAddress = async () => {
       await updateAddressFromCurrentCoordinates(
         currentPosition,
         setStartSearchState,
         startSearchState,
         setStartPosition,
+        setStartName,
       );
     };
     fetchAddress();
   }, [currentPosition]);
 
   useEffect(() => {
-    if (!setStartPosition && map && endSearchState.selectedName) {
+    if (type === 'end' && map && endSearchState.selectedName) {
       if (previousMarker) {
         previousMarker.setMap(null);
       }
@@ -166,7 +177,7 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
 
   return (
     <SearchWrapper>
-      {setStartPosition && (
+      {type === 'start' && (
         <SearchBox
           currentPosition={currentPosition}
           searchState={startSearchState}
@@ -174,6 +185,7 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
           placeholder="출발지를 입력하세요"
           places={startPlaces}
           setPosition={setStartPosition}
+          setName={setStartName}
         />
       )}
       <SearchBox
@@ -185,7 +197,7 @@ function SearchContainer({ setStartPosition, map }: ContainerProps) {
         setPosition={setEndPosition}
         setName={setEndName}
       />
-      {!setStartPosition && (
+      {type === 'end' && (
         <Button type="button" onClick={findRoute}>
           길찾기
         </Button>

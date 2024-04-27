@@ -179,6 +179,7 @@ export async function updateAddressFromCurrentCoordinates(
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>,
   searchState: SearchState,
   setPosition: React.Dispatch<React.SetStateAction<Coord>>,
+  setName: React.Dispatch<React.SetStateAction<string>>,
 ) {
   if (!currentPosition) return;
 
@@ -187,12 +188,16 @@ export async function updateAddressFromCurrentCoordinates(
     currentPosition?.coords.latitude,
   );
 
+  // console.log('좌표를 주소로 변환중', 'selectedName:', response);
+
   // TODO: response가 null이 되지 않게
   setSearchState({
     ...searchState,
     isSearching: false,
     selectedName: response!,
   });
+
+  setName(response!);
 
   setPosition({
     longitude: currentPosition?.coords.longitude,
