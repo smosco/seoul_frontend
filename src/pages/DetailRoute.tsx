@@ -47,12 +47,10 @@ function DetailRoute() {
     if (!data || data.length === 0) {
       return [];
     }
-    // TODO : 잘못된 데이터가 들어갈 수 있음 (length를 보고 선택할 수 있는 알고리즘이 필요함)
-    // 예를들면, 경유지가 1개인 경우, 출발지 없이 경유지, 도착지만 slice될 가능성 있음
-    // 혹은 API 에서 수정되야함
-
-    // 데이터는 최소 3개 (출발, 도착, 평균) 최대 8개 (출발, 도착, 경유지 5개, 평균)
-    return data.slice(1, 4);
+    if(data.length >= 4) {
+      return data.slice(1, -2);
+    }
+    return [];
   }, [data]);
 
   const mean = data && data.length > 0 ? data[data.length - 1][0] : null;
@@ -95,7 +93,6 @@ function DetailRoute() {
         setRouteInfo(newRouteInfos);
       })
       .catch((error) => console.error('Error drawing route:', error));
-    console.log('waypoints', waypoints);
   }, [map, startPosition, endPosition, waypoints]);
 
   return (

@@ -25,7 +25,6 @@ function ReportModalContents() {
     // eslint-disable-next-line no-alert
     if(window.confirm('신고를 하시겠습니까?')) {
       if(!currentPosition) return;
-      // TODO : API 추가 시 요청애 추가
       const data = {
         'time' : getCurrentTimestamp(),
         'longitude' : currentPosition.coords.longitude,
@@ -53,7 +52,6 @@ function ReportModalContents() {
     <Wrapper>
       <Title>무슨 일 있나요?</Title>
       <Input>
-        {/* TODO : p가 나올때 UI 변경 최소화하기 */}
         <input type='text' onChange={(e) => setReportContents(e.target.value)} value={reportContents} maxLength={100} />
         <p>{reportContents.length >= 100 && '신고 내용은 최대 100자까지 가능합니다.'}</p>
       </Input>
