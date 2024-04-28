@@ -31,7 +31,13 @@ function useEmergencyMarker(map: any, data: ReportData) {
     setDangerMarker(newMarker);
 
     if(data.contents) {
-      const newInfoWindow = generateInfoWindow(map, data.latitude, data.longitude, data.contents);
+      const element = `
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0.5rem; text-align:center; width:150px; padding:5px;">
+        <p style="font-weight: bold; font-size: 14px; color: #FF7757";>신고 사유</p>
+        <p>${data.contents}</p>
+      </div>
+      `;
+      const newInfoWindow = generateInfoWindow(map, data.latitude, data.longitude, element);
       newInfoWindow.setMap(map);
       setInfoWindow(newInfoWindow);
     }
