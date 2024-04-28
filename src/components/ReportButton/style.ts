@@ -10,11 +10,23 @@ const Button = styled.button`
   padding: 1rem;
   border: none;
   border-radius: 1.5rem;
-  color: #fff;
   background-color: #ff7757;
+  box-shadow: -1px 3px 4px 0px rgba(140, 79, 66, 1);
   font-size: 16px;
   font-weight: bold;
+  color: #fff;
   cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.01) translateX(-49.5%);
+  }
+
+  &:active {
+    background-color: #ff532b;
+  }
 `;
 
 export default Button;

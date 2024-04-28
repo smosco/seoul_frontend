@@ -67,9 +67,21 @@ export const Button = styled.button`
   height: 2.5rem;
   border: none;
   border-radius: 1.5rem;
-  color: #fff;
   background-color: #ff7757;
-  font-weight: 500;
-  font-size: 0.8rem;
+  box-shadow: -1px 3px 4px 0px rgba(140, 79, 66, 1);
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
   cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #fff;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  &:active {
+    background-color: #ff532b;
+  }
 `;

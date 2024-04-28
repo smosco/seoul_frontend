@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Carousel = styled.div`
   width: 80%;
   height: 7rem;
+  border: 1px solid transparent;
   border-radius: 0.4rem;
   display: flex;
   flex-direction: column;
@@ -13,8 +14,16 @@ export const Carousel = styled.div`
   background-color: #ffffff;
   position: absolute;
   bottom: 1.2rem;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
   &:hover {
     cursor: pointer;
+    transform: scale(1.02);
+  }
+
+  &:active {
+    border-color: #ff7757;
   }
 `;
 

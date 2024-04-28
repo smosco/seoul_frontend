@@ -16,31 +16,31 @@ export const Title = styled.p`
 `;
 
 export const Input = styled.div`
-width: 100%;
-display: flex;
-flex-direction: column;
-gap: 0.5rem;
-justify-content: center;
-input {
   width: 100%;
-  height: 2.5rem;
-  border-radius: 1.5rem;
-  border: 1px solid #868581;
-  padding: 0.8rem 1rem;
-}
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  input {
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid #868581;
+    padding: 0.8rem 1rem;
+  }
 
-input:focus {
-  outline: none;
-  border: 2px solid #868581;
-}
+  input:focus {
+    outline: none;
+    border: 2px solid #868581;
+  }
 
-input::placeholder {
-  color: #bcbab6;
-}
+  input::placeholder {
+    color: #bcbab6;
+  }
 
-p {
-  color: red;
-}
+  p {
+    color: red;
+  }
 `;
 
 export const Main = styled.section`
@@ -59,7 +59,7 @@ export const Main = styled.section`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    
+
     li {
       cursor: pointer;
     }
@@ -72,8 +72,20 @@ export const Button = styled.button`
   width: 100%;
   height: 2.5rem;
   border-radius: 1.5rem;
-  color: #fff;
+  box-shadow: -1px 3px 4px 0px rgba(140, 79, 66, 1);
   font-weight: bold;
+  color: #fff;
   cursor: pointer;
-`;
 
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  &:active {
+    background-color: #ff532b;
+  }
+`;
