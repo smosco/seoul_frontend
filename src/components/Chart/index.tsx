@@ -38,9 +38,8 @@ function Chart({ data, type }: ChartProps) {
           <>
             <p>위험도 : {riskData.find((item) => item.mean)?.A}점</p>
             <DangerList>
-              {/* TODO : 경유지가 확실하게 2개 이상 있어야 오류없이 작동가능!! */}
-              {/* TODO : 혹시 모를 예외에 대한 대비 필요 */}
               {riskData
+                .filter(item => item.risk)
                 .sort((a, b) => b.A - a.A)
                 .slice(0, 2)
                 .map((item) => (
