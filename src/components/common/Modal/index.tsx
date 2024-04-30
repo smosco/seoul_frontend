@@ -8,7 +8,7 @@ interface ModalContextProps {
 
 const ModalContext = createContext<ModalContextProps | null>(null);
 
-const useModal = () => {
+export const useModal = () => {
   const context = useContext(ModalContext);
   if (!context) {
     throw new Error('useModal은 반드시 ModalProvider 안에 있어야합니다.');

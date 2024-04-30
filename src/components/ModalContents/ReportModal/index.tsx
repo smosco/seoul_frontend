@@ -5,6 +5,7 @@ import useCurrentPosition from '../../../hooks/useCurruntPosition';
 import useToast from '../../../hooks/useToast';
 import { postReportData } from '../../../api/reportAPI';
 import { getCurrentTimestamp } from '../../../utils/commonUtils';
+import { useModal } from '../../common/Modal';
 
 function ReportModalContents() {
 
@@ -14,6 +15,7 @@ function ReportModalContents() {
   const mutation = useMutation({
     mutationFn: postReportData
   });
+  const { setIsOpen } = useModal();
 
   function handleListClick(e : React.MouseEvent) {
     if((e.target as HTMLElement).tagName === 'LI') {
@@ -43,6 +45,9 @@ function ReportModalContents() {
             msg: '네트워크 에러로 신고 접수가 불가합니다.',
             type: 'error'
           });
+        },
+        onSettled: () => {
+          setIsOpen(false);
         }
       });
     }
