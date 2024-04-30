@@ -54,11 +54,30 @@ export const SearchResultList = styled.li`
   line-height: 1.5;
   font-size: 13px;
   border-bottom: 1px solid #f4f4f4;
+  cursor: pointer;
 
   &:hover,
   &:active {
     background-color: #fcf4e7;
-    cursor: pointer;
+  }
+`;
+
+export const MyPositionButton = styled.button`
+  border: none;
+  height: 44px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #f4f4f4;
+  cursor: pointer;
+  color: #e97f3c;
+
+  img {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.2rem;
   }
 `;
 
