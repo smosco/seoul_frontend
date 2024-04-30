@@ -1,10 +1,10 @@
 import { useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import filterState from '../recoil/atoms';
 import { generateMarker } from '../utils/mapUtils';
 import { FacilitiesType } from '../types/mapTypes';
 import useToast from './useToast';
+import getPositionData from '../api/positionAPI';
 
 interface UseFilteringMarkerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,13 +19,6 @@ interface FilteringPosition {
   type: FacilitiesType;
   lon: number;
   lat: number;
-}
-
-// 위치 정보 가져오기
-async function fetchPositionData(key: string, lat: number, lng: number) {
-  const url = `http://3.34.25.245:80/api/${key}?userLat=${lat}&userLon=${lng}`;
-  const response = await axios.get(url);
-  return { key, data: response.data };
 }
 
 // 마커 추가 함수
@@ -58,7 +51,7 @@ function useFilteringMarker({ map, lat, lng }: UseFilteringMarkerProps): void {
       'emergencybell',
     ];
 
-    Promise.all(allFilter.map((key) => fetchPositionData(key, lat, lng)))
+    Promise.all(allFilter.map((key) => getPositionData(key, lat, lng)))
       .then((responses) => {
         setPosition(
           responses.reduce((acc, res) => {
