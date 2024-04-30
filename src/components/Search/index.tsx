@@ -11,6 +11,7 @@ import {
   SearchResultContainer,
   SearchResultList,
   Button,
+  MyPositionButton,
 } from './style';
 import {
   endNameState,
@@ -19,6 +20,7 @@ import {
   startPositionState,
 } from '../../recoil/atoms';
 import ep from '../../assets/images/ep.png';
+import near_me from '../../assets/images/near_me.png';
 
 interface SearchBoxProps {
   currentPosition: GeolocationPosition | undefined;
@@ -77,9 +79,10 @@ function SearchBox({
       />
       {isSearching && (
         <SearchResultContainer>
-          <button type="button" onClick={selectCurrent}>
-            현위치로 설정
-          </button>
+          <MyPositionButton onClick={selectCurrent}>
+            <img src={near_me} alt="near_me" />
+            내위치
+          </MyPositionButton>
           {places.map((place, index) => (
             <SearchResultList
               // eslint-disable-next-line react/no-array-index-key

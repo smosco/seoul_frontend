@@ -42,7 +42,10 @@ function RouteExplorer() {
     if (!data || data.length === 0) {
       return [];
     }
-    return data.slice(1, 4);
+    if (data.length >= 4) {
+      return data.slice(1, -2);
+    }
+    return [];
   }, [data]);
 
   useEffect(() => {
