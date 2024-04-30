@@ -78,7 +78,7 @@ export function generateInfoWindow(
 ) {
   const infoWindow = new Tmapv2.InfoWindow({
     map,
-    content : element,
+    content: element,
     position: new Tmapv2.LatLng(lat, lng),
     type: 2,
   });
@@ -342,7 +342,7 @@ export const drawRoute = async (
         const newPolyline = new window.Tmapv2.Polyline({
           path: coordinates,
           strokeColor: '#FF0000',
-          strokeWeight: 6,
+          strokeWeight: 8,
           map,
         });
         polylines.push(newPolyline);
