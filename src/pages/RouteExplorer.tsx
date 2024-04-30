@@ -42,8 +42,10 @@ function RouteExplorer() {
     if (!data || data.length === 0) {
       return [];
     }
-    // TODO: 경로 상세 페이지와 개수 맞춰야함
-    return data.slice(1, 4);
+    if (data.length >= 4) {
+      return data.slice(1, -2);
+    }
+    return [];
   }, [data]);
 
   useEffect(() => {
