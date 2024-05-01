@@ -12,6 +12,7 @@ import { startPositionState, endPositionState } from '../recoil/atoms';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
 import Skeleton from '../components/Skeleton';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function RouteExplorer() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ function RouteExplorer() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
+  const [currentMarker, setCurrentMarker] = useState<any>(null);
   const startPosition = useRecoilValue(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
@@ -48,15 +50,26 @@ function RouteExplorer() {
     return [];
   }, [data]);
 
+  useFilteringMarker({
+    map,
+    lat: currentPosition?.coords.latitude,
+    lng: currentPosition?.coords.longitude,
+  });
+
   useEffect(() => {
     if (!currentPosition) return;
 
-    // 현재 위치 마커 생성 및 추가
-    generateMarker(
+    const marker = generateMarker(
       map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
+
+    if (currentMarker) {
+      currentMarker.setMap(null);
+    }
+
+    setCurrentMarker(marker);
   }, [map]);
 
   useEffect(() => {

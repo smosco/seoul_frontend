@@ -5,6 +5,7 @@ import {
   ReportBtn,
   Label,
   // ReportListWrapper,
+  Checkbox,
 } from './style';
 import ReportList from '../ReportList';
 import filterState from '../../recoil/atoms';
@@ -31,13 +32,13 @@ function Content() {
     <>
       <Wrapper>
         <Label htmlFor="safetyCheckbox">
-          <input
+          안전시설 모두보기
+          <Checkbox
             id="safetyCheckbox"
             type="checkbox"
             checked={isChecked}
             onChange={handleChange}
           />
-          안전시설 모두보기
         </Label>
         <FilterWrapper />
         <ReportBtn type="button">1시간 내 긴급신고</ReportBtn>

@@ -99,7 +99,7 @@ function useFilteringMarker({ map, lat, lng }: UseFilteringMarkerProps): void {
     });
 
     setMarkers(newMarkers);
-  }, [map, filterValue]);
+  }, [map, filterValue, position]);
 }
 
 export default useFilteringMarker;
