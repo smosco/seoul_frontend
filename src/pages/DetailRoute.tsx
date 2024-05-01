@@ -16,6 +16,7 @@ import getWaypoints from '../api/routeAPI';
 import ReportModalContents from '../components/ModalContents/ReportModal';
 import Modal from '../components/common/Modal';
 import Skeleton from '../components/Skeleton';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -25,6 +26,7 @@ function DetailRoute() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
+  const [currentMarker, setCurrentMarker] = useState<any>(null);
   const startPosition = useRecoilValue(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
@@ -47,7 +49,7 @@ function DetailRoute() {
     if (!data || data.length === 0) {
       return [];
     }
-    if(data.length >= 4) {
+    if (data.length >= 4) {
       return data.slice(1, -2);
     }
     return [];
@@ -55,15 +57,26 @@ function DetailRoute() {
 
   const mean = data && data.length > 0 ? data[data.length - 1][0] : null;
 
+  useFilteringMarker({
+    map,
+    lat: currentPosition?.coords.latitude,
+    lng: currentPosition?.coords.longitude,
+  });
+
   useEffect(() => {
     if (!currentPosition) return;
 
-    // 현재 위치 마커 생성 및 추가
-    generateMarker(
+    const marker = generateMarker(
       map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
+
+    if (currentMarker) {
+      currentMarker.setMap(null);
+    }
+
+    setCurrentMarker(marker);
   }, [map]);
 
   useEffect(() => {

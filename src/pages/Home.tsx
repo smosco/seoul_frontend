@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useMap from '../hooks/useMap';
 import useCurrentPosition from '../hooks/useCurruntPosition';
 import { generateMarker } from '../utils/mapUtils';
@@ -16,22 +16,29 @@ function Home() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
+  const [currentMarker, setCurrentMarker] = useState<any>(null);
 
   useFilteringMarker({
     map,
-    lat: 37.4812298,
-    lng: 126.9441014,
+    lat: currentPosition?.coords.latitude,
+    lng: currentPosition?.coords.longitude,
   });
 
   useEffect(() => {
     if (!currentPosition) return;
-    // 현재 위치 마커 생성 및 추가
-    generateMarker(
+
+    const marker = generateMarker(
       map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
-  }, [map]);
+
+    if (currentMarker) {
+      currentMarker.setMap(null);
+    }
+
+    setCurrentMarker(marker);
+  }, [map, currentPosition]);
 
   return (
     <Wrapper>
