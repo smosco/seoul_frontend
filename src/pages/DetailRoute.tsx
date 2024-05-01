@@ -16,6 +16,7 @@ import getWaypoints from '../api/routeAPI';
 import ReportModalContents from '../components/ModalContents/ReportModal';
 import Modal from '../components/common/Modal';
 import Skeleton from '../components/Skeleton';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function DetailRoute() {
   const { currentPosition } = useCurrentPosition();
@@ -47,13 +48,19 @@ function DetailRoute() {
     if (!data || data.length === 0) {
       return [];
     }
-    if(data.length >= 4) {
+    if (data.length >= 4) {
       return data.slice(1, -2);
     }
     return [];
   }, [data]);
 
   const mean = data && data.length > 0 ? data[data.length - 1][0] : null;
+
+  useFilteringMarker({
+    map,
+    lat: currentPosition?.coords.latitude,
+    lng: currentPosition?.coords.longitude,
+  });
 
   useEffect(() => {
     if (!currentPosition) return;

@@ -12,6 +12,7 @@ import { startPositionState, endPositionState } from '../recoil/atoms';
 import RouteCarousel from '../components/RouteCarousel';
 import Wrapper from '../components/common/Wrapper';
 import Skeleton from '../components/Skeleton';
+import useFilteringMarker from '../hooks/useFilteringMarker';
 
 function RouteExplorer() {
   const navigate = useNavigate();
@@ -47,6 +48,12 @@ function RouteExplorer() {
     }
     return [];
   }, [data]);
+
+  useFilteringMarker({
+    map,
+    lat: currentPosition?.coords.latitude,
+    lng: currentPosition?.coords.longitude,
+  });
 
   useEffect(() => {
     if (!currentPosition) return;
