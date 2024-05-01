@@ -26,6 +26,7 @@ function DetailRoute() {
     currentPosition?.coords.latitude,
     currentPosition?.coords.longitude,
   );
+  const [currentMarker, setCurrentMarker] = useState<any>(null);
   const startPosition = useRecoilValue(startPositionState);
   const endPosition = useRecoilValue(endPositionState);
   const [polylines, setPolylines] = useState<any[]>([]);
@@ -65,12 +66,17 @@ function DetailRoute() {
   useEffect(() => {
     if (!currentPosition) return;
 
-    // 현재 위치 마커 생성 및 추가
-    generateMarker(
+    const marker = generateMarker(
       map,
       currentPosition.coords.latitude,
       currentPosition.coords.longitude,
     );
+
+    if (currentMarker) {
+      currentMarker.setMap(null);
+    }
+
+    setCurrentMarker(marker);
   }, [map]);
 
   useEffect(() => {
