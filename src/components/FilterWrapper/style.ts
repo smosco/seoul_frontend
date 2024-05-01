@@ -17,9 +17,8 @@ export const Wrapper = styled.div`
   }
 
   ${device.desktop} {
-    justify-content: space-between
+    justify-content: space-between;
   }
-
 `;
 
 export const FacilityButton = styled.button<FacilityButtonProps>`
@@ -32,6 +31,7 @@ export const FacilityButton = styled.button<FacilityButtonProps>`
   background-color: ${(props) => (props.$isClicked ? '#F9ECD4' : '#F4F4F4')};
   font-size: 0.8rem;
   font-weight: 500;
+  color: #2e2d2c;
   cursor: pointer;
 
   ${device.desktop} {
