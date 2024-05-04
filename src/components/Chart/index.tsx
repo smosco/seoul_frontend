@@ -7,7 +7,12 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
 } from 'recharts';
-import { transformData } from '../../utils/mapUtils';
+import {
+  transformData,
+  isWaypointInfo,
+  isWaypointMean,
+  // isWaypointMean,
+} from '../../utils/mapUtils';
 import { WaypointInfo, WaypointMean } from '../../types/mapTypes';
 import { ChartWrapper, Content, DangerList, Facility } from './style';
 
@@ -28,18 +33,26 @@ function Chart({ data, type }: ChartProps) {
         <Radar
           name="risk-scores"
           dataKey="A"
-          stroke="#FF5757"
-          fill="#FF5757"
+          stroke="#ff7757"
+          fill="#ff7757"
           fillOpacity={0.6}
         />
       </RadarChart>
       <Content>
         {riskData && riskData.length > 0 && (
           <>
-            <p>위험도 : {riskData.find((item) => item.mean)?.A}점</p>
+            <p>
+              위험도 :&nbsp;
+              {type === 'info' && isWaypointInfo(data)
+                ? Math.round(data.rank_score)
+                : type === 'mean' &&
+                  isWaypointMean(data) &&
+                  Math.round(data.rank_score_mean)}
+              점
+            </p>
             <DangerList>
               {riskData
-                .filter(item => item.risk)
+                .filter((item) => item.risk)
                 .sort((a, b) => b.A - a.A)
                 .slice(0, 2)
                 .map((item) => (

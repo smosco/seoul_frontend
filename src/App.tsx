@@ -7,6 +7,7 @@ import EmergencyPage from './pages/Report';
 import RouteExplorer from './pages/RouteExplorer';
 import DetailRoute from './pages/DetailRoute';
 import GlobalStyle from './styles/GlobalStyles';
+import NotFound from './components/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/report',
     element: <EmergencyPage />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ]);
 
