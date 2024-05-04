@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import EmergencyPage from './pages/Report';
 import RouteExplorer from './pages/RouteExplorer';
 import DetailRoute from './pages/DetailRoute';
+import GlobalStyle from './styles/GlobalStyles';
 import NotFound from './components/NotFound';
 
 const router = createBrowserRouter([
@@ -37,6 +38,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
+        <GlobalStyle />
         <RouterProvider router={router} />
       </RecoilRoot>
     </QueryClientProvider>
