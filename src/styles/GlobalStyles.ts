@@ -5,7 +5,11 @@ const GlobalStyle = createGlobalStyle`
   ${fonts}
 
   * {
-    font-family: 'Noto Sans KR', 'Roboto'; 
+    font-family: 'Pretendard', 'Roboto'; 
+  }
+
+  div, label {
+    font-family: 'Pretendard', 'Roboto';
   }
 `;
 
