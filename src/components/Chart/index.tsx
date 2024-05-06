@@ -26,7 +26,7 @@ function Chart({ data, type }: ChartProps) {
 
   return (
     <ChartWrapper>
-      <RadarChart width={170} height={120} data={riskData}>
+      <RadarChart width={160} height={120} data={riskData}>
         <PolarGrid />
         <PolarAngleAxis dataKey="risk" tick={{ fontSize: 8 }} />
         <PolarRadiusAxis tick={{ fontSize: 5 }} />
