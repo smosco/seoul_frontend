@@ -66,9 +66,13 @@ WE MATE는 **서울시 위험 지역 분석**을 통해 **최적의 순찰 경�
 
 ## 백엔드 
 
+### 프론트엔드 - 백엔드 통신
+
 <img width="400" alt="프론트백통신" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/527601e6-e596-42b6-a132-2a907c18b1b1">
 
 - ec2, rds 등을 이용한 가상 서버와 관계형 데이터베이스를 관리 및 운영
+
+### 프론트엔드 - 서버리스 통신
 
 <img width="400" alt="프론트서버리스통신" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/2f649bdd-f75d-41d7-b3f7-a80a13a10e66">
 
