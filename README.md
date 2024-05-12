@@ -11,13 +11,17 @@ WE MATE는 서울시 위험 지역 분석을 통해 최적의 순찰 경로 추�
 ## 기능
 
 ### 안전 시설 마커 표시
-![안전시설](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/b80342aa-4af0-4839-9b12-4ffc11531515)
+
+<img width="150" alt="경로찾기" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/b80342aa-4af0-4839-9b12-4ffc11531515">
+
 - 현위치로부터 500m 반경 내의 안전시설을 종류 별로 다른 이미지의 마커로 표시해요
 
 - 원하는 안전시설만 필터링해서 볼 수 있어요
 
 ### 순찰 경로 탐색
-![경로찾기](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/d717047f-438e-452e-a771-549a550e6290)
+
+<img width="150" alt="경로찾기" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/d717047f-438e-452e-a771-549a550e6290">
+
 - TMAP API의 키워드 장소 검색을 사용해 출발, 도착지를 입력해요
 
 - 순찰 경로 추천 알고리즘으로 얻은 위험 지역 중 최대 5곳을 경유하는 경로를 탐색해요
@@ -25,7 +29,9 @@ WE MATE는 서울시 위험 지역 분석을 통해 최적의 순찰 경로 추�
 - 경로 소요 시간과 거리를 표시해요
 
 ### 순찰 경로 위험도 상세 정보
-![경로상세](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/63830849-75e9-4d77-b696-e44c060d2c7c)
+
+<img width="150" alt="경로상세" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/63830849-75e9-4d77-b696-e44c060d2c7c">
+
 - 순찰 경로 추천 알고리즘을 통해 계산된 경로의 평균 위험도 점수를 표시해요
 
 - 경유지 마커 클릭 시 위험도를 한눈에 볼 수 있도록 레이더 차트로 표시해요
@@ -33,7 +39,9 @@ WE MATE는 서울시 위험 지역 분석을 통해 최적의 순찰 경로 추�
 - 각 경유지에서 가장 부족한 안전시설 2가지를 텍스트로 표시해요
 
 ### 빠르고 간편한 신고 기능
-![신고](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/7d2284c2-b9e3-4780-b72d-dcb7ab462282)
+
+<img width="150" alt="신고" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/7d2284c2-b9e3-4780-b72d-dcb7ab462282">
+
 - 신고하기 버튼 클릭 시 현위치로 신고할 수 있어요
 
 - 신고 사유는 직접 입력 또는 빠른 신고를 위해 선택지 클릭 시 바로 입력 가능해요
@@ -58,14 +66,18 @@ WE MATE는 서울시 위험 지역 분석을 통해 최적의 순찰 경로 추�
 
 ## 백엔드 
 
-![프론트백엔드통신](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/527601e6-e596-42b6-a132-2a907c18b1b1)
+<img width="200" alt="프론트백통신" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/527601e6-e596-42b6-a132-2a907c18b1b1">
+
 - ec2, rds 등을 이용한 가상 서버와 관계형 데이터베이스를 관리 및 운영
 
-![프론트서버리스통신](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/2f649bdd-f75d-41d7-b3f7-a80a13a10e66)
+<img width="200" alt="프론트서버리스통신" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/2f649bdd-f75d-41d7-b3f7-a80a13a10e66">
+
 - Lambda와 api gateway를 통한 서버리스 통신
   
 ## IA(Information Architecture)
-![IA](https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/9a248428-2133-454b-b2e9-cbd8360f9d09)
+
+<img width="200" alt="IA" src="https://github.com/Seoul-Public-Data/seoul_frontend/assets/62870362/9a248428-2133-454b-b2e9-cbd8360f9d09">
+
 
 
 
