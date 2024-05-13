@@ -10,7 +10,7 @@ function useCurrentPosition() {
     const options = {
       enableHighAccuracy: true,
       timeout: 5000, // 5초
-      maximumAge: 10 * 60 * 1000, // 10분
+      maximumAge: 5 * 60 * 1000, // 5분
     };
 
     const successCallback = (position: GeolocationPosition) => {
