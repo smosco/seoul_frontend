@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getPositionData = async (key: string, lat: number, lng: number) => {
   try {
-    const url = `http://wemate.site/api/${key}?userLat=${lat}&userLon=${lng}`;
+    const url = `https://wemate.site/api/${key}?userLat=${lat}&userLon=${lng}`;
     const response = await axios.get(url);
     return { key, data: response.data };
   } catch (error) {
