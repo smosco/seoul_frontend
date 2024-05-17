@@ -44,6 +44,7 @@ export interface WaypointInfo {
   grid_shelter_distance_score: number;
   grid_facilities_distance_score: number;
   number_of_cctv_score: number;
+  human_density_score: number;
 }
 
 export interface WaypointMean {
@@ -53,4 +54,5 @@ export interface WaypointMean {
   grid_shelter_distance_score_mean: number;
   grid_facilities_distance_score_mean: number;
   number_of_cctv_score_mean: number;
+  human_density_mean: number;
 }

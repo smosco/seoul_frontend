@@ -390,7 +390,8 @@ export function isWaypointInfo(data: any): data is WaypointInfo {
     'safety_center_and_distacne_score' in data &&
     'grid_shelter_distance_score' in data &&
     'grid_facilities_distance_score' in data &&
-    'number_of_cctv_score' in data
+    'number_of_cctv_score' in data &&
+    'human_density_score' in data
   );
 }
 
@@ -402,7 +403,8 @@ export function isWaypointMean(data: any): data is WaypointMean {
     'safety_center_and_distacne_score_mean' in data &&
     'grid_shelter_distance_score_mean' in data &&
     'grid_facilities_distance_score_mean' in data &&
-    'number_of_cctv_score_mean' in data
+    'number_of_cctv_score_mean' in data &&
+    'human_density_mean' in data
   );
 }
 
@@ -418,6 +420,7 @@ export const transformData = (
       { risk: '보호시설', A: data.grid_shelter_distance_score },
       { risk: '안전시설', A: data.grid_facilities_distance_score },
       { risk: 'CCTV', A: data.number_of_cctv_score },
+      { risk: '인구밀도', A: data.human_density_score },
     ];
   }
   if (type === 'mean' && isWaypointMean(data)) {
@@ -427,6 +430,7 @@ export const transformData = (
       { risk: '보호시설', A: data.grid_shelter_distance_score_mean },
       { risk: '안전시설', A: data.grid_facilities_distance_score_mean },
       { risk: 'CCTV', A: data.number_of_cctv_score_mean },
+      { risk: '인구밀도', A: data.human_density_mean },
     ];
   }
   return [];
