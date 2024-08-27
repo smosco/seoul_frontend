@@ -7,8 +7,7 @@ WE MATE는 **서울시 위험 지역 분석**을 통해 **최적의 순찰 경�
 - 서울 지역의 안전 시설 및 시설물 모니터링 🚨
 
 - [🙋‍♂️ Visit WE MATE](https://wemate-patrol.vercel.app/)
-- 
-![스켈레톤UI](https://github.com/user-attachments/assets/6d2a7479-b12d-46c8-9fb1-95d7ff9712d5)
+  
 ![경로](https://github.com/user-attachments/assets/54cbf5dc-8d67-40df-a01e-b6711562b3bc)
 
 ## 기능
